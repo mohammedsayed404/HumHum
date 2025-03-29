@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "Chicken",
+    "PublicImageId": "Chicken_xmjlmd",
+    "ImageUrl": "v1743242781/Chicken_xmjlmd.webp"
+  },
+  {
+    "Name": "Seafood",
+    "PublicImageId": "Seafood_niliwq.jpg",
+    "ImageUrl": "v1743242751/Seafood_niliwq.jpg"
+  },
+  {
+    "Name": "Pasta and Noodles",
+    "PublicImageId": "Pasta_and_Noodles_wz8k6e",
+    "ImageUrl": "v1743242752/Pasta_and_Noodles_wz8k6e.avif"
+  },
+  {
+    "Name": "Soup",
+    "PublicImageId": "Soup_wmv7pn",
+    "ImageUrl": "v1743242750/Soup_wmv7pn.jpg"
+  },
+  {
+    "Name": "Desserts",
+    "PublicImageId": "Desserts_p2jrxl",
+    "ImageUrl": "v1743242750/Desserts_p2jrxl.jpg"
+  },
+  {
+    "Name": "Vegetable",
+    "PublicImageId": "Vegetable_mqx29y",
+    "ImageUrl": "v1743242754/Vegetable_mqx29y.jpg"
+  }
+]
