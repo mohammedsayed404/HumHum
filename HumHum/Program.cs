@@ -1,10 +1,12 @@
 using Domain.Contracts;
+using FluentValidation;
 using HumHum.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Persistence.Repositories;
 using Service.Abstractions;
 using Services;
-using Shared;
+using Shared.Cloudinary;
 
 namespace HumHum;
 
@@ -30,9 +32,15 @@ public class Program
 
 
         builder.Services.AddScoped<IServiceManager, ServiceManager>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddAutoMapper(typeof(Services.AssemblyReference).Assembly);
+
 
 
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
+
+        builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 
         #endregion

@@ -1,0 +1,68 @@
+﻿@model ProductToCreationViewModels
+@inject IUnitOfWork unitOfWork;
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var restaurants = await unitOfWork.GetRepository<Restaurant, int>().GetAllAsync();
+    var categories = await unitOfWork.GetRepository<ProductCategory, int>().GetAllAsync();
+
+   var  restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
+   var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
+
+
+
+}
+
+<h1>Create</h1>
+
+<h4>Create New Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RestaurantId" class="control-label"></label>
+                <select asp-for="RestaurantId" asp-items="restaurantslist" class="form-control"></select>
+                <span asp-validation-for="RestaurantId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId"  class="control-label"></label>
+                <select  asp-for="CategoryId" asp-items="categoriesslist" class="form-control"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image"></label>
+                <input class="form-control" asp-for="Image" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

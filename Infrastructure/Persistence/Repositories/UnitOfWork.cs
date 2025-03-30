@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 namespace Persistence.Repositories;
 
-internal class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly HumHumContext _dbContext;
     private readonly ConcurrentDictionary<string, object> _repositories;

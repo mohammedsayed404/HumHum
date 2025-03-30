@@ -1,4 +1,4 @@
-using HumHum.Models;
+using HumHum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

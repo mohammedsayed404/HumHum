@@ -1,4 +1,4 @@
-namespace HumHum.Models
+namespace HumHum.ViewModels
 {
     public class ErrorViewModel
     {
