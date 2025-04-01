@@ -67,10 +67,15 @@ internal sealed class PhotoService : IPhotoService
 
     }
 
-    public async Task<DeletionResult> DeletePhotoAsync(string publicId)
+    public async Task<bool> DeletePhotoAsync(string publicId)
     {
         var deleteParams = new DeletionParams(publicId);
 
-        return await _cloudinary.DestroyAsync(deleteParams);
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+
+        if (result.Error is not null)
+            return false;
+
+        return true;
     }
 }

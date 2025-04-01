@@ -15,4 +15,6 @@ public interface IRepository<TEntity, TKey> where TEntity : EntityBase<TKey>
     void Update(TEntity entity);
 
 
+
+
 }

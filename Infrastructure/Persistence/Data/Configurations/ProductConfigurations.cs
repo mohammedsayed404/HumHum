@@ -21,5 +21,10 @@ internal sealed class ProductConfigurations : IEntityTypeConfiguration<Product>
 
 
 
+        builder.HasQueryFilter(product => !product.IsDeleted);
+
+
+
+
     }
 }

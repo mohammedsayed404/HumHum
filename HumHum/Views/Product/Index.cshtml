@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Shared.ProductToReturnDto>
+﻿@model IEnumerable<ProductToReturnDto>
 @inject IOptionsMonitor<CloudinarySettings> cloudinary;
 @{
     ViewData["Title"] = "Index";
@@ -26,13 +26,16 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImageUrl) 
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RestaurantName)
+                @Html.DisplayNameFor(model => model.Image) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
+                @Html.DisplayNameFor(model => model.Restaurant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
             </th>
             <th></th>
         </tr>
@@ -49,24 +52,29 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.Price)
+             </td>
+            
             <td>
                 @* @Html.DisplayFor(modelItem => item.ImageUrl) *@
-                @{
+               @*  @{
                         string seka = $"{cloudinaryBaseUrl}{item?.ImageUrl}";
-                }
+                } *@
 
-                    <img src="@seka" class="w-75 h-75 rounded" />
+                    @* <img src="@seka" class="w-75 h-75 rounded" /> *@
+                    <img src="@item.Image" class="w-75 h-75 rounded" /> @* trying using my generic resolver img url *@
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RestaurantName)
+                @Html.DisplayFor(modelItem => item.Restaurant)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
+                @Html.DisplayFor(modelItem => item.Category)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
             </td>
         </tr>
 }

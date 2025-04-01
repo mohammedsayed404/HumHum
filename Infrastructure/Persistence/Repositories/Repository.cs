@@ -16,7 +16,7 @@ internal class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEnt
     }
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-        => await _dbSet.Where(entity => !entity.IsDeleted).AsNoTracking().ToListAsync();
+        => await _dbSet.AsNoTracking().ToListAsync();
 
     public async Task<IReadOnlyList<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity> spec)
        => await ApplySpecification(spec).AsNoTracking().ToListAsync();
@@ -41,6 +41,5 @@ internal class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEnt
 
     private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> spec)
         => SpecificationEvaluator.GetQuery(_dbSet, spec);
-
 
 }

@@ -3,7 +3,7 @@ using HumHum.ViewModels;
 
 namespace HumHum.Validators;
 
-public class ProductToCreationValidator : AbstractValidator<ProductToCreationViewModels>
+public sealed class ProductToCreationValidator : AbstractValidator<ProductToCreationViewModel>
 {
 
     public ProductToCreationValidator()
@@ -14,7 +14,7 @@ public class ProductToCreationValidator : AbstractValidator<ProductToCreationVie
 
 
         RuleFor(product => product.Price)
-            .NotEmpty().InclusiveBetween(0.5M, int.MaxValue)
+            .InclusiveBetween(1, int.MaxValue)
             .WithMessage("The Price Must Be Grater than 0");
 
 

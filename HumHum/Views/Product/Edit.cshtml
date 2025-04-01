@@ -1,27 +1,28 @@
-﻿@model ProductToCreationViewModel
+﻿@model HumHum.ViewModels.ProductToUpdateViewModel
 @inject IUnitOfWork unitOfWork;
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
     var restaurants = await unitOfWork.GetRepository<Restaurant, int>().GetAllAsync();
     var categories = await unitOfWork.GetRepository<ProductCategory, int>().GetAllAsync();
 
-   var  restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
-   var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
-
-
+    var restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
+    var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
 
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
-<h4>Create New Product</h4>
+<h4>ProductToUpdateViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" class="form-control" hidden />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -43,17 +44,26 @@
                 <span asp-validation-for="RestaurantId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId"  class="control-label"></label>
-                <select  asp-for="CategoryId" asp-items="categoriesslist" class="form-control"></select>
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" asp-items="categoriesslist" class="form-control"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ImageUrl" class="form-control" hidden />
             </div>
             <div class="form-group">
                 <label asp-for="Image"></label>
                 <input class="form-control" asp-for="Image" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input asp-for="PublicImageId" class="form-control" hidden />
+
+                <span asp-validation-for="PublicImageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -1,5 +1,6 @@
 using Domain.Contracts;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using HumHum.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -40,7 +41,20 @@ public class Program
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 
+
+
+        #region New Way Of Fluent Validation 
+        builder.Services.AddFluentValidationAutoValidation();
+        //builder.Services.AddFluentValidationAutoValidation(config =>
+        //{
+        //    config.DisableDataAnnotationsValidation = true;
+        //});
+
+        builder.Services.AddFluentValidationClientsideAdapters();
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+        #endregion
+
+
 
 
         #endregion

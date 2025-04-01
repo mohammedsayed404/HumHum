@@ -11,15 +11,17 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IPhotoService> _lazyPhotoService;
     private readonly Lazy<IProductService> _lazyProductService;
 
+
     public ServiceManager(
         IOptionsMonitor<CloudinarySettings> config,
         IUnitOfWork unitOfWork,
         IMapper mapper)
     {
 
+
         _lazyPhotoService = new(() => new PhotoService(config));
 
-        _lazyProductService = new(() => new ProductService(unitOfWork, mapper));
+        _lazyProductService = new(() => new ProductService(unitOfWork, mapper, PhotoService));
 
 
 
