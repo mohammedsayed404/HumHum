@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Common;
+
 namespace Domain.Contracts;
 
 public interface IRepository<TEntity, TKey> where TEntity : EntityBase<TKey>

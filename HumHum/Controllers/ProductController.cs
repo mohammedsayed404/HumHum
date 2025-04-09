@@ -45,6 +45,7 @@ public class ProductController : Controller
     public async Task<IActionResult> Create(ProductToCreationViewModel model)
     {
 
+
         if (!ModelState.IsValid) return View(model);
 
         var created = await _serviceManager.ProductService.CreateProductAsync(model);
@@ -72,6 +73,7 @@ public class ProductController : Controller
 
 
         var mappedProduct = _mapper.Map<ProductToUpdateViewModel>(product);
+
 
         return View(mappedProduct);
 

@@ -1,5 +1,6 @@
 using HumHum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Service.Abstractions;
 using System.Diagnostics;
 
 namespace HumHum.Controllers
@@ -8,18 +9,28 @@ namespace HumHum.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public IServiceManager ServiceManager { get; }
+
+        public HomeController(ILogger<HomeController> logger,
+            IServiceManager serviceManager
+
+
+            )
         {
             _logger = logger;
+            ServiceManager = serviceManager;
         }
 
         public IActionResult Index()
         {
+
             return View();
         }
 
         public IActionResult Privacy()
         {
+
+
             return View();
         }
 

@@ -1,9 +1,11 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-public sealed class HumHumContext : DbContext
+public sealed class HumHumContext : IdentityDbContext<ApplicationUser>
 {
 
     public HumHumContext(DbContextOptions<HumHumContext> options) : base(options)
@@ -13,7 +15,12 @@ public sealed class HumHumContext : DbContext
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-       => modelBuilder.ApplyConfigurationsFromAssembly(typeof(HumHumContext).Assembly);
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(HumHumContext).Assembly);
+
+    }
 
 
     public DbSet<Product> Products { get; set; }

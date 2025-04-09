@@ -1,7 +1,9 @@
 using Domain.Contracts;
+using Domain.Entities.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HumHum.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Repositories;
@@ -26,6 +28,9 @@ public class Program
 
         builder.Services.AddDbContext<HumHumContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                        .AddEntityFrameworkStores<HumHumContext>();
 
 
         builder.Services.Configure<CloudinarySettings>
