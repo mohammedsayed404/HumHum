@@ -10,6 +10,7 @@ using Persistence.Repositories;
 using Service.Abstractions;
 using Services;
 using Shared.Cloudinary;
+using StackExchange.Redis;
 
 namespace HumHum;
 
@@ -32,10 +33,15 @@ public class Program
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                         .AddEntityFrameworkStores<HumHumContext>();
 
+        builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
+                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!)
+           );
 
         builder.Services.Configure<CloudinarySettings>
             (builder.Configuration.GetSection(nameof(CloudinarySettings)));
 
+
+        builder.Services.AddScoped<ICartRepository, CartRepository>();
 
         builder.Services.AddScoped<IServiceManager, ServiceManager>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

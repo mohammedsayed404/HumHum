@@ -10,12 +10,14 @@ public sealed class ServiceManager : IServiceManager
 {
     private readonly Lazy<IPhotoService> _lazyPhotoService;
     private readonly Lazy<IProductService> _lazyProductService;
+    private readonly Lazy<ICartService> _lazyCartService;
 
 
     public ServiceManager(
         IOptionsMonitor<CloudinarySettings> config,
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        ICartRepository cartRepository)
     {
 
 
@@ -23,6 +25,7 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyProductService = new(() => new ProductService(unitOfWork, mapper, PhotoService));
 
+        _lazyCartService = new(() => new CartService(cartRepository, mapper));
 
 
 
@@ -31,4 +34,6 @@ public sealed class ServiceManager : IServiceManager
     public IPhotoService PhotoService => _lazyPhotoService.Value;
 
     public IProductService ProductService => _lazyProductService.Value;
+
+    public ICartService CartService => _lazyCartService.Value;
 }

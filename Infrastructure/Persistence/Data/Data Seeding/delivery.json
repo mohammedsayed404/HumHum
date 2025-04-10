@@ -1,0 +1,26 @@
+[
+    {
+      "ShortName": "Express",
+      "Description": "Fastest delivery time",
+      "DeliveryTime": "30 min",
+      "Price": 10
+    },
+    {
+      "ShortName": "DM02",
+      "Description": "Get it within 1 hour",
+      "DeliveryTime": "1 hour",
+      "Price": 5
+    },
+    {
+      "ShortName": "DM03",
+      "Description": "Slower but cheap",
+      "DeliveryTime": "1–2 Hours",
+      "Price": 2
+    },
+    {
+      "ShortName": "FREE",
+      "Description": "Free! You get what you pay for",
+      "DeliveryTime": "1-2 day",
+      "Price": 0
+    }
+  ]

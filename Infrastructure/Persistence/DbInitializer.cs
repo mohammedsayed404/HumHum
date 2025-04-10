@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using Domain.Entities;
+using Domain.Entities.Aggregates;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -108,6 +109,32 @@ public class DbInitializer : IDbInitializer
 
         }
 
+
+        if (!_dbContext.DeliveryMethods.Any())
+        {
+            var json = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Data Seeding\delivery.json");
+
+
+            var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(json);
+
+
+
+            if (deliveryMethods?.Any() == true)
+                _dbContext.DeliveryMethods.AddRange(deliveryMethods);
+
+            try
+            {
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+
+        }
 
 
     }
