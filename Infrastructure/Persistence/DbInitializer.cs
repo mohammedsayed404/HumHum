@@ -148,6 +148,7 @@ public class DbInitializer : IDbInitializer
         }
 
 
+
         if (!_userManager.Users.Any())
         {
             var Administrator = new ApplicationUser

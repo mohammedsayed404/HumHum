@@ -6,5 +6,6 @@ public interface IServiceManager
     public IProductService ProductService { get; }
 
     public ICartService CartService { get; }
+    public IOrderService OrderService { get; }
 
 }
