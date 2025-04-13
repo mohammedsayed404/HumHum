@@ -4,7 +4,7 @@ namespace Service.Abstractions;
 
 public interface IRestaurantService
 {
-    ///Create , Update , Delete and so on 
+    ///Create ,  , Delete and so on 
 
 
     public Task<IReadOnlyList<RestaurantToReturnDto>> GetAllRestaurantsAsync();

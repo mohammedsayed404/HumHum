@@ -39,6 +39,7 @@ public class ProductController : Controller
 
 
     [HttpGet]
+    //[Authorize(Roles =Roles.Administrator)]
     public IActionResult Create() => View();
 
     [HttpPost]

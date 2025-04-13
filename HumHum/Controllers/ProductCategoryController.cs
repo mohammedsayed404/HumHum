@@ -19,5 +19,6 @@ public class ProductCategoryController : Controller
 
         return View(categories);
     }
+    //Create , Delete 
 
 }

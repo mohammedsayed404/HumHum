@@ -27,6 +27,7 @@ public class RestaurantController : Controller
 
         var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
 
+
         return View(products);
     }
-}
+

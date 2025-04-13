@@ -1,3 +1,4 @@
+
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
@@ -59,4 +60,5 @@ namespace Services
             return mappedrestaurantProducts;
         }
     }
+
 }

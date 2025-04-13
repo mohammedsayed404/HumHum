@@ -3,6 +3,7 @@ using Domain.Entities.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HumHum.Extensions;
+using HumHum.Mock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -52,6 +53,11 @@ public class Program
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 
+
+        #region Tesing Current User
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<MockCurrentUser>();
+        #endregion
 
 
         #region New Way Of Fluent Validation 

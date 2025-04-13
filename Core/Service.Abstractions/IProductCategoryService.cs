@@ -2,6 +2,6 @@
 
 public interface IProductCategoryService
 {
-    ///Create , Update , Delete and so on 
+    ///Create ,  , Delete and so on 
 
 }

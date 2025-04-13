@@ -1,0 +1,116 @@
+﻿@model Shared.OrderModule.OrderToReturnDto
+
+@{
+    ViewData["Title"] = "ShowOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ShowOrder</h1>
+
+<div>
+    <h4>OrderToReturnDto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PaymentStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PaymentStatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DeliveryMethod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryMethod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Subtotal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PaymentIntentId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PaymentIntentId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderItems)
+        </dt>
+
+        <dd class="col-sm-10">
+            
+        @foreach (var item in Model.OrderItems)
+        {
+                <dt class="col-sm-2">
+                    item ID : @item.Id
+                </dt>
+                <dd class="col-sm-10">
+                        @item.Id
+                </dd>
+                <dt class="col-sm-2">
+                    Product ID : 
+                </dt>
+                <dd class="col-sm-10">
+                    @item.ProductId
+                </dd>
+                <dt class="col-sm-2">
+                     Product Name :
+                </dt>
+                <dd class="col-sm-10">
+                    @item.ProductName
+                </dd>
+                <dt class="col-sm-2">
+                     Product Image :
+                </dt>
+                <dd class="col-sm-10">
+                    @item.ProductImage
+                </dd> 
+                <dt class="col-sm-2">
+                     Product Price :
+                </dt>
+                <dd class="col-sm-10">
+                    @item.Price
+                </dd>
+
+                <dt class="col-sm-2">
+                    Product Quantity :
+                </dt>
+                <dd class="col-sm-10">
+                    @item.Quantity
+                </dd>
+
+        }
+        </dd>
+
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
