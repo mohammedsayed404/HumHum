@@ -15,10 +15,18 @@ public class RestaurantController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var restaurants = await _serviceManager.ProductService.GetAllRestaurantsAsync();
+        //var restaurants = await _serviceManager.ProductService.GetAllRestaurantsAsync();
+        var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
 
         return View(restaurants);
     }
 
+    public async Task<IActionResult> ProductsToResturant(int id)
+    {
+        //var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
 
+        var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
+
+        return View(products);
+    }
 }

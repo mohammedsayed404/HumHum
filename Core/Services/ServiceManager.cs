@@ -11,6 +11,7 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IPhotoService> _lazyPhotoService;
     private readonly Lazy<IProductService> _lazyProductService;
     private readonly Lazy<ICartService> _lazyCartService;
+    private readonly Lazy<IRestaurantService> _lazyRestaurantService;
 
 
     public ServiceManager(
@@ -27,6 +28,7 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyCartService = new(() => new CartService(cartRepository, mapper));
 
+        _lazyRestaurantService = new(() => new RestaurantService(unitOfWork, mapper, PhotoService));
 
 
     }
@@ -36,4 +38,6 @@ public sealed class ServiceManager : IServiceManager
     public IProductService ProductService => _lazyProductService.Value;
 
     public ICartService CartService => _lazyCartService.Value;
+
+    public IRestaurantService RestaurantService => _lazyRestaurantService.Value;
 }

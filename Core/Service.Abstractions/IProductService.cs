@@ -14,7 +14,6 @@ public interface IProductService
 
     public Task<IReadOnlyList<ProductCategoryToReturnDto>> GetAllCategoriesAsync();
 
-
     public Task<int> CreateProductAsync(ProductToCreationViewModel model);
 
     public Task<int> UpdateProductAsync(ProductToUpdateViewModel model);
