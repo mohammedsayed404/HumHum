@@ -5,9 +5,6 @@ namespace Services.Specifications;
 
 internal class ProductWithRestaurantAndCategorySpec : SpecificationsBase<Product>
 {
-
-
-
     public ProductWithRestaurantAndCategorySpec(int id)
         : base(product => product.Id == id)
     {
@@ -28,6 +25,4 @@ internal class ProductWithRestaurantAndCategorySpec : SpecificationsBase<Product
         AddIncludes(product => product.Restaurant);
         AddIncludes(product => product.Category);
     }
-
-
 }

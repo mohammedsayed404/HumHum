@@ -7,8 +7,8 @@
     var restaurants = await unitOfWork.GetRepository<Restaurant, int>().GetAllAsync();
     var categories = await unitOfWork.GetRepository<ProductCategory, int>().GetAllAsync();
 
-   var  restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
-   var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
+    var  restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
+    var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
 
 
 
