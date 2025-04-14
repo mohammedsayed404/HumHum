@@ -1,5 +1,8 @@
 ﻿using Domain.Contracts;
 using Domain.Entities;
+using Domain.Entities.Aggregates;
+using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -8,10 +11,15 @@ namespace Persistence;
 public class DbInitializer : IDbInitializer
 {
     private readonly HumHumContext _dbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public DbInitializer(HumHumContext dbContext)
+    public DbInitializer(HumHumContext dbContext, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     public async Task InitializeAsync()
@@ -97,6 +105,104 @@ public class DbInitializer : IDbInitializer
                 Console.WriteLine(ex.Message);
                 throw;
             }
+
+
+        }
+
+
+        if (!_dbContext.DeliveryMethods.Any())
+        {
+            var json = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Data Seeding\delivery.json");
+
+
+            var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(json);
+
+
+
+            if (deliveryMethods?.Any() == true)
+                _dbContext.DeliveryMethods.AddRange(deliveryMethods);
+
+            try
+            {
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+
+        }
+
+
+    }
+
+    public async Task InitializeIdentityAsync()
+    {
+        if (!_roleManager.Roles.Any())
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Administrator));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
+        }
+
+
+
+        if (!_userManager.Users.Any())
+        {
+            var Administrator = new ApplicationUser
+            {
+                DisplayName = nameof(Roles.Administrator),
+                Email = "admin@gmail.com",
+                UserName = "mmossyed525",
+                PhoneNumber = "01061212129"
+            };
+
+            var customer = new ApplicationUser
+            {
+                DisplayName = "Mohamed Khafaga",
+                Email = "customer@gmail.com",
+                UserName = "Mohamed.Sayed",
+                PhoneNumber = "01061212126",
+                Address = new Address
+                {
+                    City = "Cairo",
+                    Street = "123 str",
+                    Country = "Egypt",
+                    FirstName = "Mohamed",
+                    LastName = "Khafaga",
+                }
+            };
+
+            await _userManager.CreateAsync(Administrator, "Pa$$w0rd");
+            await _userManager.CreateAsync(customer, "Pa$$w0rd");
+
+            #region test db
+            //var res02 = await _userManager.CreateAsync(customer, "Pa$$w0rd");
+            //var res02 = await _userManager.CreateAsync(customer, "Pa$$w0rd");
+
+            //if (res.Succeeded) Console.WriteLine("admin done");
+
+            //if (res02.Succeeded) Console.WriteLine("customer done");
+            //else
+            //{
+
+            //    foreach (var err in res02.Errors)
+            //    {
+            //        Console.WriteLine(err.Description);
+            //    }
+
+
+
+            //    Console.WriteLine("error");
+            //} 
+            #endregion
+
+
+
+            await _userManager.AddToRoleAsync(Administrator, Roles.Administrator);
+            await _userManager.AddToRoleAsync(customer, Roles.Customer);
 
 
         }

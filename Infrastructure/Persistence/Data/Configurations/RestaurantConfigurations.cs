@@ -10,6 +10,7 @@ internal sealed class RestaurantConfigurations : IEntityTypeConfiguration<Restau
     {
         builder.ToTable(nameof(Restaurant));
         builder.Property(restaurant => restaurant.Name).HasColumnType("varchar(50)");
+        builder.HasIndex(restaurant => restaurant.Name).IsUnique();
 
         builder.Property(restaurant => restaurant.PublicImageId).HasColumnType("varchar(100)");
         builder.Property(restaurant => restaurant.ImageUrl).HasColumnType("varchar(100)");
