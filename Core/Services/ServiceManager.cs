@@ -1,41 +1,20 @@
-﻿using AutoMapper;
-using Domain.Contracts;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Service.Abstractions;
-using Shared.Cloudinary;
+using Shared;
 
 namespace Services;
 
 public sealed class ServiceManager : IServiceManager
 {
     private readonly Lazy<IPhotoService> _lazyPhotoService;
-    private readonly Lazy<IProductService> _lazyProductService;
-    private readonly Lazy<ICartService> _lazyCartService;
-
-    private readonly Lazy<IRestaurantService> _lazyRestaurantService;
-
-    private readonly Lazy<IOrderService> _lazyOrderService;
-
-
 
     public ServiceManager(
-        IOptionsMonitor<CloudinarySettings> config,
-        IUnitOfWork unitOfWork,
-        IMapper mapper,
-        ICartRepository cartRepository)
+        IOptionsMonitor<CloudinarySettings> config)
     {
 
-
-        _lazyPhotoService = new(() => new PhotoService(config));
-
-        _lazyProductService = new(() => new ProductService(unitOfWork, mapper, PhotoService));
-
-        _lazyCartService = new(() => new CartService(cartRepository, mapper));
+        _lazyPhotoService = new Lazy<IPhotoService>(() => new PhotoService(config));
 
 
-        _lazyRestaurantService = new(() => new RestaurantService(unitOfWork, mapper, PhotoService));
-
-        _lazyOrderService = new(() => new OrderService(CartService, unitOfWork, mapper));
 
 
 
@@ -43,14 +22,4 @@ public sealed class ServiceManager : IServiceManager
     }
 
     public IPhotoService PhotoService => _lazyPhotoService.Value;
-
-    public IProductService ProductService => _lazyProductService.Value;
-
-    public ICartService CartService => _lazyCartService.Value;
-
-
-    public IRestaurantService RestaurantService => _lazyRestaurantService.Value;
-
-    public IOrderService OrderService => _lazyOrderService.Value;
-
 }

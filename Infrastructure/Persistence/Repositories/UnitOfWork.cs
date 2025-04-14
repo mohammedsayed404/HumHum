@@ -1,10 +1,10 @@
-﻿using Domain.Common;
-using Domain.Contracts;
+﻿using Domain.Contracts;
+using Domain.Entities;
 using System.Collections.Concurrent;
 
 namespace Persistence.Repositories;
 
-public sealed class UnitOfWork : IUnitOfWork
+internal class UnitOfWork : IUnitOfWork
 {
     private readonly HumHumContext _dbContext;
     private readonly ConcurrentDictionary<string, object> _repositories;

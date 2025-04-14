@@ -1,10 +1,7 @@
-﻿using System.Linq.Expressions;
+﻿namespace Domain.Contracts;
 
-namespace Domain.Contracts;
-
-public interface ISpecifications<TEntity>  //need to modifying it again
+public interface ISpecifications
 {
 
-    public Expression<Func<TEntity, bool>> Criteria { get; }
-    public IReadOnlyList<Expression<Func<TEntity, object>>> Includes { get; }
+
 }

@@ -1,13 +1,13 @@
-﻿using Domain.Common;
-using Domain.Contracts;
+﻿using Domain.Contracts;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
 internal class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : EntityBase<TKey>
 {
-    private readonly HumHumContext _dbContext;
-    private protected readonly DbSet<TEntity> _dbSet;
+    private protected readonly HumHumContext _dbContext;
+    private readonly DbSet<TEntity> _dbSet;
 
     public Repository(HumHumContext dbContext)
     {
@@ -16,18 +16,9 @@ internal class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEnt
     }
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-        => await _dbSet.AsNoTracking().ToListAsync();
-
-    public async Task<IReadOnlyList<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity> spec)
-       => await ApplySpecification(spec).AsNoTracking().ToListAsync();
-
-
+        => await _dbSet.Where(entity => !entity.IsDeleted).AsNoTracking().ToListAsync();
 
     public async Task<TEntity?> GetByIdAsync(TKey key) => await _dbSet.FindAsync(key)!;
-
-    public async Task<TEntity?> GetByIdWithSpecAsync(ISpecifications<TEntity> spec)
-      => await ApplySpecification(spec).FirstOrDefaultAsync();
-
     public async Task InsertAsync(TEntity entity) => await _dbSet.AddAsync(entity);
 
     public void Remove(TEntity entity)
@@ -37,9 +28,4 @@ internal class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEnt
     }
 
     public void Update(TEntity entity) => _dbSet.Update(entity);
-
-
-    private IQueryable<TEntity> ApplySpecification(ISpecifications<TEntity> spec)
-        => SpecificationEvaluator.GetQuery(_dbSet, spec);
-
 }
