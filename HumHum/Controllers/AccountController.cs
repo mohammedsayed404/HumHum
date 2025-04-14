@@ -35,9 +35,10 @@ public class AccountController : Controller
             var user = new ApplicationUser { UserName = model.Name, Email = model.Email };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
-            await _userManager.AddToRoleAsync(user, Roles.Customer);
+
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, Roles.Customer);
                 // Add custom claims
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, model.Email));
 
