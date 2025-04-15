@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 
