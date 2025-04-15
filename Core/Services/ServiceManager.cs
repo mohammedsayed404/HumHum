@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Service.Abstractions;
 using Shared.Cloudinary;
@@ -16,13 +17,16 @@ public sealed class ServiceManager : IServiceManager
 
     private readonly Lazy<IOrderService> _lazyOrderService;
 
+    private readonly Lazy<IPaymentService> _lazyPaymentService;
 
 
     public ServiceManager(
         IOptionsMonitor<CloudinarySettings> config,
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        ICartRepository cartRepository)
+        ICartRepository cartRepository,
+        IConfiguration configuration
+        )
     {
 
 
@@ -37,7 +41,7 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyOrderService = new(() => new OrderService(CartService, unitOfWork, mapper));
 
-
+        _lazyPaymentService = new(() => new PaymentService(unitOfWork, cartRepository, configuration, mapper));
 
 
     }
@@ -52,5 +56,8 @@ public sealed class ServiceManager : IServiceManager
     public IRestaurantService RestaurantService => _lazyRestaurantService.Value;
 
     public IOrderService OrderService => _lazyOrderService.Value;
+
+    public IPaymentService PaymentService => _lazyPaymentService.Value;
+
 
 }
