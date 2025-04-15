@@ -1,6 +1,7 @@
 using Domain.Entities.Identity;
 using HumHum.Mock;
 using HumHum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 
 namespace HumHum.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -28,7 +30,7 @@ namespace HumHum.Controllers
             _mockCurrentUser = mockCurrentUser;
             _userManager = userManager;
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
 
@@ -39,6 +41,8 @@ namespace HumHum.Controllers
 
 
             return View();
+
+            //return Content("Index of Home");
         }
 
         public IActionResult Privacy()
