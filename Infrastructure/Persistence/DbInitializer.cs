@@ -196,9 +196,8 @@ public class DbInitializer : IDbInitializer
 
 
             //    Console.WriteLine("error");
-            //} 
+            //}
             #endregion
-
 
 
             await _userManager.AddToRoleAsync(Administrator, Roles.Administrator);
