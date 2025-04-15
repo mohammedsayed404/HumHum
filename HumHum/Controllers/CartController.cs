@@ -48,7 +48,7 @@ namespace HumHum.Controllers
 
             if (oldCartItem is null)
             {
-                throw new ProductNotFoundException(id);
+                return Json(new { success = false, message = "The product doesn't exist"});
             }
 
             var listOfNewItems = new List<CartItemDto>();
@@ -102,7 +102,7 @@ namespace HumHum.Controllers
 
             if (oldCartItem is null)
             {
-                throw new ProductNotFoundException(id);
+                return Json(new { success = false, message = "The product doesn't exist" });
             }
             
             var listOfNewItems = new List<CartItemDto>();
@@ -163,7 +163,7 @@ namespace HumHum.Controllers
 
             if (oldCartItem is null)
             {
-                throw new ProductNotFoundException(id);
+                return Json(new { success = false, message = "The product doesn't exist" });
             }
 
             var listOfNewItems = new List<CartItemDto>();
