@@ -176,10 +176,10 @@ public class DbInitializer : IDbInitializer
             };
 
             await _userManager.CreateAsync(Administrator, "Pa$$w0rd");
-            await _userManager.CreateAsync(Administrator, "Pa$$w0rd");
+            await _userManager.CreateAsync(customer, "Pa$$w0rd");
 
             #region test db
-            //var res02 = await _userManager.CreateAsync(customer, "Pa$$w0rd");
+            //var res = await _userManager.CreateAsync(Administrator, "Pa$$w0rd");
             //var res02 = await _userManager.CreateAsync(customer, "Pa$$w0rd");
 
             //if (res.Succeeded) Console.WriteLine("admin done");
@@ -196,9 +196,8 @@ public class DbInitializer : IDbInitializer
 
 
             //    Console.WriteLine("error");
-            //} 
+            //}
             #endregion
-
 
 
             await _userManager.AddToRoleAsync(Administrator, Roles.Administrator);

@@ -38,6 +38,8 @@ public class Program
                 ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!)
            );
 
+        builder.Services.AddSession();
+
         builder.Services.Configure<CloudinarySettings>
             (builder.Configuration.GetSection(nameof(CloudinarySettings)));
 
@@ -91,6 +93,8 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        app.UseSession();
 
         app.UseRouting();
 
