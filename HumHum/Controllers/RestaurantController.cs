@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Humanizer;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Service.Abstractions;
 using Shared.ViewModels;
 
@@ -139,4 +142,3 @@ public class RestaurantController : Controller
         }
     }
 }
-
