@@ -38,6 +38,8 @@ public class AccountController : Controller
             await _userManager.AddToRoleAsync(user, Roles.Customer);
             if (result.Succeeded)
             {
+
+
                 // Add custom claims
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, model.Email));
 
