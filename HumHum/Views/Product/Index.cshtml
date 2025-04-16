@@ -13,6 +13,7 @@
 
 
 
+
 <!-- ============================================-->
 <!-- <section> begin ============================-->
 <section class="py-0">
@@ -70,3 +71,31 @@
 </section>
 <!-- <section> close ============================-->
 <!-- ============================================-->
+
+
+@* <br />
+        <div class="text-center mt-5 py-5 ">
+            <a asp-action="Create" class="btn btn-success">+ Create New Product</a>
+        </div>
+<div class="menu-container">
+    @foreach (var item in Model)
+    {
+        <div class="box">
+            <div class="box-img">
+                <img src="@item.Image" alt="@item.Name" />
+            </div>
+            <h2>@item.Name</h2>
+            <h3>@item.Description.Substring(10)...</h3>
+            <span>$@item.Price</span>
+            <p><strong>Restaurant:</strong> @item.Restaurant</p>
+            <p><strong>Category:</strong> @item.Category</p>
+            <div class="d-flex justify-content-center gap-2 mt-2">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    }
+</div>
+ *@
+

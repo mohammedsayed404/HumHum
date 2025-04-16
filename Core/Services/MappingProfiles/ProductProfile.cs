@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 using Shared;
 
 namespace Services.MappingProfiles;
