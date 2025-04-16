@@ -1,7 +1,8 @@
 ﻿
+@using Domain.Entities.Identity
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,12 +21,18 @@
 <body>
     <!-- Navbar -->
     <header>
+        <header>
+
+            @{
+                await Html.RenderPartialAsync("_Nav");
+            }
+
+        </header>
         @* <div class="bx bx-menu" id="menu-icon"></div> *@
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 w-100">
-            @*class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 w-100"*@
+@*         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 w-100">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HumHum</a>
-                @* <a href="#" class="logo">HumHum</a> *@
+                
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +65,7 @@
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Administrator))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Role" asp-action="Create">Create Role</a>
+                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="ManageRoles">Manage Roles</a>
                             </li>
                         }
                     </ul>
@@ -89,7 +96,7 @@
                 </div>
             </div>
         </nav>
-
+ *@
        @*  <ul class="navbar">
             <li><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li><a href="#about">About</a></li>

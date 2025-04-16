@@ -166,4 +166,15 @@ internal sealed class ProductService : IProductService
         }
 
     }
+
+    public async Task<IReadOnlyList<ProductToReturnDto>> GetTopRatingProductsAsync(int count)
+    {
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllWithSpecAsync(new ProductWithTopRatingSpec(count));
+
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
+
+        return mappedProducts;
+    }
 }

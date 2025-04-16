@@ -13,10 +13,11 @@ namespace HumHum.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IServiceManager _serviceManager;
         private readonly MockCurrentUser _mockCurrentUser;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public IServiceManager ServiceManager { get; }
+
 
         public HomeController(ILogger<HomeController> logger,
             IServiceManager serviceManager,
@@ -26,7 +27,7 @@ namespace HumHum.Controllers
             )
         {
             _logger = logger;
-            ServiceManager = serviceManager;
+            _serviceManager = serviceManager;
             _mockCurrentUser = mockCurrentUser;
             _userManager = userManager;
         }
@@ -35,14 +36,25 @@ namespace HumHum.Controllers
         {
 
 
+            #region Kafaga Testing
             //var seka = await _userManager.FindByIdAsync(_mockCurrentUser?.Id);
 
             //Console.WriteLine(seka);
 
+            //Console.WriteLine(User.Identity.Name);
+            //Console.WriteLine($"ssssssssssssssssss{User.FindFirstValue(ClaimTypes.NameIdentifier)}");
 
-            return View();
+            //var user = await _userManager.GetUserAsync(User);
+            //Console.WriteLine($"ssssssssssssssssss{user.UserName}");
 
-            //return Content("Index of Home");
+            //_userManager.Users 
+            #endregion
+
+            var topProducts = await _serviceManager.ProductService
+                .GetTopRatingProductsAsync(8);
+
+            return View(topProducts);
+
         }
 
         public IActionResult Privacy()

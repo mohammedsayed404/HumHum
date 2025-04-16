@@ -18,8 +18,17 @@ internal static class SpecificationEvaluator
         if (spec.Includes is not null)
             query = spec.Includes.Aggregate(query, (current, expressions) => current.Include(expressions));
 
+        if (spec.OrderBy is not null)
+            query = query.OrderBy(spec.OrderBy);
 
+        else if (spec.OrderByDescending is not null)
+            query = query.OrderByDescending(spec.OrderByDescending);
 
+        if (spec.Take is not null)
+            query = query.Take(spec.Take ?? 0);
+
+        if (spec.Skip is not null)
+            query = query.Skip(spec.Skip ?? 0);
 
         return query;
 

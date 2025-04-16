@@ -145,6 +145,7 @@ public class DbInitializer : IDbInitializer
         {
             await _roleManager.CreateAsync(new IdentityRole(Roles.Administrator));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.RestaurantManager));
         }
 
 
@@ -175,8 +176,25 @@ public class DbInitializer : IDbInitializer
                 }
             };
 
+            var restaurantManager = new ApplicationUser
+            {
+                DisplayName = "abdellateef eid",
+                Email = "RestaurantManager@gmail.com",
+                UserName = "abdellateef",
+                PhoneNumber = "01090116894",
+                Address = new Address
+                {
+                    City = "Cairo",
+                    Street = "123 str",
+                    Country = "Egypt",
+                    FirstName = "abdeallateef",
+                    LastName = "eid",
+                }
+            };
+
             await _userManager.CreateAsync(Administrator, "Pa$$w0rd");
             await _userManager.CreateAsync(customer, "Pa$$w0rd");
+            await _userManager.CreateAsync(restaurantManager, "Pa$$w0rd");
 
             #region test db
             //var res02 = await _userManager.CreateAsync(customer, "Pa$$w0rd");
@@ -203,6 +221,7 @@ public class DbInitializer : IDbInitializer
 
             await _userManager.AddToRoleAsync(Administrator, Roles.Administrator);
             await _userManager.AddToRoleAsync(customer, Roles.Customer);
+            await _userManager.AddToRoleAsync(restaurantManager, Roles.RestaurantManager);
 
 
         }
