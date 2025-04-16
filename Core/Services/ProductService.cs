@@ -3,11 +3,11 @@ using Domain.Contracts;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Exceptions.Photo;
-using Shared.ViewModels;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
 using Shared.Cloudinary;
+using Shared.ViewModels;
 
 namespace Services;
 
