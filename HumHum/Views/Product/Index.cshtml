@@ -2,14 +2,78 @@
 @inject IOptionsMonitor<CloudinarySettings> cloudinary;
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_MyLayout.cshtml";
 
     var cloudinaryBaseUrl = cloudinary.CurrentValue.CloudinaryBaseUrl;
 
 }
+@* <div style="height:50px"></div>
+ *@
 
 
-<br />
+
+
+
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0">
+    <div class="container">
+        <div class="row h-100 gx-2 gy-5 mt-7">
+            @foreach (var item in Model)
+                {
+            <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
+                
+                    <div class="card card-span h-100">
+                        <div class="position-relative">
+                            <img class="img-fluid rounded-3 w-100"style="height:300px;"
+                            src="@item.Image"
+                            alt="..." />
+                            <div class="card-actions">
+                                <div class="badge badge-foodwagon bg-primary p-4">
+                                    <div class="d-flex flex-between-center">
+                                        <div class="text-white fs-3">@item.Price</div>
+                                        <div class="d-block text-white fs-2">
+                                            LE <br />
+@*                                             <div class="fw-normal fs-1 mt-2">Off</div>
+ *@                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge bg-soft-danger py-2 px-3">
+                                    <span class="fs-1 text-danger">@item.Category</span>
+                                </span>
+                                <span class="badge bg-soft-warning py-2 px-3">
+                                    <span class="fs-1 text-warning">@item.Restaurant</span>
+                                </span>
+                            </div>
+                            <h5 class="fw-bold text-1000 text-truncate mt-2">
+                                @item.Name
+                            </h5>
+                            
+                        </div>
+                        <a class="stretched-link" href="#"></a>
+
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-lg btn-danger"
+                           href="#!"
+                           role="button">Add to Cart</a>
+                    </div>
+            </div>
+            }
+
+        </div>
+    </div>
+    <!-- end of .container-->
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+
+
+@* <br />
         <div class="text-center mt-5 py-5 ">
             <a asp-action="Create" class="btn btn-success">+ Create New Product</a>
         </div>
@@ -33,87 +97,5 @@
         </div>
     }
 </div>
-
-
-
-@* 
-    <h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image) 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-             <td>
-                 @Html.DisplayFor(modelItem => item.Price)
-             </td>
-
-            <td>
-                @* @Html.DisplayFor(modelItem => item.ImageUrl) 
-@*  @{
-                        string seka = $"{cloudinaryBaseUrl}{item?.ImageUrl}";
-                } 
-
- <img src="@seka" class="w-75 h-75 rounded" /> 
-<img src="@item.Image" class="w-75 h-75 rounded" />  trying using my generic resolver img url
-
-
-
-<td>
-    @Html.DisplayFor(modelItem => item.Restaurant)
-</td>
-<td>
-    @Html.DisplayFor(modelItem => item.Category)
-</td>
-<td>
-    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-</td>
-        </tr>
-}
-    </tbody>
-</table>
-            </td>
-
-
-*@
-
+ *@
 

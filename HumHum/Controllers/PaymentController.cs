@@ -12,10 +12,16 @@ public class PaymentController : Controller
         _ServiceManger = serviceManger;
     }
 
+
+    //[HttpPost("cardId")]
+
+    //why generic actionResult  ==>  for  api  or  all  ?
+
     #region Until Finshing Payment
     //[HttpPost("cardId")]
 
     ////why generic actionResult  ==>  for  api  or  all  ?
+
     //public async Task<ActionResult> CreateOrUpdatePaymentIntent(string cardId)
     //{
     //    var card = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cardId);
@@ -23,6 +29,10 @@ public class PaymentController : Controller
     //    if (cardId is null) return BadRequest();
 
     //    return View(card);
+
+    //}
+
     //} 
     #endregion
+
 }

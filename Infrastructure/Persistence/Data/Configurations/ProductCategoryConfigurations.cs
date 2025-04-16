@@ -20,6 +20,7 @@ internal sealed class ProductCategoryConfigurations : IEntityTypeConfiguration<P
               .HasForeignKey(product => product.CategoryId)
               .OnDelete(DeleteBehavior.NoAction);
 
+        builder.HasQueryFilter(productType => !productType.IsDeleted);
 
 
     }

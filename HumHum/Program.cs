@@ -4,6 +4,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using HumHum.Extensions;
 using HumHum.Mock;
+using HumHum.SMTP;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -37,7 +40,8 @@ public class Program
             Connect Identity to a database using AddEntityFrameworkStores<ApplicationDbContext>().
         */
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                        .AddEntityFrameworkStores<HumHumContext>();
+                        .AddEntityFrameworkStores<HumHumContext>()
+                        .AddDefaultTokenProviders();
         builder.Services.Configure<IdentityOptions>(options =>
         {
             // Password settings
@@ -59,6 +63,8 @@ public class Program
         });
         builder.Services.AddControllersWithViews();
 
+        builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+        builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 
@@ -66,6 +72,27 @@ public class Program
         builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
                 ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!)
            );
+
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+        })
+        .AddCookie()
+        .AddFacebook(facebookOptions =>
+        {
+            facebookOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+            facebookOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+        });
+        builder.Services.AddAuthentication()
+        .AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        });
+
+
 
         builder.Services.AddSession();
 
@@ -128,6 +155,8 @@ public class Program
 
         app.UseRouting();
 
+
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(
