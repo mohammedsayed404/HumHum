@@ -302,6 +302,9 @@ namespace Persistence.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
+
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
