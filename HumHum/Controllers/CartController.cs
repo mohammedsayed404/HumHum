@@ -11,9 +11,13 @@ namespace HumHum.Controllers
     {
         private readonly IServiceManager _serviceManager;
 
+        private readonly string cartId;
+
         public CartController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
+
+            cartId = _serviceManager.UserServices.Id!;
         }
 
         public async Task<IActionResult> CartDetails(string id)
@@ -38,7 +42,6 @@ namespace HumHum.Controllers
         }
         public async Task<IActionResult> AddOne(int id)
         {
-            const string cartId = "54150542-7e35-4fe3-9fdc-ee0a383d4f07";
 
             var customerCartDto = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
@@ -83,7 +86,7 @@ namespace HumHum.Controllers
             //    totalPrice += item.Price * item.Quantity;
             //}
 
-            customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
+            customerCartDto = new CustomerCartDto(cartId!, listOfNewItems);
 
             var res = _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
@@ -92,8 +95,6 @@ namespace HumHum.Controllers
 
         public async Task<IActionResult> DecreaseOne(int id)
         {
-            const string cartId = "54150542-7e35-4fe3-9fdc-ee0a383d4f07";
-
             var customerCartDto = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
             var product = await _serviceManager.ProductService.GetProductByIdAsync(id);
@@ -153,8 +154,6 @@ namespace HumHum.Controllers
 
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            const string cartId = "54150542-7e35-4fe3-9fdc-ee0a383d4f07";
-
             var customerCartDto = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
             var product = await _serviceManager.ProductService.GetProductByIdAsync(id);
@@ -194,7 +193,6 @@ namespace HumHum.Controllers
 
         public async Task<IActionResult> UpdateCart(int id)
         {
-            const string cartId = "54150542-7e35-4fe3-9fdc-ee0a383d4f07";
             CustomerCartDto existingProductList;
             try
             {
@@ -244,7 +242,6 @@ namespace HumHum.Controllers
 
         public async Task<IActionResult> GetCartCount()
         {
-            const string cartId = "54150542-7e35-4fe3-9fdc-ee0a383d4f07";
             CustomerCartDto existingProductList;
             try
             {
