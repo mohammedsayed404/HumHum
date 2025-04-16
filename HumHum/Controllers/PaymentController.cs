@@ -12,15 +12,17 @@ public class PaymentController : Controller
         _ServiceManger = serviceManger;
     }
 
-    [HttpPost("cardId")]
+    #region Until Finshing Payment
+    //[HttpPost("cardId")]
 
-    //why generic actionResult  ==>  for  api  or  all  ?
-    public async Task<ActionResult> CreateOrUpdatePaymentIntent(string cardId)
-    {
-        var card = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cardId);
+    ////why generic actionResult  ==>  for  api  or  all  ?
+    //public async Task<ActionResult> CreateOrUpdatePaymentIntent(string cardId)
+    //{
+    //    var card = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cardId);
 
-        if (cardId is null) return BadRequest();
+    //    if (cardId is null) return BadRequest();
 
-        return View(card);
-    }
+    //    return View(card);
+    //} 
+    #endregion
 }
