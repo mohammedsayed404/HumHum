@@ -1,6 +1,6 @@
 using Domain.Entities.Identity;
 using HumHum.Mock;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

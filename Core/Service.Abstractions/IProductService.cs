@@ -1,4 +1,4 @@
-﻿using HumHum.ViewModels;
+﻿using Shared.ViewModels;
 using Shared;
 
 namespace Service.Abstractions;
