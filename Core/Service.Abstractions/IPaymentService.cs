@@ -1,7 +1,13 @@
-﻿namespace Service.Abstractions;
+﻿//using Domain.Entities;
+
+using Shared;
+
+namespace Service.Abstractions;
 
 public interface IPaymentService
 {
-    //Create , Update 
+    //Create , Update
+    
+    Task<CustomerCartDto?> CreateOrUpdatePaymentIntent(string CartId);
 
 }

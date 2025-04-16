@@ -3,7 +3,7 @@ using Domain.Contracts;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Exceptions.Photo;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
