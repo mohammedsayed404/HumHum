@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Service.Abstractions;
@@ -18,6 +19,7 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IOrderService> _lazyOrderService;
 
     private readonly Lazy<IPaymentService> _lazyPaymentService;
+    private readonly Lazy<IUserServices> _lazyUserServices;
 
 
     public ServiceManager(
@@ -25,7 +27,8 @@ public sealed class ServiceManager : IServiceManager
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ICartRepository cartRepository,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IHttpContextAccessor httpContextAccessor
         )
     {
 
@@ -43,6 +46,8 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyPaymentService = new(() => new PaymentService(unitOfWork, cartRepository, configuration, mapper));
 
+        _lazyUserServices = new(() => new UserServices(httpContextAccessor, unitOfWork, mapper));
+
 
     }
 
@@ -58,6 +63,7 @@ public sealed class ServiceManager : IServiceManager
     public IOrderService OrderService => _lazyOrderService.Value;
 
     public IPaymentService PaymentService => _lazyPaymentService.Value;
+    public IUserServices UserServices => _lazyUserServices.Value;
 
 
 }
