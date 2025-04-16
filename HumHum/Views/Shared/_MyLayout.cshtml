@@ -24,7 +24,14 @@
     <link rel="icon" type="image/png" sizes="32x32" href="~/assets/img/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/assets/img/favicons/favicon-16x16.png">
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicons/favicon.ico">
+
     <link rel="manifest" href="~/assets/img/favicons/manifest.json">
+    <!-- Intro.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/introjs.min.css"
+          rel="stylesheet" />
+
+          @* custom tour layout CSS *@
+	<link href="~/css/layouttour.css" rel="stylesheet" />
     <meta name="msapplication-TileImage" content="~/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
@@ -95,7 +102,7 @@
                                 </button>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item" id="restaurant-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                 onclick="location.href='@Url.Action("Index", "Restaurant")'">
                                     Restaurants
@@ -133,7 +140,7 @@
                             @* <li class="nav-item">
                                 <span class="nav-link">Hello, @User.Identity.Name!</span>
                             </li> *@
-                            <li class="nav-item">
+                            <li class="nav-item" id="logout-tour">
                                 <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
                                     @* <button type="submit" class="btn btn-link nav-link">Logout</button> *@
                                     <button class="btn btn-white shadow-warning text-warning"
@@ -203,7 +210,7 @@
                 </div>
 
                 <!-- Search Box -->
-                <form class="d-flex align-items-center">
+                <form class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
                         <input class="form-control border-0 input-box bg-100 "
@@ -253,5 +260,10 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
           rel="stylesheet" />
+
+    <!-- Intro.js -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
+	<script src="~/js/layouttour.js"></script>
+
 </body>
 </html>
