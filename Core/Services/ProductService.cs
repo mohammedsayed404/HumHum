@@ -3,11 +3,11 @@ using Domain.Contracts;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Exceptions.Photo;
-using Shared.ViewModels;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
 using Shared.Cloudinary;
+using Shared.ViewModels;
 
 namespace Services;
 
@@ -165,5 +165,16 @@ internal sealed class ProductService : IProductService
             throw;
         }
 
+    }
+
+    public async Task<IReadOnlyList<ProductToReturnDto>> GetTopRatingProductsAsync(int count)
+    {
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllWithSpecAsync(new ProductWithTopRatingSpec(count));
+
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
+
+        return mappedProducts;
     }
 }

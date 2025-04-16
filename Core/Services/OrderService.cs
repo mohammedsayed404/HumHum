@@ -120,7 +120,7 @@ internal sealed class OrderService : IOrderService
     public async Task<OrderToReturnDto> GetOrderForUserByIdAsync(Guid id)
     {
         var order = await _unitOfWork.GetRepository<Order, Guid>()
-                                     .GetByIdWithSpecAsync(new OrderWithItemsAndDeliveryMethod(id));
+                                     .GetByIdWithSpecAsync(new OrderWithItemsAndDeliveryMethodSpec(id));
 
         if (order is null)
             throw new OrderNotFoundException(id);
@@ -131,7 +131,7 @@ internal sealed class OrderService : IOrderService
     public async Task<IReadOnlyList<OrderToReturnDto>> GetOrdersForUserByEmailAsync(string userEmail)
     {
         var orders = await _unitOfWork.GetRepository<Order, Guid>()
-                                    .GetAllWithSpecAsync(new OrderWithItemsAndDeliveryMethod(userEmail));
+                                    .GetAllWithSpecAsync(new OrderWithItemsAndDeliveryMethodSpec(userEmail));
 
         return _mapper.Map<IReadOnlyList<OrderToReturnDto>>(orders);
     }
