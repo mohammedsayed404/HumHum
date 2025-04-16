@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "ProductsToResturant";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Layout = "_AuthView";
 }
 
 <h1>ProductsToResturant</h1>
@@ -11,66 +12,112 @@
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Restaurant)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.Image)*@           
-                <img src="@item?.Image"
-                    class="card-img-top rounded img-fluid object-fit-cover w-100 h-50"
-                    alt="@item?.Name" />
-            </td>
+	<thead>
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.Id)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Name)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Description)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Price)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Restaurant)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Category)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Image)
+		</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Id)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Description)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Price)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Restaurant)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Category)
+			</td>
+			<td>
+				@*@Html.DisplayFor(modelItem => item.Image)*@           
+				<img src="@item?.Image"
+				     class="card-img-top rounded img-fluid object-fit-cover w-100 h-50"
+				     alt="@item?.Name" />
+			</td>
 
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
+			<td>
+				@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+				@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+				@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+
+				<div id = "@item.Id" style="display: none">
+					<button class="plusOne" data-product-id="@item.Id">Plus</button>
+					<button class="minusOne" data-product-id="@item.Id">Minus</button>
+					<button class="delete" data-product-id="@item.Id">Delete</button>
+				</div>
+
+				<button class="addToCart" data-product-id="@item.Id">Add to Cart</button>
+			</td>
+		</tr>
+	}
+	</tbody>
 </table>
+
+
+@section Scripts {
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+        $(document).ready(function () {
+            $('.addToCart').click(function () {
+				const button = $(this);
+                var productId = $(this).data('product-id');
+                $.ajax({
+                    url: '@Url.Action("UpdateCart", "Cart")',
+                    type: 'POST',
+                    data: { id: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            // alert(response.message);
+							button.html('Added to Cart');
+							button.toggle();
+
+							$("#" + productId).show();
+
+							$("#spanCount").html(`${response.cartCount}`);
+
+							// button.prop('disabled', true);
+							// button.prop('display', none);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while adding the product to the cart.');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+
+

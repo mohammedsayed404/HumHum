@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
-using Humanizer;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Service.Abstractions;
 using Shared.ViewModels;
 
@@ -46,6 +43,17 @@ public class RestaurantController : Controller
 
         var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
 
+        //CustomerCartDto Count;
+        //try
+        //{
+        //    Count = await _serviceManager.CartService.GetCustomerCartAsync("54150542-7e35-4fe3-9fdc-ee0a383d4f07");
+
+        //    HttpContext.Session.SetInt32("CartCount", Count.Items.Count);
+        //}
+        //catch
+        //{
+        //    HttpContext.Session.SetInt32("CartCount", 0);
+        //}
 
         return View(products);
     }
@@ -131,3 +139,4 @@ public class RestaurantController : Controller
         }
     }
 }
+

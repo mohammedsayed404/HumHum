@@ -45,8 +45,6 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(ProductToCreationViewModel model)
     {
-
-
         if (!ModelState.IsValid) return View(model);
 
         var created = await _serviceManager.ProductService.CreateProductAsync(model);
