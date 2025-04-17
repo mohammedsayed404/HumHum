@@ -31,19 +31,21 @@ public class AccountController : Controller
 
     // GET: /Account/Register
     public IActionResult Register() => View();
-
+    
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Name, Email = model.Email };
+            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+
                 await _userManager.AddToRoleAsync(user, Roles.Customer);
+
                 // Add custom claims
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, model.Email));
 
@@ -253,6 +255,22 @@ public class AccountController : Controller
         }
     }
 
+
+
+    // Action to mark user as completed the Tour guide
+  
+    [Authorize]
+    public async Task<IActionResult> CompleteTour()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+        {
+            user.HasSeenTour = true;
+            await _userManager.UpdateAsync(user);
+            return Json(new { success = true });
+        }
+        return Json(new { success = false });
+    }
 }
 
 

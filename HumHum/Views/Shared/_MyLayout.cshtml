@@ -1,7 +1,10 @@
 ﻿@using Domain.Entities.Identity
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Service.Abstractions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IServiceManager ServiceManager
 <!DOCTYPE html>
 <html>
 
@@ -34,6 +37,17 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="~/assets/css/theme.css" rel="stylesheet" />
+
+    <!-- ===============================================-->
+    <!--    Intro.js CSS-->
+    <!-- ===============================================-->
+
+    <!-- Intro.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/introjs.min.css"
+          rel="stylesheet" />
+
+    @* custom tour layout CSS *@
+    <link href="~/css/layouttour.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -93,7 +107,7 @@
                                 </button>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item" id="restaurant-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                 onclick="location.href='@Url.Action("Index", "Restaurant")'">
                                     Restaurants
@@ -128,19 +142,43 @@
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @* <li class="nav-item">
+	                        @* <li class="nav-item">
                                 <span class="nav-link">Hello, @User.Identity.Name!</span>
                             </li> *@
-                            <li class="nav-item">
-                                <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
-                                    @* <button type="submit" class="btn btn-link nav-link">Logout</button> *@
-                                    <button class="btn btn-white shadow-warning text-warning"
-                                    type="submit">
-                                        <i class="fas fa-sign-out-alt me-2"></i>
-                                    </button>
 
-                                </form>
+	                        @* <li class="nav-item me-auto"> *@
+		                       @*  <a class="btn btn-warning" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id"> *@
+			                      @*   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16"> *@
+				                     @*    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/> *@
+			                      @*   </svg> *@
+			                      @*   <span id="spanCount" class="badge badge-light"> *@
+			                      @*   </span> *@
+		                       @*  </a> *@
+		                       @* </li> *@
+
+		                       <li class="nav-item me-auto">
+			                       <a class="btn btn-warning position-relative" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+				                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+					                       <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+				                       </svg>
+                                    <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: large">
+				                       </span>
+			                       </a>
+		                       </li>
+
+
+
+                            <li class="nav-item" id="logout-tour">
+	                            <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
+		                            @* <button type="submit" class="btn btn-link nav-link">Logout</button> *@
+		                            <button class="btn btn-white shadow-warning text-warning"
+		                                    type="submit">
+			                            <i class="fas fa-sign-out-alt me-2"></i>
+		                            </button>
+
+	                            </form>
                             </li>
+
                         }
                         else
                         {
@@ -205,7 +243,7 @@
                 </div>
 
                 <!-- Search Box -->
-                <form class="d-flex align-items-center">
+                <form class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
                         <input class="form-control border-0 input-box bg-100 "
@@ -301,9 +339,283 @@
     <script src="~/vendors/is/is.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="~/vendors/fontawesome/all.min.js"></script>
-    <script src="~/assets/js/theme.js"></script>
+	<script src="~/assets/js/theme.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
-          rel="stylesheet" />
-</body>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+
+	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
+	      rel="stylesheet" />
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            function loadCartCount(){
+                 $.ajax({
+                        url: '@Url.Action("GetCartCount", "Cart")',
+                        type: 'POST',
+                        data: {},
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                // button.html('Added to Cart');
+                                // button.toggle();
+
+                                // $("#" + productId).show();
+
+                                $("#spanCount").html(`${response.cartCount}`);
+
+                                $("#spanCount").removeClass("d-none");
+
+                                // $("#spanCount").html(`${response.cartCount}`);
+
+                                // button.prop('disabled', true);
+                                // button.prop('display', none);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while adding the product to the cart.');
+                        }
+                });
+            }
+
+            $(document).ready(function () {
+
+                loadCartCount();
+
+                $('.addToCart').click(function () {
+                    const button = $(this);
+                    var productId = $(this).data('product-id');
+                    $.ajax({
+                        url: '@Url.Action("UpdateCart", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+
+                                // button.html('Added to Cart');
+                                // button.hide();
+
+                                $("#addToCart" + productId).addClass('d-none');
+
+                                 $("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
+
+                                // $("#" + productId).show();
+
+                                $("#spanCount").html(`${response.cartCount}`);
+
+                                //For the restuarantToProduct view, so that it always shows 1 when it's first added to the cart
+                                $("#in" + productId).val(1);
+
+                                // button.prop('disabled', true);
+                                // button.prop('display', none);    
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while adding the product to the cart.');
+                        }
+                    });
+                });
+
+                $('.plusOne').click(function () {
+                    var productId = $(this).data('product-id');
+                    $.ajax({
+                        url: '@Url.Action("AddOne", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                $("#" + productId).html(`${response.quantity}`);
+                                $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+
+                                $("#in" + productId).val(response.quantity);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while increasing the product in the cart.');
+                        }
+                    });
+                });
+
+                $('.minusOne').click(function () {
+                    var productId = $(this).data('product-id');
+
+                    let value = parseInt($("#spanCount").html());
+
+                    $.ajax({
+                        url: '@Url.Action("DecreaseOne", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                if (response.quantity >= 1) {
+                                    $("#" + productId).html(`${response.quantity}`);
+                                    $("#in" + productId).val(response.quantity);
+                                } else {
+                                    $("#row" + productId).remove();
+
+                                    $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
+
+                                    //To add the addToCart
+                                    $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
+                                    //To remove the quantity controller
+                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                }
+                                $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while increasing the product in the cart.');
+                        }
+                    });
+                });
+
+                $('.delete').click(function () {
+                    var productId = $(this).data('product-id');
+
+                    let value = parseInt($("#spanCount").html());
+
+                    $.ajax({
+                        url: '@Url.Action("DeleteProduct", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                if (response.isDeleted) {
+                                    $("#row" + productId).remove();
+
+                                    $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
+
+                                    //To add the addToCart
+                                    $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
+                                    //To remove the quantity controller
+                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    $("#quantityCount" + productId).remove(); //Div from the server based on the condition
+
+                                }
+                                $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while deleting the product in the cart.');
+                        }
+                    });
+                });
+
+            });
+        </script>
+    }
+
+
+    <script>
+
+    </script>
+    <!-- Intro.js -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
+
+    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User).Result.HasSeenTour)
+    {
+        <script>
+
+            function getTooltipHeader() {
+                return `<div class="d-flex align-items-center mb-3">
+                             <img class="d-inline-block" style="width:50px; height:50px; border-radius:4px;"
+                                  src="/assets/img/HumHum_logo.jpg"
+                                  alt="HumHum Logo" />
+                             <span class="fs-3 fw-bold ms-2" style="background: linear-gradient(90deg, #F17228 0%, #FFB30E 100%);
+                                  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                               HumHum
+                             </span>
+                           </div>`
+            }
+
+             function startTour() {
+                introJs()
+                    .setOptions({
+                        steps: [
+                            {
+                                element: document.getElementById("restaurant-tour"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("search-tour"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("popular-items"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("testimonial"),
+                                intro: `${getTooltipHeader()}
+                                    <strong>Why Choose Hum Hum?</strong><br>We highlight three core benefits that make us the preferred food delivery choice: Fast Delivery, Fresh Food, and 24/7 Support.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("logout-tour"),
+                                intro: `${getTooltipHeader()}
+                                     <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                        ],
+                        nextLabel: 'Next <i class="fas fa-chevron-right"></i>',
+                        prevLabel: '<i class="fas fa-chevron-left"></i> Back',
+                        skipLabel: '<i class="btn-close" style="color: #ffffff;"></i>',
+                        doneLabel: 'Finish <i class="fas fa-utensils"></i>',
+                        tooltipClass: 'customTooltip',
+                        highlightClass: 'customHighlight',
+                        exitOnEsc: true,
+                        exitOnOverlayClick: false,
+                        showStepNumbers: false,
+                        showBullets: true,
+                        showProgress: true,
+                        keyboardNavigation: true,
+                        scrollToElement: true,
+                        overlayOpacity: 0.8,
+                        position: 'auto',
+                        tooltipClass: 'customTooltip',
+                        isActive: true,
+                    })
+                    .oncomplete(function () {
+                        // Send AJAX request to mark tour as completed
+                        $.ajax({
+                            url: '/Account/CompleteTour', // Adjust URL based on your controller
+                            type: 'GET',
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log('Tour marked as completed');
+                                }
+                            },
+                            error: function () {
+                                console.error('Failed to mark tour as completed');
+                            }
+                        });
+                    })
+                    .onexit(function () {
+                        // Optionally mark as completed on exit as well
+                        $.ajax({
+                            url: '/Account/CompleteTour', // Adjust URL based on your controller
+                            type: 'GET'
+                        });
+                    })
+                    .start();
+            }
+
+            window.onload = function () {
+                startTour();
+            }
+        </script>
+    }
+	</body>
 </html>

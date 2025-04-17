@@ -22,5 +22,6 @@ internal sealed class ProductCategoryConfigurations : IEntityTypeConfiguration<P
 
         builder.HasQueryFilter(productType => !productType.IsDeleted);
 
+
     }
 }
