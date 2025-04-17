@@ -19,8 +19,8 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IOrderService> _lazyOrderService;
 
     private readonly Lazy<IPaymentService> _lazyPaymentService;
-    private readonly Lazy<IUserServices> _lazyUserServices;
 
+    private readonly Lazy<IUserServices> _lazyUserServices;
 
     public ServiceManager(
         IOptionsMonitor<CloudinarySettings> config,
@@ -46,8 +46,8 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyPaymentService = new(() => new PaymentService(unitOfWork, cartRepository, configuration, mapper));
 
-        _lazyUserServices = new(() => new UserServices(httpContextAccessor, unitOfWork, mapper));
 
+        _lazyUserServices = new(() => new UserServices(httpContextAccessor, unitOfWork, mapper));
 
     }
 
@@ -57,13 +57,13 @@ public sealed class ServiceManager : IServiceManager
 
     public ICartService CartService => _lazyCartService.Value;
 
-
     public IRestaurantService RestaurantService => _lazyRestaurantService.Value;
+
+    public IUserServices UserServices => _lazyUserServices.Value;
 
     public IOrderService OrderService => _lazyOrderService.Value;
 
     public IPaymentService PaymentService => _lazyPaymentService.Value;
-    public IUserServices UserServices => _lazyUserServices.Value;
 
 
 }

@@ -1,7 +1,10 @@
 ﻿@using Domain.Entities.Identity
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Service.Abstractions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IServiceManager ServiceManager
 <!DOCTYPE html>
 <html>
 
@@ -24,14 +27,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="~/assets/img/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/assets/img/favicons/favicon-16x16.png">
     <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicons/favicon.ico">
-
     <link rel="manifest" href="~/assets/img/favicons/manifest.json">
-    <!-- Intro.js CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/introjs.min.css"
-          rel="stylesheet" />
-
-          @* custom tour layout CSS *@
-	<link href="~/css/layouttour.css" rel="stylesheet" />
     <meta name="msapplication-TileImage" content="~/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
@@ -50,30 +46,30 @@
     <main class="main" id="top">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
-        data-navbar-on-scroll="data-navbar-on-scroll">
+             data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container-fluid align-items-center d-flex">
                 <!-- Brand -->
 
                 <a class="navbar-brand d-inline-flex align-items-center" href="@Url.Action("Index", "Home")">
                     <img class="d-inline-block" style="width:50px; height:50px;"
-                    src="~/assets/img/HumHum_logo.jpg"
-                    alt="logo" />
+                         src="~/assets/img/HumHum_logo.jpg"
+                         alt="logo" />
                     <span class="text-1000 fs-3 fw-bold ms-2 text-gradient">HumHum</span>
                 </a>
                 <!-- Toggler -->
 
                 <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"> </span>
                 </button>
                 <!-- Navbar content -->
                 <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0"
-                id="navbarSupportedContent">
+                     id="navbarSupportedContent">
 
                     <ul class="nav nav-pills me-auto mt-2 mb-lg-0 d-flex align-items-center">
                         @* <ul class="nav nav-pills navbar-nav me-auto mb-3 mb-lg-0 d-flex align-items-center"> *@
@@ -81,14 +77,14 @@
 
                         <li class="nav-item">
                             <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                            onclick="location.href='@Url.Action("Index", "Home")'">
+                                    onclick="location.href='@Url.Action("Index", "Home")'">
                                 Home
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")"
-                            onclick="location.href='@Url.Action("Privacy", "Home")'">
+                                    onclick="location.href='@Url.Action("Privacy", "Home")'">
                                 Privacy
                             </button>
                         </li>
@@ -97,21 +93,21 @@
                         {
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                                onclick="location.href='@Url.Action("Index", "Product")'">
+                                        onclick="location.href='@Url.Action("Index", "Product")'">
                                     Products
                                 </button>
                             </li>
 
-                            <li class="nav-item" id="restaurant-tour">
+                            <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                                onclick="location.href='@Url.Action("Index", "Restaurant")'">
+                                        onclick="location.href='@Url.Action("Index", "Restaurant")'">
                                     Restaurants
                                 </button>
                             </li>
 
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProductCategory" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                                onclick="location.href='@Url.Action("Index", "ProductCategory")'">
+                                        onclick="location.href='@Url.Action("Index", "ProductCategory")'">
                                     Categories
                                 </button>
                             </li>
@@ -121,7 +117,7 @@
                         {
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["action"]?.ToString() == "ManageRoles" ? "active" : "")"
-                                onclick="location.href='@Url.Action("ManageRoles", "Admin")'">
+                                        onclick="location.href='@Url.Action("ManageRoles", "Admin")'">
                                     Manage
                                 </button>
                             </li>
@@ -140,22 +136,47 @@
                             @* <li class="nav-item">
                                 <span class="nav-link">Hello, @User.Identity.Name!</span>
                             </li> *@
-                            <li class="nav-item" id="logout-tour">
+
+                            @* <li class="nav-item me-auto"> *@
+                            @*  <a class="btn btn-warning" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id"> *@
+                            @*   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16"> *@
+                            @*    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/> *@
+                            @*   </svg> *@
+                            @*   <span id="spanCount" class="badge badge-light"> *@
+                            @*   </span> *@
+                            @*  </a> *@
+                            @* </li> *@
+
+                            <li class="nav-item me-auto">
+                                <a class="btn btn-warning position-relative" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                    </svg>
+                                    <span id="spanCount" class="position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%;">
+                                        <span class="visually-hidden">items in cart</span>
+                                    </span>
+                                </a>
+                            </li>
+
+
+
+                            <li class="nav-item">
                                 <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
                                     @* <button type="submit" class="btn btn-link nav-link">Logout</button> *@
                                     <button class="btn btn-white shadow-warning text-warning"
-                                    type="submit">
+                                            type="submit">
                                         <i class="fas fa-sign-out-alt me-2"></i>
                                     </button>
 
                                 </form>
                             </li>
+
                         }
                         else
                         {
                             <li class="nav-item">
                                 <button class="btn btn-white shadow-warning text-warning"
-                                type="submit" onclick="location.href='@Url.Action("Login", "Account")'">
+                                        type="submit" onclick="location.href='@Url.Action("Login", "Account")'">
                                     <i class="fas fa-user me-2"></i>Login
                                 </button>
                                 @* <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
@@ -167,8 +188,8 @@
                             <li class="nav-item">
                                 @* <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a> *@
                                 <button class="btn btn-white shadow-warning text-warning"
-                                type="button"
-                                onclick="location.href='@Url.Action("Register", "Account")'">
+                                        type="button"
+                                        onclick="location.href='@Url.Action("Register", "Account")'">
                                     <i class="fas fa-user-plus me-2"></i>Register
                                 </button>
                             </li>
@@ -193,7 +214,7 @@
                 </div>
 
             </div>
-        </nav> 
+        </nav>
 
         @if (User.Identity.IsAuthenticated)
         {
@@ -210,13 +231,13 @@
                 </div>
 
                 <!-- Search Box -->
-                <form class="d-flex align-items-center" id="search-tour">
+                <form class="d-flex align-items-center">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
                         <input class="form-control border-0 input-box bg-100 "
-                        type="search"
-                        placeholder="Search Food"
-                        aria-label="Search" />
+                               type="search"
+                               placeholder="Search Food"
+                               aria-label="Search" />
                     </div>
                 </form>
 
@@ -240,7 +261,7 @@
                 </div>
             </form>
         </div> *@
-        
+
         @RenderBody()
     </main>
 
@@ -249,8 +270,8 @@
     </footer>
     <!-- ===============================================-->
     <!--    JavaScripts-->
-	<!-- ===============================================-->
-	
+    <!-- ===============================================-->
+
     <script src="~/vendors/popperjs/popper.min.js"></script>
     <script src="~/vendors/bootstrap/bootstrap.min.js"></script>
     <script src="~/vendors/is/is.min.js"></script>
@@ -258,12 +279,168 @@
     <script src="~/vendors/fontawesome/all.min.js"></script>
     <script src="~/assets/js/theme.js"></script>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
           rel="stylesheet" />
 
-    <!-- Intro.js -->
-    <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
-	<script src="~/js/layouttour.js"></script>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            $(document).ready(function () {
+                    $.ajax({
+                        url: '@Url.Action("GetCartCount", "Cart")',
+                        type: 'GET',
+                        data: {},
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                // button.html('Added to Cart');
+                                // button.toggle();
+
+                                // $("#" + productId).show();
+
+                                $("#spanCount").html(${response.cartCount});
+
+                                // $("#spanCount").html(${response.cartCount});
+
+                                // button.prop('disabled', true);
+                                // button.prop('display', none);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while adding the product to the cart.');
+                        }
+                });
+
+                $('.addToCart').click(function () {
+                    const button = $(this);
+                    var productId = $(this).data('product-id');
+                    $.ajax({
+                        url: '@Url.Action("UpdateCart", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+
+                                // button.html('Added to Cart');
+                                // button.hide();
+
+                                $("#addToCart" + productId).addClass('d-none');
+
+                                 $("#quantityCountDis" + productId).removeClass('d-none');
+
+                                // $("#" + productId).show();
+
+                                $("#spanCount").html(${response.cartCount});
+
+                                //For the restuarantToProduct view, so that it always shows 1 when it's first added to the cart
+                                $("#in" + productId).val(1);
+
+                                // button.prop('disabled', true);
+                                // button.prop('display', none);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while adding the product to the cart.');
+                        }
+                    });
+                });
+
+                $('.plusOne').click(function () {
+                    var productId = $(this).data('product-id');
+                    $.ajax({
+                        url: '@Url.Action("AddOne", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                $("#" + productId).html(${response.quantity});
+                                $("#totalPrice").html(Total price = ${(response.total).toFixed(2)})
+
+                                $("#in" + productId).val(response.quantity);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while increasing the product in the cart.');
+                        }
+                    });
+                });
+
+                $('.minusOne').click(function () {
+                    var productId = $(this).data('product-id');
+
+                    let value = parseInt($("#spanCount").html());
+
+                    $.ajax({
+                        url: '@Url.Action("DecreaseOne", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                if (response.quantity >= 1) {
+                                    $("#" + productId).html(${response.quantity});
+                                    $("#in" + productId).val(response.quantity);
+                                } else {
+                                    $("#row" + productId).remove();
+
+                                    $("#spanCount").html(${value - 1}); //To decrease the counter beside the cart
+
+                                    //To add the addToCart
+                                    $("#addToCart"+ productId).removeClass('d-none');
+                                    //To remove the quantity controller
+                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                }
+                                $("#totalPrice").html(Total price = ${(response.total).toFixed(2)})
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while increasing the product in the cart.');
+                        }
+                    });
+                });
+
+                $('.delete').click(function () {
+                    var productId = $(this).data('product-id');
+
+                    let value = parseInt($("#spanCount").html());
+
+                    $.ajax({
+                        url: '@Url.Action("DeleteProduct", "Cart")',
+                        type: 'POST',
+                        data: { id: productId },
+                        success: function (response) {
+                            if (response.success) {
+                                // alert(response.message);
+                                if (response.isDeleted) {
+                                    $("#row" + productId).remove();
+
+                                    $("#spanCount").html(${value - 1}); //To decrease the counter beside the cart
+
+                                    //To add the addToCart
+                                    $("#addToCart"+ productId).removeClass('d-none');
+                                    //To remove the quantity controller
+                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    $("#quantityCount" + productId).remove(); //Div from the server based on the condition
+
+                                }
+                                $("#totalPrice").html(Total price = ${(response.total).toFixed(2)})
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while deleting the product in the cart.');
+                        }
+                    });
+                });
+
+            });
+        </script>
+    }
 
 </body>
 </html>

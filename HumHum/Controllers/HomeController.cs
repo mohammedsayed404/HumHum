@@ -63,14 +63,15 @@ namespace HumHum.Controllers
 
             #endregion
 
-            var topProducts = await _serviceManager.ProductService
-                .GetTopRatingProductsAsync(8);
-
-
-
-
-
-            return View(topProducts);
+            var topProducts = await _serviceManager.ProductService.GetTopRatingProductsAsync(8);
+            var featuredRestaurants = await _serviceManager.ProductService.GetProductsWithFeaturedRestaurantsAsync(8);
+            
+            ////var restProdImg = topProducts.Where(p => p.Restaurant.Contains(featuredRestaurants[0].Name) .ToLower()).FirstOrDefault();
+            //var restProdImg = topProducts.FirstOrDefault(p => p.Restaurant == "Hardee's");
+            
+            var viewModel = new TopProductAndFeaturedRestaurantsViewModel(topProducts, featuredRestaurants);
+   
+            return View(viewModel);
 
         }
 

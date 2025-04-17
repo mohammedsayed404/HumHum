@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
-using Humanizer;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Service.Abstractions;
+using Shared;
 using Shared.ViewModels;
 
 namespace HumHum.Controllers;
@@ -15,15 +13,19 @@ public class RestaurantController : Controller
 
     private readonly IServiceManager _serviceManager;
 
+    private readonly string cartId;
     public RestaurantController(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;
+        cartId = _serviceManager.UserServices.Id!;
     }
 
     public async Task<IActionResult> Index()
     {
         //var restaurants = await _serviceManager.ProductService.GetAllRestaurantsAsync();
         var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
+
+        //TempData["restaurantNames"] = restaurants.Select(r => r.Name); 
 
         return View(restaurants);
     }
@@ -44,8 +46,50 @@ public class RestaurantController : Controller
     {
         //var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
 
-        var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
+        try
+        {
+            var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
 
+            var customerCart =
+                await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+
+            var items = customerCart.Items;
+
+
+            var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+            {
+                Products = products.ToList(),
+                RestaurantName = products[0].Name,
+                Quantity = Enumerable.Repeat(0, products.Count).ToList()
+            };
+
+            if (items.Count != 0)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    productsWithQuantity.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                }
+            }
+
+
+                //var restaurant = await _serviceManager.RestaurantService.GetRestaurantByIdAsync(id);
+
+                //var restaruantsNames = TempData["restaurantNames"] as IReadOnlyList<string>;
+
+                //var restaurantName = restaruantsNames.
+
+                //ViewBag.restaurantName = products[0].Restaurant;
+
+                //ViewBag.customerProducts = items;
+
+                return View(productsWithQuantity);
+
+        }
+        catch
+        {
+            return RedirectToAction("Index", "Restaurant");
+        }
         //CustomerCartDto Count;
         //try
         //{
@@ -57,8 +101,6 @@ public class RestaurantController : Controller
         //{
         //    HttpContext.Session.SetInt32("CartCount", 0);
         //}
-
-        return View(products);
     }
 
     [HttpGet]
