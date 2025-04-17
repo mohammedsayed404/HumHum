@@ -336,7 +336,7 @@
 
                                 $("#addToCart" + productId).addClass('d-none');
 
-                                 $("#quantityCountDis" + productId).removeClass('d-none');
+                                 $("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
 
                                 // $("#" + productId).show();
 
@@ -346,7 +346,7 @@
                                 $("#in" + productId).val(1);
 
                                 // button.prop('disabled', true);
-                                // button.prop('display', none);
+                                // button.prop('display', none);    
                             }
                         },
                         error: function () {
@@ -397,7 +397,7 @@
                                     $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
 
                                     //To add the addToCart
-                                    $("#addToCart"+ productId).removeClass('d-none');
+                                    $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
                                     $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
                                     $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
@@ -429,7 +429,7 @@
                                     $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
 
                                     //To add the addToCart
-                                    $("#addToCart"+ productId).removeClass('d-none');
+                                    $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
                                     $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
                                     $("#quantityCount" + productId).remove(); //Div from the server based on the condition
