@@ -177,4 +177,17 @@ internal sealed class ProductService : IProductService
 
         return mappedProducts;
     }
+
+    public async Task<IReadOnlyList<ProductWithRestaurantToReturnDto>> GetProductsWithFeaturedRestaurantsAsync(int count)
+    {
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllWithSpecAsync(new ProductsWithFeaturedRestaurantsSpec(count));
+
+        
+        
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductWithRestaurantToReturnDto>>(products);
+
+        return mappedProducts;
+    }
 }
