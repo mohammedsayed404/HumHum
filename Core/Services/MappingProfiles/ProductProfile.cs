@@ -24,6 +24,13 @@ internal sealed class ProductProfile : Profile
 
         CreateMap<ProductToUpdateViewModel, Product>().ReverseMap();
 
+        CreateMap<Product, ProductWithRestaurantToReturnDto>()
+            .ForMember(dest => dest.ProductImage,
+              options =>
+              options.MapFrom<PhotoResolver<Product, ProductWithRestaurantToReturnDto>>()
+            
+           );
+
     }
 
 }

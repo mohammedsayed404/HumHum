@@ -21,5 +21,6 @@ public interface IProductService
     public Task<int> DeleteProductAsync(int id);
 
     public Task<IReadOnlyList<ProductToReturnDto>> GetTopRatingProductsAsync(int count);
+    public Task<IReadOnlyList<ProductWithRestaurantToReturnDto>> GetProductsWithFeaturedRestaurantsAsync(int count);
 
 }

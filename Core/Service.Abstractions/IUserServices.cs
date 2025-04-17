@@ -1,4 +1,5 @@
 ﻿using Shared;
+using Shared.ViewModels;
 
 namespace Service.Abstractions;
 
@@ -11,8 +12,13 @@ public interface IUserServices
 
     //Task<ApplicationUserDto> GetCurrentUserByEmail(string userEmail);
 
+
     Task<AddressToReturnDto> GetUserAddress(string userId);
 
-    Task<AddressToReturnDto> UpdateUserAddress(string userId);
+
+    Task<AddressToReturnDto> GetUserAddressAsync(string userId);
+
+
+    Task<int> UpdateUserAddressAsync(AddressToUpdateViewModel model);
 
 }
