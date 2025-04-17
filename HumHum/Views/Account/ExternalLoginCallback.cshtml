@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "ExternalLoginCallback";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["HideFooterAndFooter"] = true;
+
 }
 
 
@@ -20,7 +21,7 @@
     <button type="submit" class="btn btn-primary">Confirm</button>
 </form>
 
-
+@* 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+} *@

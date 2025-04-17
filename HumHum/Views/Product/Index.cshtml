@@ -17,53 +17,71 @@
 <section class="py-0">
     <div class="container">
         <div class="row h-100 gx-2 gy-5 mt-7">
-            @for (int i = 0; i < Model.Products.Count; i++)
-                {
-            <div class="col-sm-6 col-lg-4 mb-3 mb-md-0 h-100 pb-4">
-                
-	            <div class="card card-span h-100">
-		            <div class="position-relative">
-			            <img class="img-fluid rounded-3 w-100"style="height:300px;"
-			                 src="@Model.Products[i].Image"
-			                 alt="..." />
-			            <div class="card-actions">
-				            <div class="badge badge-foodwagon bg-primary p-4">
-					            <div class="d-flex flex-between-center">
-						            <div class="text-white fs-3">@Model.Products[i].Price</div>
-						            <div class="d-block text-white fs-2">
-							            LE <br />
-							            @*                                             <div class="fw-normal fs-1 mt-2">Off</div>
- *@                                        </div>
-					            </div>
-				            </div>
-			            </div>
-		            </div>
-		            <div class="card-body px-0">
-			            <div class="d-flex justify-content-between">
-				            <span class="badge bg-soft-danger py-2 px-3">
-					            <span class="fs-1 text-danger">@Model.Products[i].Category</span>
-				            </span>
-				            <span class="badge bg-soft-warning py-2 px-3">
-					            <span class="fs-1 text-warning">@Model.Products[i].Restaurant</span>
-				            </span>
-			            </div>
-			            <h5 class="fw-bold text-1000 text-truncate mt-2">
-				            @Model.Products[i].Name
-			            </h5>
-                            
-		            </div>
-		            @* <a class="stretched-link" href="#"></a> *@
-	            </div>
-				
-					@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary (ViewData) {["index"] = i})
 
-					@* <div class="d-grid gap-2"> *@
-                    @*     <a class="btn btn-lg btn-danger" *@
-                    @*        href="#!" *@
-                    @*        role="button">Add to Cart</a> *@
-                    @* </div> *@
+@for (int i = 0; i < Model.Products.Count; i++)
+{
+<div class="col-sm-6 col-lg-4 mb-3 mb-md-0 h-100 pb-4">
+
+<div class="card card-span h-100 mx-2">
+<div class="position-relative">
+	<img class="img-fluid rounded-3 w-100"style="height:250px;"
+			src="@Model.Products[i].Image"
+			alt="..." />
+	<div class="d-flex justify-content-between align-items-end  card-actions">
+		<div class="badge badge-foodwagon bg-primary p-4">
+			<div class="d-flex flex-between-center">
+				<div class="text-white fs-3">@Model.Products[i].Price</div>
+				<div class="d-block text-white fs-2">
+				LE <br />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="card-body px-0">
+	<div class="d-flex justify-content-between">
+		<span class="badge bg-soft-danger py-2 px-3">
+			<span class="fs-1 text-danger">@Model.Products[i].Category</span>
+		</span>
+		<span class="badge bg-soft-warning py-2 px-3">
+			<span class="fs-1 text-warning">@Model.Products[i].Restaurant</span>
+		</span>
+	</div>
+	<div class="d-flex justify-content-between align-items-end ">
+                <h5 class="fw-bold text-1000 text-truncate mt-2">
+                    @item.Name
+                </h5>
+                <!-- Star Rating -->
+                <div class="d-flex gap-1 p-2">
+                    @{
+                        double rate = @item.Rate;
+                        int fullStars = (int)Math.Floor(rate);
+                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                    }
+                    @for (int j = 0; j < fullStars; j++)
+                    {
+                        <i class="fas fa-star text-warning fs-1"></i>
+                    }
+                    @if (hasHalfStar)
+                    {
+                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                    }
+                    @for (int j = 0; j < emptyStars; j++)
+                    {
+                        <i class="far fa-star text-warning fs-1"></i>
+                    }
+                </div>
+                <!-- End Star Rating -->
+         </div>
             </div>
-            }
+</div>
+
+@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary (ViewData) {["index"] = i})
+
+
+            </div>
+}
 
         </div>
     </div>

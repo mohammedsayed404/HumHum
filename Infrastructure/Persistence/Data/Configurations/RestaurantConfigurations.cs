@@ -23,5 +23,6 @@ internal sealed class RestaurantConfigurations : IEntityTypeConfiguration<Restau
               .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasQueryFilter(restaurant => !restaurant.IsDeleted);
+
     }
 }
