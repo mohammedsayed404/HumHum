@@ -37,6 +37,17 @@
     <!-- ===============================================-->
     <link href="~/assets/css/theme.css" rel="stylesheet" />
 
+    <!-- ===============================================-->
+    <!--    Intro.js CSS-->
+    <!-- ===============================================-->
+
+    <!-- Intro.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/introjs.min.css"
+          rel="stylesheet" />
+
+    @* custom tour layout CSS *@
+    <link href="~/css/layouttour.css" rel="stylesheet" />
+
 </head>
 <body>
     <header>
@@ -98,7 +109,7 @@
                                 </button>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item" id="restaurant-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                 onclick="location.href='@Url.Action("Index", "Restaurant")'">
                                     Restaurants
@@ -160,7 +171,7 @@
 
 
 
-		                       <li class="nav-item">
+                            <li class="nav-item" id="logout-tour">
 	                            <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
 		                            @* <button type="submit" class="btn btn-link nav-link">Logout</button> *@
 		                            <button class="btn btn-white shadow-warning text-warning"
@@ -231,7 +242,7 @@
                 </div>
 
                 <!-- Search Box -->
-                <form class="d-flex align-items-center">
+                <form class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
                         <input class="form-control border-0 input-box bg-100 "
@@ -441,6 +452,11 @@
             });
         </script>
     }
-        
+
+
+
+    <!-- Intro.js -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
+    <script src="~/js/layouttour.js"></script>
 	</body>
 </html>

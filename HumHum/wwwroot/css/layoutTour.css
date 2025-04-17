@@ -1,0 +1,110 @@
+﻿
+.introjs-overlay {
+    background-color: rgba(41, 47, 54, 0.8); /* --dark-color with opacity */
+}
+
+.introjs-helperLayer {
+    background-color: transparent;
+    border: 2px solid #F17228; /* New orange color */
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(241, 114, 40, 0.4);
+}
+
+.introjs-tooltip {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    max-width: 400px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.introjs-tooltip-header {
+    background: linear-gradient(90deg, #F17228 0%, #FFB30E 100%); /* Gradient from orange to yellow */
+    color: white;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+}
+
+.introjs-tooltip-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.introjs-tooltip-content {
+    padding: 20px;
+    color: #292F36; /* --dark-color */
+    line-height: 1.6;
+}
+
+.introjs-progress {
+    background-color: rgba(241, 114, 40, 0.2); /* Lighter orange */
+    border-radius: 0 0 12px 12px;
+    height: 6px;
+    overflow: hidden;
+}
+
+.introjs-progressbar {
+    background: linear-gradient(90deg, #F17228 0%, #FFB30E 100%); /* Gradient from orange to yellow */
+}
+
+.introjs-bullets ul li a {
+    background: rgba(241, 114, 40, 0.3); /* Lighter orange */
+}
+
+    .introjs-bullets ul li a.active {
+        background: #F17228; /* Orange */
+    }
+
+.introjs-button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: none;
+    font-weight: 600;
+    border-radius: 50px !important;
+    padding: 8px 20px !important;
+    transition: all 0.3s ease;
+}
+
+.introjs-nextbutton {
+    background-color: #F17228 !important; /* Orange */
+    color: white !important;
+    border: 2px solid #F17228 !important;
+}
+
+    .introjs-nextbutton:hover {
+        background-color: #e06623 !important; /* Darker orange */
+        border-color: #e06623 !important;
+    }
+
+.introjs-prevbutton {
+    background-color: white !important;
+    color: #F17228 !important; /* Orange */
+    border: 2px solid #F17228 !important;
+    margin-right: 10px;
+}
+
+    .introjs-prevbutton:hover {
+        background-color: #f8f9fa !important;
+    }
+
+.introjs-helperNumberLayer {
+    background: #F17228 !important; /* Orange */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Food icon for tooltip */
+.introjs-tooltip-icon {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.introjs-tooltip-title .fas {
+    color: rgba(255,255,255,0.8);
+}
