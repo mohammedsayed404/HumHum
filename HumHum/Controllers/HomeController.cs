@@ -1,10 +1,10 @@
 using Domain.Entities.Identity;
 using HumHum.Mock;
-using Shared.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
+using Shared.ViewModels;
 using System.Diagnostics;
 
 namespace HumHum.Controllers
@@ -48,12 +48,30 @@ namespace HumHum.Controllers
             //Console.WriteLine($"ssssssssssssssssss{user.UserName}");
 
             //_userManager.Users 
+
+            //var userAddress = await _serviceManager.UserServices.GetUserAddressAsync
+            //    (User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+
+
+            //var updated = await _serviceManager.UserServices.UpdateUserAddressAsync(
+            //    new AddressToUpdateViewModel(1, "Mohamed", "Khafaga", "123 str city", "Alex", "USA", User.FindFirstValue(ClaimTypes.NameIdentifier)!)
+            //    );
+
+            //or using our service _serviceManager.UserServices.Id
+
+
             #endregion
 
-            var topProducts = await _serviceManager.ProductService
-                .GetTopRatingProductsAsync(8);
-
-            return View(topProducts);
+            var topProducts = await _serviceManager.ProductService.GetTopRatingProductsAsync(8);
+            var featuredRestaurants = await _serviceManager.ProductService.GetProductsWithFeaturedRestaurantsAsync(8);
+            
+            ////var restProdImg = topProducts.Where(p => p.Restaurant.Contains(featuredRestaurants[0].Name) .ToLower()).FirstOrDefault();
+            //var restProdImg = topProducts.FirstOrDefault(p => p.Restaurant == "Hardee's");
+            
+            var viewModel = new TopProductAndFeaturedRestaurantsViewModel(topProducts, featuredRestaurants);
+   
+            return View(viewModel);
 
         }
 
