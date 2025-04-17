@@ -288,10 +288,10 @@
     @if (User.Identity.IsAuthenticated)
     {
         <script>
-            $(document).ready(function () {
-                    $.ajax({
+            function loadCartCount(){
+                 $.ajax({
                         url: '@Url.Action("GetCartCount", "Cart")',
-                        type: 'GET',
+                        type: 'POST',
                         data: {},
                         success: function (response) {
                             if (response.success) {
@@ -313,6 +313,11 @@
                             alert('An error occurred while adding the product to the cart.');
                         }
                 });
+            }
+
+            $(document).ready(function () {
+
+                loadCartCount();
 
                 $('.addToCart').click(function () {
                     const button = $(this);
