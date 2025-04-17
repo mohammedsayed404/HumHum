@@ -8,6 +8,8 @@ public class ApplicationUser : IdentityUser
 
     public Address Address { get; set; } = null!;
 
+    public bool HasSeenTour { get; set; } = false;
+
 }
 
 

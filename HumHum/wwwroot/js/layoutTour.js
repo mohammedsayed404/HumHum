@@ -1,6 +1,5 @@
 ﻿function getTooltipHeader() {
-    return `
-               <div class="d-flex align-items-center mb-3">
+    return `<div class="d-flex align-items-center mb-3">
                  <img class="d-inline-block" style="width:50px; height:50px; border-radius:4px;" 
                       src="/assets/img/HumHum_logo.jpg"
                       alt="HumHum Logo" />
@@ -8,7 +7,7 @@
                       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                    HumHum
                  </span>
-               </div>`;
+               </div>`
 }
 
 
@@ -36,8 +35,8 @@ function startTour() {
                 },
                 {
                     element: document.getElementById("testimonial"),
-                    intro:
-                        "<strong>Why Choose Hum Hum?</strong><br>We highlight three core benefits that make us the preferred food delivery choice: Fast Delivery, Fresh Food, and 24/7 Support.",
+                    intro: `${getTooltipHeader()}
+                        <strong>Why Choose Hum Hum?</strong><br>We highlight three core benefits that make us the preferred food delivery choice: Fast Delivery, Fresh Food, and 24/7 Support.`,
                     position: "bottom",
                 },
                 {
@@ -66,22 +65,26 @@ function startTour() {
             isActive: true,
         })
         .oncomplete(function () {
-            // Mark tour as completed when user finishes it
-            localStorage.setItem('humhumTourCompleted', 'true');
+            // Send AJAX request to mark tour as completed
+            $.ajax({
+                url: '/Account/CompleteTour', // Adjust URL based on your controller
+                type: 'POST',
+                success: function (response) {
+                    if (response.success) {
+                        console.log('Tour marked as completed');
+                    }
+                },
+                error: function () {
+                    console.error('Failed to mark tour as completed');
+                }
+            });
         })
         .onexit(function () {
-            // Mark tour as completed if user exits it (even if not finished)
-            localStorage.setItem('humhumTourCompleted', 'true');
+            // Optionally mark as completed on exit as well
+            $.ajax({
+                url: '/Account/CompleteTour', // Adjust URL based on your controller
+                type: 'POST'
+            });
         })
         .start();
 }
-
-window.onload = function () {
-    // Check if the user has completed the tour before
-    const tourCompleted = localStorage.getItem('humhumTourCompleted');
-    // Only start the tour if it hasn't been completed before
-    if (tourCompleted !== 'true') {
-        // Start tour after a slight delay to allow page to fully load
-        setTimeout(startTour, 1000);
-    }
-};
