@@ -13,7 +13,7 @@ public interface IUserServices
     //Task<ApplicationUserDto> GetCurrentUserByEmail(string userEmail);
 
 
-    Task<AddressToReturnDto> GetUserAddress(string userId);
+    //Task<AddressToReturnDto> GetUserAddress(string userId);
 
 
     Task<AddressToReturnDto> GetUserAddressAsync(string userId);
