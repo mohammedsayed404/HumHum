@@ -2,6 +2,7 @@
 using Domain.Contracts;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Service.Abstractions;
 using Shared.ViewModels;
 
@@ -12,15 +13,19 @@ public class RestaurantController : Controller
 
     private readonly IServiceManager _serviceManager;
 
+    private readonly string cartId;
     public RestaurantController(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;
+        cartId = _serviceManager.UserServices.Id!;
     }
 
     public async Task<IActionResult> Index()
     {
         //var restaurants = await _serviceManager.ProductService.GetAllRestaurantsAsync();
         var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
+
+        //TempData["restaurantNames"] = restaurants.Select(r => r.Name); 
 
         return View(restaurants);
     }
@@ -43,6 +48,28 @@ public class RestaurantController : Controller
 
         var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
 
+        try
+        {
+            //var restaurant = await _serviceManager.RestaurantService.GetRestaurantByIdAsync(id);
+
+            //var restaruantsNames = TempData["restaurantNames"] as IReadOnlyList<string>;
+
+            //var restaurantName = restaruantsNames.
+
+            ViewBag.restaurantName = products[0].Restaurant;
+
+            var customerCart =
+                await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+
+            var items = customerCart.Items;
+
+            ViewBag.customerProducts = items;
+
+        }
+        catch
+        {
+            return RedirectToAction("Index", "Restaurant");
+        }
         //CustomerCartDto Count;
         //try
         //{

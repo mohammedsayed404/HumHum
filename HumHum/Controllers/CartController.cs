@@ -40,6 +40,7 @@ namespace HumHum.Controllers
                return RedirectToAction("Index", "Restaurant");
             }
         }
+
         public async Task<IActionResult> AddOne(int id)
         {
 

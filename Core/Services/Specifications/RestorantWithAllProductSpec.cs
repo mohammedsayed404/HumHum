@@ -9,6 +9,7 @@ namespace Services.Specifications
         {
             // .Where(p=>p.resturantID == id)
             AddIncludes(p => p.Category);
+            AddIncludes(p => p.Restaurant);
         }
     }
 }
