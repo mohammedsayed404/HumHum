@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProductToReturnDto>
+﻿@model ProductToRestaurantWithQuantityViewModel
 @inject IOptionsMonitor<CloudinarySettings> cloudinary;
 @{
     ViewData["Title"] = "Index";
@@ -10,58 +10,109 @@
 @* <div style="height:50px"></div>
  *@
 
+<style>
 
+/* Smooth transition for all buttons */
+.btn {
+transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
 
+/* Add to Cart button styled in yellow with hover effect */
+.btn-warning {
+background-color: #ffb411;
+border-color: #ffb411;
+color: #000;
+}
 
+.btn-warning:hover {
+	background-color: #e0a800;
+	border-color: #e0a800;
+	color: #000;
+}
+
+/* Input spinner buttons with hover effect */
+.input-spinner .btn {
+background-color: #ffb411;
+border: 1px solid #ffb411;
+color: #000;
+}
+
+.input-spinner .btn:hover {
+	background-color: #e0a800;
+	border-color: #e0a800;
+	color: #000;
+}
+
+/* Trash can button with red background and white icon on hover */
+.delete {
+background-color: transparent;
+border: 1px solid #dc3545;
+color: #dc3545;
+transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.delete:hover {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.delete:hover svg {
+	fill: #fff;
+}
+
+</style>
 
 <!-- ============================================-->
 <!-- <section> begin ============================-->
 <section class="py-0">
     <div class="container">
         <div class="row h-100 gx-2 gy-5 mt-7">
-            @foreach (var item in Model)
+            @for (int i = 0; i < Model.Products.Count; i++)
                 {
             <div class="col-sm-6 col-lg-4 mb-3 mb-md-0 h-100 pb-4">
                 
-                    <div class="card card-span h-100">
-                        <div class="position-relative">
-                            <img class="img-fluid rounded-3 w-100"style="height:300px;"
-                            src="@item.Image"
-                            alt="..." />
-                            <div class="card-actions">
-                                <div class="badge badge-foodwagon bg-primary p-4">
-                                    <div class="d-flex flex-between-center">
-                                        <div class="text-white fs-3">@item.Price</div>
-                                        <div class="d-block text-white fs-2">
-                                            LE <br />
-@*                                             <div class="fw-normal fs-1 mt-2">Off</div>
+	            <div class="card card-span h-100">
+		            <div class="position-relative">
+			            <img class="img-fluid rounded-3 w-100"style="height:300px;"
+			                 src="@Model.Products[i].Image"
+			                 alt="..." />
+			            <div class="card-actions">
+				            <div class="badge badge-foodwagon bg-primary p-4">
+					            <div class="d-flex flex-between-center">
+						            <div class="text-white fs-3">@Model.Products[i].Price</div>
+						            <div class="d-block text-white fs-2">
+							            LE <br />
+							            @*                                             <div class="fw-normal fs-1 mt-2">Off</div>
  *@                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body px-0">
-                            <div class="d-flex justify-content-between">
-                                <span class="badge bg-soft-danger py-2 px-3">
-                                    <span class="fs-1 text-danger">@item.Category</span>
-                                </span>
-                                <span class="badge bg-soft-warning py-2 px-3">
-                                    <span class="fs-1 text-warning">@item.Restaurant</span>
-                                </span>
-                            </div>
-                            <h5 class="fw-bold text-1000 text-truncate mt-2">
-                                @item.Name
-                            </h5>
+					            </div>
+				            </div>
+			            </div>
+		            </div>
+		            <div class="card-body px-0">
+			            <div class="d-flex justify-content-between">
+				            <span class="badge bg-soft-danger py-2 px-3">
+					            <span class="fs-1 text-danger">@Model.Products[i].Category</span>
+				            </span>
+				            <span class="badge bg-soft-warning py-2 px-3">
+					            <span class="fs-1 text-warning">@Model.Products[i].Restaurant</span>
+				            </span>
+			            </div>
+			            <h5 class="fw-bold text-1000 text-truncate mt-2">
+				            @Model.Products[i].Name
+			            </h5>
                             
-                        </div>
-                        <a class="stretched-link" href="#"></a>
+		            </div>
+		            <a class="stretched-link" href="#"></a>
 
-                    </div>
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-lg btn-danger"
-                           href="#!"
-                           role="button">Add to Cart</a>
-                    </div>
+	            </div>
+				
+					@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary (ViewData) {["index"] = i})
+
+					@* <div class="d-grid gap-2"> *@
+                    @*     <a class="btn btn-lg btn-danger" *@
+                    @*        href="#!" *@
+                    @*        role="button">Add to Cart</a> *@
+                    @* </div> *@
             </div>
             }
 
