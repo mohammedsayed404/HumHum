@@ -21,5 +21,7 @@ internal sealed class RestaurantConfigurations : IEntityTypeConfiguration<Restau
               .WithOne(product => product.Restaurant)
               .HasForeignKey(product => product.RestaurantId)
               .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasQueryFilter(productType => !productType.IsDeleted);
     }
 }

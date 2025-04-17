@@ -8,6 +8,106 @@
 
 }
 
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="overflow-hidden pt-4 custom-div" id="home">
+    <div class="container ">
+        <div class="row flex-center">
+            <div class="col-md-5 col-lg-6 order-0 order-md-1 ">
+                <a class="img-landing-banner p-5" href="#!">
+                    <img class="img-fluid" style="filter: drop-shadow(0.5px 0.5px 0.5rem #ffa400);"
+                         src="assets/img/gallery/bg/home.png"
+                         alt="hero-header" />
+                </a>
+            </div>
+            <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
+                <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">
+                    Are you starving?
+                </h1>
+                <h1 class="text-800 mb-5 fs-4">
+                    Within a few clicks, find meals that<br class="d-none d-xxl-block" />are accessible near you
+                </h1>
+                <div class="card w-xxl-75">
+                    <div class="card-body">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link active mb-3"
+                                        id="nav-home-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-home"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-home"
+                                        aria-selected="true">
+                                    <i class="fas fa-motorcycle me-2"></i>Delivery
+                                </button>
+                                <button class="nav-link mb-3"
+                                        id="nav-profile-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-profile"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-profile"
+                                        aria-selected="false">
+                                    <i class="fas fa-shopping-bag me-2"></i>Pickup
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mt-3" id="nav-tabContent">
+                            <div class="tab-pane fade show active"
+                                 id="nav-home"
+                                 role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <form class="row gx-2 gy-2 align-items-center">
+                                    <div class="col">
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
+                                            <label class="visually-hidden" for="inputDelivery">Address</label>
+                                            <input class="form-control input-box form-foodwagon-control"
+                                                   id="inputDelivery"
+                                                   type="text"
+                                                   placeholder="Enter Your Address" />
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-3 col-sm-auto">
+                                        <button class="btn btn-danger" type="submit">
+                                            Find Food
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade"
+                                 id="nav-profile"
+                                 role="tabpanel"
+                                 aria-labelledby="nav-profile-tab">
+                                <form class="row gx-4 gy-2 align-items-center">
+                                    <div class="col">
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
+                                            <label class="visually-hidden" for="inputPickup">Address</label>
+                                            <input class="form-control input-box form-foodwagon-control"
+                                                   id="inputPickup"
+                                                   type="text"
+                                                   placeholder="Enter Your Address" />
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-3 col-sm-auto">
+                                        <button class="btn btn-danger" type="submit">
+                                            Find Food
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+
 
 
 <!-- ============================================-->
@@ -26,30 +126,51 @@
                     <div class="carousel-inner" >
                         <div class="carousel-item active" data-bs-interval="10000">
                             <div class="row gx-3 h-100 align-items-center">
-                                @for (int i=0; i < count; i++)
+                                @for (int i= 0; i < count; i++)
                                 {
                                     <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
                                         <div class="card card-span h-100 rounded-3">
-                                            <img class="img-fluid rounded-3 w-100" style="height:300px;"
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
                                                  src="@products[i].Image"
                                                  alt="..." />
                                             <div class="card-body ps-0">
                                                 <h5 class="fw-bold text-1000 text-truncate mb-1">
                                                     @products[i].Name
                                                 </h5>
-                                                <div>@products[i].Rate</div>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
                                                 <div>
-                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span><span class="text-primary">@products[i].Restaurant</span>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
                                                 </div>
                                                 <span class="text-1000 fw-bold">@products[i].Price LE</span>
                                             </div>
                                         </div>
                                         <div class="d-grid gap-2">
-                                            <a class="btn btn-lg btn-danger"
-                                               href="#!"
-                                               role="button">Order now</a>
+                                            <a class="btn btn-lg btn-danger" href="#!" role="button">Order now</a>
                                         </div>
                                     </div>
+                                    
                                 }
 
                             </div>
@@ -58,30 +179,50 @@
                             <div class="row gx-3 h-100 align-items-center">
                                 @for (int i = 0; i < count; i++)
                                 {
-                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
+                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
                                         <div class="card card-span h-100 rounded-3">
-                                            <img class="img-fluid rounded-3 w-100" style="height:300px;"
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
                                                  src="@products[i].Image"
                                                  alt="..." />
                                             <div class="card-body ps-0">
                                                 <h5 class="fw-bold text-1000 text-truncate mb-1">
                                                     @products[i].Name
                                                 </h5>
-                                                <div>@products[i].Rate</div>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
                                                 <div>
-                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span><span class="text-primary">@products[i].Restaurant</span>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
                                                 </div>
                                                 <span class="text-1000 fw-bold">@products[i].Price LE</span>
                                             </div>
                                         </div>
                                         <div class="d-grid gap-2">
-                                            <a class="btn btn-lg btn-danger"
-                                               href="#!"
-                                               role="button">Order now</a>
+                                            <a class="btn btn-lg btn-danger" href="#!" role="button">Order now</a>
                                         </div>
                                     </div>
-                                }
 
+                                }
 
                             </div>
                         </div>
@@ -89,61 +230,54 @@
                             <div class="row gx-3 h-100 align-items-center">
                                 @for (int i = 0; i < count; i++)
                                 {
-                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
+                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
                                         <div class="card card-span h-100 rounded-3">
-                                            <img class="img-fluid rounded-3 w-100" style="height:300px;"
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
                                                  src="@products[i].Image"
                                                  alt="..." />
                                             <div class="card-body ps-0">
                                                 <h5 class="fw-bold text-1000 text-truncate mb-1">
                                                     @products[i].Name
                                                 </h5>
-                                                <div>@products[i].Rate</div>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
                                                 <div>
-                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span><span class="text-primary">@products[i].Restaurant</span>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
                                                 </div>
                                                 <span class="text-1000 fw-bold">@products[i].Price LE</span>
                                             </div>
                                         </div>
                                         <div class="d-grid gap-2">
-                                            <a class="btn btn-lg btn-danger"
-                                               href="#!"
-                                               role="button">Order now</a>
+                                            <a class="btn btn-lg btn-danger" href="#!" role="button">Order now</a>
                                         </div>
                                     </div>
+
                                 }
 
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                     <button class="carousel-control-prev carousel-icon"
