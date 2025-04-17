@@ -4,6 +4,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Service.Abstractions;
+using Shared;
 using Shared.ViewModels;
 
 namespace HumHum.Controllers;
@@ -46,24 +47,44 @@ public class RestaurantController : Controller
     {
         //var restaurants = await _serviceManager.RestaurantService.GetAllRestaurantsAsync();
 
-        var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
-
         try
         {
-            //var restaurant = await _serviceManager.RestaurantService.GetRestaurantByIdAsync(id);
-
-            //var restaruantsNames = TempData["restaurantNames"] as IReadOnlyList<string>;
-
-            //var restaurantName = restaruantsNames.
-
-            ViewBag.restaurantName = products[0].Restaurant;
+            var products = await _serviceManager.RestaurantService.GetAllProductsOfRestorantById(id);
 
             var customerCart =
                 await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
             var items = customerCart.Items;
 
-            ViewBag.customerProducts = items;
+
+            var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+            {
+                Products = products.ToList(),
+                RestaurantName = products[0].Name,
+                Quantity = Enumerable.Repeat(0, products.Count).ToList()
+            };
+
+            if (items.Count != 0)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    productsWithQuantity.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                }
+            }
+
+
+                //var restaurant = await _serviceManager.RestaurantService.GetRestaurantByIdAsync(id);
+
+                //var restaruantsNames = TempData["restaurantNames"] as IReadOnlyList<string>;
+
+                //var restaurantName = restaruantsNames.
+
+                //ViewBag.restaurantName = products[0].Restaurant;
+
+                //ViewBag.customerProducts = items;
+
+                return View(productsWithQuantity);
 
         }
         catch
@@ -81,8 +102,6 @@ public class RestaurantController : Controller
         //{
         //    HttpContext.Session.SetInt32("CartCount", 0);
         //}
-
-        return View(products);
     }
 
     [HttpGet]

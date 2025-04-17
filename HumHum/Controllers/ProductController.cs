@@ -4,6 +4,7 @@ using Domain.Entities;
 using Shared.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
+using Shared;
 
 namespace HumHum.Controllers;
 
@@ -11,17 +12,41 @@ public class ProductController : Controller
 {
     private readonly IServiceManager _serviceManager;
 
+    private readonly string cartId;
 
     public ProductController(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;
+        cartId = _serviceManager.UserServices.Id!;
     }
 
     public async Task<IActionResult> Index()
     {
         var products = await _serviceManager.ProductService.GetAllProductsAsync();
 
-        return View(products);
+        var customerCart =
+            await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+
+        var items = customerCart.Items;
+
+
+        var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+        {
+            Products = products.ToList(),
+            RestaurantName = products[0].Name,
+            Quantity = Enumerable.Repeat(0, products.Count).ToList()
+        };
+
+        if (items.Count != 0)
+        {
+            for (int i = 0; i < products.Count; i++)
+            {
+                productsWithQuantity.Quantity[i] =
+                    items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+            }
+        }
+
+        return View(productsWithQuantity);
     }
 
 
