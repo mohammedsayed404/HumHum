@@ -48,8 +48,12 @@ public class ProductController : Controller
 
         return View(productsWithQuantity);
     }
+    public async Task<IActionResult> ShowAll()
+    {
+        var products = await _serviceManager.ProductService.GetAllProductsAsync();
 
-
+        return View(products);
+    }
     public async Task<IActionResult> Details(int? id, string viewName = nameof(Details))
     {
         if (!id.HasValue) return BadRequest();
@@ -59,12 +63,11 @@ public class ProductController : Controller
         if (product is null) return NotFound();
 
         return View(viewName, product);
-
     }
 
 
     [HttpGet]
-    //[Authorize(Roles =Roles.Administrator)]
+    //[Authorize(Roles = Roles.Administrator)]
     public IActionResult Create() => View();
 
     [HttpPost]
@@ -75,7 +78,7 @@ public class ProductController : Controller
         var created = await _serviceManager.ProductService.CreateProductAsync(model);
 
         if (created > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "cant' add product pls try again later");
@@ -100,10 +103,7 @@ public class ProductController : Controller
 
 
         return View(mappedProduct);
-
     }
-
-
 
     [HttpPost]
     public async Task<IActionResult> Edit([FromRoute] int id, ProductToUpdateViewModel model)
@@ -115,7 +115,7 @@ public class ProductController : Controller
         var updated = await _serviceManager.ProductService.UpdateProductAsync(model);
 
         if (updated > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "can't Update product pls try again later");
@@ -139,7 +139,7 @@ public class ProductController : Controller
         var deleted = await _serviceManager.ProductService.DeleteProductAsync(id);
 
         if (deleted > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "can't delete product pls try again later");
@@ -147,7 +147,4 @@ public class ProductController : Controller
             return await Details(id, nameof(Delete));
         }
     }
-
-
-
 }
