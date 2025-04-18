@@ -60,7 +60,7 @@ public class RestaurantController : Controller
             var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
             {
                 Products = products.ToList(),
-                RestaurantName = products[0].Name,
+                RestaurantName = products[0].Restaurant,
                 Quantity = Enumerable.Repeat(0, products.Count).ToList()
             };
 
