@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
-using Shared.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 using Shared;
+using Shared.ViewModels;
 
 namespace HumHum.Controllers;
 
@@ -20,14 +20,23 @@ public class ProductController : Controller
         cartId = _serviceManager.UserServices.Id!;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(ProductParameterRequest request)
     {
-        var products = await _serviceManager.ProductService.GetAllProductsAsync();
+        var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
 
         var customerCart =
             await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
         var items = customerCart.Items;
+
+
+        if (products?.Any() == false)
+            return View(new ProductToRestaurantWithQuantityViewModel()
+            {
+                Products = null!,
+                RestaurantName = string.Empty,
+                Quantity = null!
+            });
 
 
         var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
