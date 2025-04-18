@@ -57,9 +57,9 @@ public class ProductController : Controller
 
         return View(productsWithQuantity);
     }
-    public async Task<IActionResult> ShowAll()
+    public async Task<IActionResult> ShowAll(ProductParameterRequest request)
     {
-        var products = await _serviceManager.ProductService.GetAllProductsAsync();
+        var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
 
         return View(products);
     }

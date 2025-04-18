@@ -24,7 +24,7 @@ internal class ProductWithRestaurantAndCategorySpec : SpecificationsBase<Product
         )
     {
 
-
+        //_dbContext.Product.where(p => p.name.contaion(letter) && p.cate == 1 )
 
         ApplyIncludes();
     }
