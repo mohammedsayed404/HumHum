@@ -413,7 +413,7 @@
                             }
                         },
                         error: function () {
-                            alert('An error occurred while adding the product to the cart.');
+                            showUnavailableProductModal();
                         }
                     });
                 });
@@ -434,7 +434,8 @@
                             }
                         },
                         error: function () {
-                            alert('An error occurred while increasing the product in the cart.');
+                            @* alert('Sorry, the product is no longer available in the cart. You may delete it.'); *@
+                            showUnavailableProductModal();
                         }
                     });
                 });
@@ -469,7 +470,8 @@
                             }
                         },
                         error: function () {
-                            alert('An error occurred while increasing the product in the cart.');
+                            @* alert('An error occurred while increasing the product in the cart.'); *@
+                            showUnavailableProductModal();
                         }
                     });
                 });
@@ -508,6 +510,83 @@
                 });
 
             });
+
+        function showUnavailableProductModal() {
+              // Prevent multiple modals
+              if (document.getElementById('unavailableProductModal')) return;
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.id = 'unavailableProductModal';
+              Object.assign(overlay.style, {
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '1000'
+              });
+
+              // Create modal container
+              const modal = document.createElement('div');
+              Object.assign(modal.style, {
+                backgroundColor: '#FFD700', // Dark yellow
+                padding: '30px 40px',
+                borderRadius: '10px',
+                textAlign: 'center',
+                maxWidth: '500px',
+                width: '90%',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                color: '#333', // Dark gray text
+                fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+                fontSize: '18px'
+              });
+
+              // Create message paragraph
+              const message = document.createElement('p');
+              message.textContent = 'Sorry, the product is no longer available. You may delete it.';
+              message.style.marginBottom = '25px';
+
+              // Create close button
+              const closeButton = document.createElement('button');
+              closeButton.textContent = 'OK';
+              Object.assign(closeButton.style, {
+                padding: '10px 20px',
+                backgroundColor: '#333', // Dark gray button
+                color: '#FFD700', // Dark yellow text
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              });
+
+              // Add click event to remove the modal
+              closeButton.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+              });
+
+              // Add click event to overlay to close modal when clicking outside the modal content
+              overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) {
+                  document.body.removeChild(overlay);
+                }
+              });
+
+              // Assemble modal
+              modal.appendChild(message);
+              modal.appendChild(closeButton);
+              overlay.appendChild(modal);
+              document.body.appendChild(overlay);
+            }
+
+
+
+
+
         </script>
     }
 

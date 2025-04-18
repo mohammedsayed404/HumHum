@@ -9,14 +9,10 @@
 
     var  restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
     var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
-
-
-
 }
 
-<h1>Create</h1>
-
-<h4>Create New Product</h4>
+<h1>Create New Product</h1>
+<br/><br/>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -38,12 +34,12 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RestaurantId" class="control-label"></label>
+                <label asp-for="RestaurantId" class="control-label">Restaurant</label>
                 <select asp-for="RestaurantId" asp-items="restaurantslist" class="form-control"></select>
                 <span asp-validation-for="RestaurantId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId"  class="control-label"></label>
+                <label asp-for="CategoryId"  class="control-label">Category</label>
                 <select  asp-for="CategoryId" asp-items="categoriesslist" class="form-control"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
@@ -60,7 +56,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="ShowAll">Back to List</a>
 </div>
 
 @section Scripts {

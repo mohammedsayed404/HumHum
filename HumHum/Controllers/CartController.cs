@@ -21,8 +21,6 @@ namespace HumHum.Controllers
         {
             try
             {
-
-
                 var cart = await _serviceManager.CartService.GetCustomerCartAsync(id);
                 decimal totalPrice = 0;
 
@@ -36,7 +34,7 @@ namespace HumHum.Controllers
             }
             catch
             {
-                return RedirectToAction("Index", "Restaurant");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -88,7 +86,7 @@ namespace HumHum.Controllers
 
             customerCartDto = new CustomerCartDto(cartId!, listOfNewItems);
 
-            var res = _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
+            await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
             return Json(new { success = true, message = "Product is increased by one", quantity = newQuantity, total = totalPrice });
         }
@@ -147,7 +145,7 @@ namespace HumHum.Controllers
 
             customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
 
-            var res = _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
+            await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
             return Json(new { success = true, message = "Product is decreased by one", quantity = newQuantity, total = totalPrice });
         }
@@ -156,9 +154,9 @@ namespace HumHum.Controllers
         {
             var customerCartDto = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
-            var product = await _serviceManager.ProductService.GetProductByIdAsync(id);
+            //var product = await _serviceManager.ProductService.GetProductByIdAsync(id);
 
-            var oldCartItem = customerCartDto.Items.FirstOrDefault(item => item.Id == product.Id);
+            var oldCartItem = customerCartDto.Items.FirstOrDefault(item => item.Id == id);
 
             if (oldCartItem is null)
             {
@@ -171,7 +169,7 @@ namespace HumHum.Controllers
 
             foreach (var item in customerCartDto.Items)
             {
-                if (item.Id != product.Id)
+                if (item.Id != id)
                 {
                     totalPrice += item.Price * item.Quantity;
 
@@ -186,7 +184,7 @@ namespace HumHum.Controllers
 
             customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
 
-            var res = _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
+            await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
             return Json(new { success = true, message = "Product is deleted", isDeleted = 1, total = totalPrice });
         }
@@ -235,7 +233,7 @@ namespace HumHum.Controllers
             /// Create the CustomerCartDto("20" as the user id, add k)
 
 
-            var res = _serviceManager.CartService.UpdateCustomerCartAsync(customerCart);
+            await _serviceManager.CartService.UpdateCustomerCartAsync(customerCart);
 
             return Json(new { success = true, message = "Product is added to cart", cartCount = cartItemList.Count });
         }
