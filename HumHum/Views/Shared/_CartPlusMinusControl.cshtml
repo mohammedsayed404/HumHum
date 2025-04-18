@@ -16,12 +16,6 @@ background-color: #ffb411;
 border-color: #ffb411;
 }
 
-.btn-warning:hover {
-background-color: #e0a800;
-border-color: #e0a800;
-color: #000;
-}
-
 /* Smooth hover effect on input spinner buttons */
 .input-spinner .btn {
 background-color: #ffb411;
@@ -81,29 +75,33 @@ background-color: #fff9e5;
 background-color: #fff5b8;
 }
 
-/* Add smooth fade in and fade out transitions */
-#addToCart,
-#quantityCount,
-#quantityCountDis {
-display: none;
-transition: opacity 0.3s ease;
+.quantityControl {
+margin: -15px;
 }
 
-/* Smooth transition for visibility changes */
-#addToCart.fadeIn,
-#quantityCount.fadeIn,
-#quantityCountDis.fadeIn {
-display: block;
-opacity: 1;
+.input-spinner .btn-sm {
+background-color: transparent;
+border: 1px solid #ffb411;
+color: #000;
+transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
-#addToCart.fadeOut,
-#quantityCount.fadeOut,
-#quantityCountDis.fadeOut {
-opacity: 0;
-display: block;
+/* Hover state for both buttons */
+.input-spinner .btn-sm:hover {
+	background-color: #ffb411;
+	border-color: #e0a800;
+	color: #000;
 }
 
+/* Active (click) state for nice feedback */
+.input-spinner .btn-sm:active {
+	transform: scale(0.95);
+	background-color: #e0a800;
+	border-color: #e0a800;
+}
 
 </style>
 
@@ -116,7 +114,7 @@ display: block;
 }
 else
 {
-	<div id="quantityCount@(@Model.Products[i].Id)" class="d-flex justify-content-center align-items-center gx-2">
+	<div id="quantityCount@(@Model.Products[i].Id)" class="quantityControl d-flex justify-content-center align-items-center gx-2">
 		<div class="input-group input-spinner" style="width: 15vw">
 			<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@Model.Products[i].Id">
 				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
@@ -145,7 +143,7 @@ else
 	<button class="addToCart btn btn-lg btn-danger" data-product-id="@Model.Products[i].Id">Add to Cart</button>
 </div>
 
-<div id="quantityCountDis@(@Model.Products[i].Id)" class="d-none d-flex justify-content-center align-items-center gx-2">
+<div id="quantityCountDis@(@Model.Products[i].Id)" class="quantityControl d-none d-flex justify-content-center align-items-center gx-2">
 	<div class="input-group input-spinner" style="width: 15vw">
 		<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@Model.Products[i].Id">
 			<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
