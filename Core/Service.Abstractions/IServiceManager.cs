@@ -8,4 +8,5 @@ public interface IServiceManager
     public IOrderService OrderService { get; }
 
     public IRestaurantService RestaurantService { get; }
+    public IPaymentService  PaymentService { get; }
 }
