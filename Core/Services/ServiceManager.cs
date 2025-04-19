@@ -27,6 +27,7 @@ public sealed class ServiceManager : IServiceManager
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ICartRepository cartRepository,
+        //IServiceManager serviceManager,
         IConfiguration configuration,
         IHttpContextAccessor httpContextAccessor
         )
@@ -42,7 +43,7 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyRestaurantService = new(() => new RestaurantService(unitOfWork, mapper, PhotoService));
 
-        _lazyOrderService = new(() => new OrderService(CartService, unitOfWork, mapper));
+        _lazyOrderService = new(() => new OrderService(CartService,PaymentService ,unitOfWork, mapper));
 
         _lazyPaymentService = new(() => new PaymentService(unitOfWork, cartRepository, configuration, mapper));
 

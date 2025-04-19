@@ -28,31 +28,38 @@ public class ProductController : Controller
             await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
         var items = customerCart.Items;
+        var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel();
 
+        //if (products?.Any() == false)
+        //    return View(new ProductToRestaurantWithQuantityViewModel()
+        //    {
+        //        Products = null!,
+        //        RestaurantName = string.Empty,
+        //        Quantity = null!
+        //    });
 
-        if (products?.Any() == false)
-            return View(new ProductToRestaurantWithQuantityViewModel()
-            {
-                Products = null!,
-                RestaurantName = string.Empty,
-                Quantity = null!
-            });
-
-
-        var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+        if (products?.Any() == true)
         {
-            Products = products.ToList(),
-            RestaurantName = products[0].Restaurant,
-            Quantity = Enumerable.Repeat(0, products.Count).ToList()
-        };
-
-        if (items.Count != 0)
-        {
-            for (int i = 0; i < products.Count; i++)
+            productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
             {
-                productsWithQuantity.Quantity[i] =
-                    items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                Products = products.ToList(),
+                RestaurantName = products[0].Restaurant,
+                Quantity = Enumerable.Repeat(0, products.Count).ToList()
+            };
+
+            if (items.Count != 0)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    productsWithQuantity.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                }
             }
+        }
+
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            return PartialView("ProductsSearchPartialView", productsWithQuantity);
         }
 
         return View(productsWithQuantity);

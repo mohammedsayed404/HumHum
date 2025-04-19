@@ -383,9 +383,10 @@
 
                 loadCartCount();
 
-                $('.addToCart').click(function () {
+                   $(document).on('click', '.addToCart', function() {
                     const button = $(this);
                     var productId = $(this).data('product-id');
+                    console.log("Add to cart is pressed");
                     $.ajax({
                         url: '@Url.Action("UpdateCart", "Cart")',
                         type: 'POST',
@@ -399,7 +400,7 @@
 
                                 $("#addToCart" + productId).addClass('d-none');
 
-                                 $("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
+                                 //$("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
 
                                 // $("#" + productId).show();
 
@@ -410,6 +411,9 @@
 
                                 // button.prop('disabled', true);
                                 // button.prop('display', none);    
+
+                                $("#quantityCount" + productId).removeClass('d-none').hide().fadeIn(500);
+
                             }
                         },
                         error: function () {
@@ -418,7 +422,7 @@
                     });
                 });
 
-                $('.plusOne').click(function () {
+                 $(document).on('click', '.plusOne', function() {
                     var productId = $(this).data('product-id');
                     $.ajax({
                         url: '@Url.Action("AddOne", "Cart")',
@@ -440,7 +444,7 @@
                     });
                 });
 
-                $('.minusOne').click(function () {
+                   $(document).on('click', '.minusOne', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -463,8 +467,10 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
@@ -476,7 +482,8 @@
                     });
                 });
 
-                $('.delete').click(function () {
+                  
+                $(document).on('click', '.delete', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -496,9 +503,11 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the server based on the condition
 
+
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
