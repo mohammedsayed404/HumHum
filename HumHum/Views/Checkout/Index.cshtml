@@ -1,0 +1,113 @@
+﻿@model AddressToReturnDto
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #fffdfa;
+        color: #333;
+        padding: 30px;
+    }
+
+    h2 {
+        color: #ffb411;
+        margin-bottom: 20px;
+    }
+
+    .checkout-container {
+        max-width: 70%;
+        margin: auto;
+        margin-top: 30px;
+        background-color: #fff8ed;
+        border: 1px solid #ffb411;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 180, 17, 0.2);
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #444;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input[readonly] {
+        background-color: #f4f4f4;
+        color: #777;
+    }
+
+    .btn-theme {
+        background-color: #ffb411;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn-theme:hover {
+            background-color: #e2a800;
+        }
+</style>
+
+<div class="checkout-container">
+    <h2>Shipping Address</h2>
+
+    <hr />
+
+    <form asp-action="SetDefaultAddress" method="post">
+        <input type="hidden" name="Id" value="@Model.ApplicationUserId" />
+        <input type="hidden" name="FirstName" value="@Model.FirstName" />
+        <input type="hidden" name="LastName" value="@Model.LastName" />
+
+        <div class="form-group">
+            <label>Country</label>
+            <input type="text" name="Country" id="country" value="@Model.Country" required />
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="City" id="city" value="@Model.City" required />
+        </div>
+
+        <div class="form-group">
+            <label>Street</label>
+            <input type="text" name="Street" id="street" value="@Model.Street" required />
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="IsDefault" value="true" id="isDefault" onchange="toggleReadonly()" />
+                Set as default address
+            </label>
+        </div>
+
+        <div style="text-align: right;">
+            <button asp-controller="Checkout" asp-action="Next" type="submit" class="btn-theme">Next</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleReadonly() {
+        const isChecked = document.getElementById("isDefault").checked;
+        document.getElementById("country").readOnly = isChecked;
+        document.getElementById("city").readOnly = isChecked;
+        document.getElementById("street").readOnly = isChecked;
+    }
+</script>
