@@ -6,5 +6,7 @@ public record ProductToRestaurantWithQuantityViewModel()
     public required string RestaurantName { get; init; }
 
     public List<int> Quantity { get; init; } = default!;
+    public int TotalPages { get; init; }
+    public int CurrentPage { get; init; }
 }
 

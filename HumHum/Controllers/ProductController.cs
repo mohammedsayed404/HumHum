@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
-using Shared.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 using Shared;
+using Shared.ViewModels;
 
 namespace HumHum.Controllers;
 
@@ -20,33 +20,42 @@ public class ProductController : Controller
         cartId = _serviceManager.UserServices.Id!;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
     {
         var products = await _serviceManager.ProductService.GetAllProductsAsync();
-
-        var customerCart =
-            await _serviceManager.CartService.GetCustomerCartAsync(cartId);
-
+        var customerCart = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
         var items = customerCart.Items;
 
+        var pagedProducts = products
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-        var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
-        {
-            Products = products.ToList(),
-            RestaurantName = products[0].Name,
-            Quantity = Enumerable.Repeat(0, products.Count).ToList()
-        };
+        var quantity = Enumerable.Repeat(0, pagedProducts.Count).ToList();
 
         if (items.Count != 0)
         {
-            for (int i = 0; i < products.Count; i++)
+            for (int i = 0; i < pagedProducts.Count; i++)
             {
-                productsWithQuantity.Quantity[i] =
-                    items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                quantity[i] = items.FirstOrDefault(item => item.Id == pagedProducts[i].Id)?.Quantity ?? 0;
             }
         }
 
-        return View(productsWithQuantity);
+        var viewModel = new ProductToRestaurantWithQuantityViewModel
+        {
+            Products = pagedProducts,
+            RestaurantName = products[0].Name,
+            Quantity = quantity,
+            TotalPages = (int)Math.Ceiling(products.Count / (double)pageSize),
+            CurrentPage = pageNumber
+        };
+
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            return PartialView("_ProductCardsPartial", viewModel);
+        }
+
+        return View(viewModel);
     }
 
 
