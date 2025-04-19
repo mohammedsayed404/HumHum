@@ -3,18 +3,20 @@ using Domain.Entities.Aggregates;
 
 namespace Services.Specifications;
 
-internal sealed class OrderWithItemsAndDeliveryMethod : SpecificationsBase<Order>
+internal sealed class OrderWithItemsAndDeliveryMethodSpec : SpecificationsBase<Order>
 {
 
 
-    public OrderWithItemsAndDeliveryMethod(Guid orderId)
+    public OrderWithItemsAndDeliveryMethodSpec(Guid orderId)
         : base(order => order.Id == orderId)
     {
         AddIncludes(order => order.OrderItems);
         AddIncludes(order => order.DeliveryMethod);
     }
 
-    public OrderWithItemsAndDeliveryMethod(string userEmail)
+
+
+    public OrderWithItemsAndDeliveryMethodSpec(string userEmail)
         : base(order => order.UserEmail == userEmail)
     {
         AddIncludes(order => order.OrderItems);

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 
 namespace HumHum.Validators;
 

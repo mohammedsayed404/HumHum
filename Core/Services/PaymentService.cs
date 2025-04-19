@@ -9,6 +9,7 @@ using Product = Domain.Entities.Product;
 using AutoMapper;
 using Services.Specifications;
 using Domain.Enums;
+using Shared.OrderModule;
 
 
 namespace Services;
@@ -98,27 +99,27 @@ internal  sealed class PaymentService  : IPaymentService
             return _mapper.Map<CustomerCartDto>(Card) ;
         }
 
-    public async Task<PaymentIntent> UpdatePaymentIntentForSucceededOrFailed(string paymentIntent, bool flag)
+    public async Task<OrderToReturnDto> UpdatePaymentIntentForSucceededOrFailed(string paymentIntent, bool flag)
     {
         var spec = new OrderWithPaymentIntentSpec(paymentIntent);
 
         //should Have await
-        var Order =  await _unitOfWork.GetRepository<Order, Guid>().GetAllWithSpecAsync(spec);
+        var Order =  await _unitOfWork.GetRepository<Order, Guid>().GetByIdWithSpecAsync(spec);
 
         if(flag)
         {
-            Order.Status = OrderPaymentStatus.PaymentReceived;
+            Order.PaymentStatus = OrderPaymentStatus.PaymentReceived;
         }
         else
         {
-            Order.Status = OrderPaymentStatus.PaymentFailed;
+            Order.PaymentStatus = OrderPaymentStatus.PaymentFailed;
         }
 
         _unitOfWork.GetRepository<Order, Guid>().Update(Order);
 
         await _unitOfWork.CompleteAsync();
 
-        return Order;
+        return  _mapper.Map<OrderToReturnDto>(Order) ;
     }
 
 }

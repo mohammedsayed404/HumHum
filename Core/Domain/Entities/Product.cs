@@ -20,4 +20,8 @@ public class Product : EntityBase<int>
     public int CategoryId { get; set; }
     public ProductCategory Category { get; set; } = null!;
 
+
+    //add rate prop
+    public float Rate { get; set; }
+
 }

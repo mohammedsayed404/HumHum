@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace HumHum.ViewModels;
+namespace Shared.ViewModels;
 
 public record ProductToCreationViewModel(string Name, string Description, decimal Price,
     IFormFile Image, int RestaurantId, int CategoryId);
+
 
 
 

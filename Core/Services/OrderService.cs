@@ -12,18 +12,19 @@ namespace Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly ICartService _cartService;
-    private readonly IServiceManager _serviceManager;
+    //private readonly IServiceManager _serviceManager;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    //private readonly IPaymentService _paymentService;
+    private readonly IPaymentService _paymentService;
 
     public OrderService(ICartService cartService, 
-                        IServiceManager serviceManager, 
+                        IPaymentService paymentService, 
                         IUnitOfWork unitOfWork,
                         IMapper mapper)
     {
         _cartService = cartService;
-        _serviceManager = serviceManager;
+        _paymentService = paymentService;
+        //_serviceManager = serviceManager;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -97,7 +98,7 @@ internal sealed class OrderService : IOrderService
             OrderRepo.Remove(ExistingOrder);
 
         }
-        var CardDto =  await _serviceManager.PaymentService.CreateOrUpdatePaymentIntent(cart.Id);
+        var CardDto =  await _paymentService.CreateOrUpdatePaymentIntent(cart.Id);
         
 
         var order = new Order
@@ -122,7 +123,7 @@ internal sealed class OrderService : IOrderService
     public async Task<OrderToReturnDto> GetOrderForUserByIdAsync(Guid id)
     {
         var order = await _unitOfWork.GetRepository<Order, Guid>()
-                                     .GetByIdWithSpecAsync(new OrderWithItemsAndDeliveryMethod(id));
+                                     .GetByIdWithSpecAsync(new OrderWithItemsAndDeliveryMethodSpec(id));
 
         if (order is null)
             throw new OrderNotFoundException(id);
@@ -133,7 +134,7 @@ internal sealed class OrderService : IOrderService
     public async Task<IReadOnlyList<OrderToReturnDto>> GetOrdersForUserByEmailAsync(string userEmail)
     {
         var orders = await _unitOfWork.GetRepository<Order, Guid>()
-                                    .GetAllWithSpecAsync(new OrderWithItemsAndDeliveryMethod(userEmail));
+                                    .GetAllWithSpecAsync(new OrderWithItemsAndDeliveryMethodSpec(userEmail));
 
         return _mapper.Map<IReadOnlyList<OrderToReturnDto>>(orders);
     }

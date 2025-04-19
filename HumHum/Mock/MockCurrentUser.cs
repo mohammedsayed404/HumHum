@@ -11,6 +11,9 @@ public class MockCurrentUser
         _httpContextAccessor = httpContextAccessor;
     }
 
+
+    //test test
+
     public string? Id => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
 }

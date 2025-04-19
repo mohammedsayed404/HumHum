@@ -3,11 +3,11 @@ using Domain.Contracts;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Exceptions.Photo;
-using HumHum.ViewModels;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
 using Shared.Cloudinary;
+using Shared.ViewModels;
 
 namespace Services;
 
@@ -33,10 +33,10 @@ internal sealed class ProductService : IProductService
         return mappedCategories;
     }
 
-    public async Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync()
+    public async Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync(ProductParameterRequest request)
     {
         var products = await _unitOfWork.GetRepository<Product, int>()
-                                        .GetAllWithSpecAsync(new ProductWithRestaurantAndCategorySpec());
+                                        .GetAllWithSpecAsync(new ProductWithRestaurantAndCategorySpec(request));
 
 
         var mappedProducts = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
@@ -165,5 +165,29 @@ internal sealed class ProductService : IProductService
             throw;
         }
 
+    }
+
+    public async Task<IReadOnlyList<ProductToReturnDto>> GetTopRatingProductsAsync(int count)
+    {
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllWithSpecAsync(new ProductWithTopRatingSpec(count));
+
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
+
+        return mappedProducts;
+    }
+
+    public async Task<IReadOnlyList<ProductWithRestaurantToReturnDto>> GetProductsWithFeaturedRestaurantsAsync(int count)
+    {
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllWithSpecAsync(new ProductsWithFeaturedRestaurantsSpec(count));
+
+
+
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductWithRestaurantToReturnDto>>(products);
+
+        return mappedProducts;
     }
 }
