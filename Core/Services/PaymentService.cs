@@ -7,6 +7,9 @@ using Shared;
 using Stripe;
 using Product = Domain.Entities.Product;
 using AutoMapper;
+using Services.Specifications;
+using Domain.Enums;
+using Shared.OrderModule;
 
 
 namespace Services;
@@ -67,13 +70,13 @@ internal  sealed class PaymentService  : IPaymentService
 
             if (string.IsNullOrEmpty(Card.PaymentIntentId))  // create new paymentintentID
             {
-                var CreateOptions = new PaymentIntentCreateOptions()
-                {
-                    Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
-                    Currency = "usd",
-                    PaymentMethodTypes = new List<string>() { "card" }
+            var CreateOptions = new PaymentIntentCreateOptions()
+            {
+                //Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
+                Currency = "usd",
+                PaymentMethodTypes = new List<string>() { "card" }
 
-                };
+            };
 
                 paymentIntent = await paymentIntentService.CreateAsync(CreateOptions);
 
@@ -85,16 +88,38 @@ internal  sealed class PaymentService  : IPaymentService
                 var UpdateOptions = new PaymentIntentUpdateOptions()
                 {
                     Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
-
                 };
 
                 await paymentIntentService.UpdateAsync(Card.PaymentIntentId, UpdateOptions);
-
+               
             }
 
             await _cartRepository.CreateOrUpdateCartAsync(Card);
 
             return _mapper.Map<CustomerCartDto>(Card) ;
         }
-    
+
+    public async Task<OrderToReturnDto> UpdatePaymentIntentForSucceededOrFailed(string paymentIntent, bool flag)
+    {
+        var spec = new OrderWithPaymentIntentSpec(paymentIntent);
+
+        //should Have await
+        var Order =  await _unitOfWork.GetRepository<Order, Guid>().GetByIdWithSpecAsync(spec);
+
+        if(flag)
+        {
+            Order.PaymentStatus = OrderPaymentStatus.PaymentReceived;
+        }
+        else
+        {
+            Order.PaymentStatus = OrderPaymentStatus.PaymentFailed;
+        }
+
+        _unitOfWork.GetRepository<Order, Guid>().Update(Order);
+
+        await _unitOfWork.CompleteAsync();
+
+        return  _mapper.Map<OrderToReturnDto>(Order) ;
+    }
+
 }
