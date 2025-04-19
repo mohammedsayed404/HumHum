@@ -84,7 +84,7 @@ namespace HumHum.Controllers
             //    totalPrice += item.Price * item.Quantity;
             //}
 
-            customerCartDto = new CustomerCartDto(cartId!, listOfNewItems);
+            customerCartDto = new CustomerCartDto(cartId!, listOfNewItems, null, null, null, null);
 
             await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
@@ -143,7 +143,8 @@ namespace HumHum.Controllers
             //    totalPrice += item.Price * item.Quantity;
             //}
 
-            customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
+            customerCartDto = new CustomerCartDto(cartId!, listOfNewItems, null, null, null, null);
+
 
             await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
@@ -182,7 +183,9 @@ namespace HumHum.Controllers
             //    totalPrice += item.Price * item.Quantity;
             //}
 
-            customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
+            customerCartDto = new CustomerCartDto(cartId!, listOfNewItems, null, null, null, null);
+
+            //customerCartDto = new CustomerCartDto(cartId, listOfNewItems);
 
             await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
@@ -213,7 +216,9 @@ namespace HumHum.Controllers
             }
             catch
             {
-                var cart = new CustomerCartDto(cartId, new List<CartItemDto>());
+                var cart = new CustomerCartDto(cartId!, new  List<CartItemDto>(), null, null, null, null);
+
+                //var cart = new CustomerCartDto(cartId, new List<CartItemDto>());
 
                 existingProductList = await _serviceManager.CartService.UpdateCustomerCartAsync(cart);
             }
@@ -237,7 +242,7 @@ namespace HumHum.Controllers
                 //HttpContext.Session.SetInt32("CartCount", cartItemList.Count);
             }
 
-            var customerCart = new CustomerCartDto(cartId, cartItemList);
+            var customerCart = new CustomerCartDto(cartId, cartItemList, null, null, null, null);
 
             //var Dto = new CustomerCartDto("5", )
             ///Get the id from the button
@@ -262,7 +267,8 @@ namespace HumHum.Controllers
             }
             catch
             {
-                var cart = new CustomerCartDto(cartId, new List<CartItemDto>());
+
+                var cart = new CustomerCartDto(cartId, new List<CartItemDto>(), null, null, null, null);
 
                 existingProductList = await _serviceManager.CartService.UpdateCustomerCartAsync(cart);
             }
