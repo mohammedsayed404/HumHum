@@ -383,7 +383,7 @@
 
                 loadCartCount();
 
-                $('.addToCart').click(function () {
+                $(document).on('click', '.addToCart', function() {
                     const button = $(this);
                     var productId = $(this).data('product-id');
                     $.ajax({
@@ -418,7 +418,7 @@
                     });
                 });
 
-                $('.plusOne').click(function () {
+                $(document).on('click', '.plusOne', function() {
                     var productId = $(this).data('product-id');
                     $.ajax({
                         url: '@Url.Action("AddOne", "Cart")',
@@ -439,7 +439,8 @@
                     });
                 });
 
-                $('.minusOne').click(function () {
+                           $(document).on('click', '.minusOne', function()
+            {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -474,7 +475,7 @@
                     });
                 });
 
-                $('.delete').click(function () {
+                $(document).on('click', '.delete', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());

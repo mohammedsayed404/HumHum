@@ -20,7 +20,7 @@ public class ProductController : Controller
         cartId = _serviceManager.UserServices.Id!;
     }
 
-    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
+    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 4)
     {
         var products = await _serviceManager.ProductService.GetAllProductsAsync();
         var customerCart = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
