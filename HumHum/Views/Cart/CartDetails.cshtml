@@ -100,6 +100,14 @@
 		<h1 class="cart-title">Your Shopping Cart</h1>
 		<div id="totalPrice">Total price = @ViewBag.TotalPrice</div>
 	</div>
+	
+	<div class="container mt-3">
+		<div class="d-flex justify-content-end">
+			<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+				<i class="bi bi-trash me-2"></i> Clear Cart
+			</button>
+		</div>
+	</div>
 
 	<table class="table cart-table">
 		<thead>
@@ -117,7 +125,7 @@
 		<tbody>
 		@foreach (var item in Model.Items)
 		{
-			<tr id="row@(@item.Id)">
+			<tr id="row@(@item.Id)" class = "cartItems">
 				@* <td>@Html.DisplayFor(modelItem => item.Id)</td> *@
 				<td>@Html.DisplayFor(modelItem => item.ProductName)</td>
 				<td>
@@ -163,6 +171,102 @@
 </div>
 
 @section Scripts {
+	<script>
+
+	$(document).ready(function () {
+		$('.deleteAll').on('click', function () {
+			  $.ajax({
+				url: '/Cart/DeleteAll',
+				type: 'POST',
+				success: function (response) {
+					if(response.success){
+						$(".cartItems").remove();
+						$("#spanCount").html(0);
+						$("#totalPrice").html(`Total price = 0.00`)
+						deleteAllMessage();
+					}
+				},
+				error: function (xhr, status, error) {
+				  console.error('Error clearing cart:', error);
+				  alert('An error occurred while clearing your cart. Please try again.');
+				}
+			  });
+		  });
+		});
+
+			function deleteAllMessage() {
+				  // Prevent multiple modals
+				  if (document.getElementById('deleteAll')) return;
+
+				  // Create overlay
+				  const overlay = document.createElement('div');
+					  overlay.id = 'deleteAll';
+				  Object.assign(overlay.style, {
+					position: 'fixed',
+					top: '0',
+					left: '0',
+					width: '100%',
+					height: '100%',
+					backgroundColor: 'rgba(0, 0, 0, 0.5)',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					zIndex: '1000'
+				  });
+
+				  // Create modal container
+				  const modal = document.createElement('div');
+				  Object.assign(modal.style, {
+					backgroundColor: '#FFD700', // Dark yellow
+					padding: '30px 40px',
+					borderRadius: '10px',
+					textAlign: 'center',
+					maxWidth: '500px',
+					width: '90%',
+					boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+					color: '#333', // Dark gray text
+					fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+					fontSize: '18px'
+				  });
+
+				  // Create message paragraph
+				  const message = document.createElement('p');
+				  message.textContent = 'Your cart has been deleted!';
+				  message.style.marginBottom = '25px';
+
+				  // Create close button
+				  const closeButton = document.createElement('button');
+				  closeButton.textContent = 'OK';
+				  Object.assign(closeButton.style, {
+					padding: '10px 20px',
+					backgroundColor: '#333', // Dark gray button
+					color: '#FFD700', // Dark yellow text
+					border: 'none',
+					borderRadius: '5px',
+					cursor: 'pointer',
+					fontSize: '16px'
+				  });
+
+				  // Add click event to remove the modal
+				  closeButton.addEventListener('click', () => {
+					document.body.removeChild(overlay);
+				  });
+
+				  // Add click event to overlay to close modal when clicking outside the modal content
+				  overlay.addEventListener('click', (event) => {
+					if (event.target === overlay) {
+					  document.body.removeChild(overlay);
+					}
+				  });
+
+				  // Assemble modal
+				  modal.appendChild(message);
+				  modal.appendChild(closeButton);
+				  overlay.appendChild(modal);
+				  document.body.appendChild(overlay);
+				}
+
+	</script>
 	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
 	@* <script> *@
 	@* 	$(document).ready(function () { *@
