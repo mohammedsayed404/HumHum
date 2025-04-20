@@ -1,7 +1,9 @@
-﻿@model DeliveryMethodViewModel
-
+﻿@using Service.Abstractions
+@model DeliveryMethodViewModel
+@inject IServiceManager serviceManager
 @{
     ViewData["Title"] = "Choose Delivery Method";
+    var deliveryMethods = await serviceManager.OrderService.GetAllDeliveryMethodsAsync();
 }
 
 <style>
@@ -71,15 +73,17 @@
 
     <form asp-action="ConfirmDeliveryMethod" method="post">
         <div class="form-group">
-            @foreach (var method in Model.DeliveryMethods)
+            @* @foreach (var method in Model.DeliveryMethods) *@
+            @foreach (var method in deliveryMethods)
             {
+
                 <label class="radio-option">
                     <input type="radio" name="SelectedDeliveryMethodId" value="@method.Id" required />
                     <strong>@method.ShortName</strong> - @method.Price.ToString("C") (ETA: @method.DeliveryTime)
                 </label>
 
             }
-            <button asp-controller="Payment" asp-action="" type="submit" class="btn-theme">Continue</button>
+            <button asp-controller="Payment" asp-action="Details" asp-route-id = "@Model.SelectedDeliveryMethodId"  type="submit" class="btn-theme">Continue</button>
         </div>
 
     </form>

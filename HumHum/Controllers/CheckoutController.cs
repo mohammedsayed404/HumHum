@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
+using Shared.OrderModule;
 using Shared.ViewModels;
 using System.Security.Claims;
 
@@ -32,48 +33,68 @@ namespace HumHum.Controllers
             }
 
             var userAddress = await _serviceManager.UserServices.GetUserAddressAsync(userId);
-
-            return View(userAddress);
+            var mappedUserAddress = new OrderAddressToReturnDto(userAddress.FirstName, userAddress.LastName, userAddress.Street, userAddress.City, userAddress.Country);
+            var orderModel = new OrderToCreationViewModel(userId, 0, mappedUserAddress); 
+            return View(orderModel);
         }
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> SetDefaultAddress(AddressToUpdateViewModel model)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-                return RedirectToAction("Login", "Account");
+        #region Old
+        //[HttpPost]
+        //public async Task<IActionResult> SetDefaultAddress(AddressToUpdateViewModel model)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(userId))
+        //        return RedirectToAction("Login", "Account");
 
 
-            await _serviceManager.UserServices.UpdateUserAddressAsync(model);
+        //    await _serviceManager.UserServices.UpdateUserAddressAsync(model);
 
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
 
-        //Step02 DeliveryMethod
-        [HttpPost]
-        public async Task<IActionResult> Next()
-        {
-            var deliveryMethods = await _serviceManager.OrderService.GetAllDeliveryMethodsAsync();
+        ////Step02 DeliveryMethod
+        //[HttpPost]
+        //public async Task<IActionResult> Next(OrderToCreationViewModel orderToCreateModel)
+        //{
+        //    Console.WriteLine(orderToCreateModel);
+        //    var deliveryMethods = await _serviceManager.OrderService.GetAllDeliveryMethodsAsync();
 
-            var model = new DeliveryMethodViewModel
-            {
-                DeliveryMethods = deliveryMethods.ToList()
-            };
+        //    var model = new DeliveryMethodViewModel
+        //    {
+        //        DeliveryMethods = deliveryMethods.ToList()
+        //    };
 
-            return View("DeliveryMethod", model);
-        }
+        //    return View("DeliveryMethod", model);
+        //} 
+        #endregion
 
+        //KafagaTest // Payment //Youssef Will Comelete from here
+        //public async Task<IActionResult> CreateOrUpdatePayment(OrderToCreationViewModel orderToCreate)
+        //{
+        //    Console.WriteLine(orderToCreate);
+        //    //var deliveryMethods = await _serviceManager.OrderService.GetAllDeliveryMethodsAsync();
 
-        //step03
-        [HttpPost]
-        public IActionResult ConfirmDeliveryMethod(int SelectedDeliveryMethodId)
-        {
-            TempData["SelectedDeliveryMethodId"] = SelectedDeliveryMethodId;
+        //    //var model = new DeliveryMethodViewModel
+        //    //{
+        //    //    DeliveryMethods = deliveryMethods.ToList()
+        //    //};
 
-            return RedirectToAction("PaymentSummary");
-        }
+        //    return View("PaymentSummery");
+        //}
+
+        #region Old
+
+        ////step03
+        //[HttpPost]
+        //public IActionResult ConfirmDeliveryMethod(int SelectedDeliveryMethodId)
+        //{
+        //    TempData["SelectedDeliveryMethodId"] = SelectedDeliveryMethodId;
+
+        //    return RedirectToAction("PaymentSummary");
+        //} 
+        #endregion
 
     }
 }

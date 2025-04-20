@@ -195,7 +195,7 @@ namespace HumHum.Controllers
         {
             try
             {
-                var customerCartDto = new CustomerCartDto(cartId, new List<CartItemDto>());
+                var customerCartDto = new CustomerCartDto(cartId, new List<CartItemDto>() , null , null , null , null);
 
                 await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 
