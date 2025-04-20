@@ -1,4 +1,5 @@
-﻿using Domain.Contracts;
+﻿using AutoMapper;
+using Domain.Contracts;
 using Domain.Entities.Identity;
 using HumHum.SMTP;
 using Microsoft.AspNetCore.Authorization;
@@ -17,27 +18,30 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
+    private readonly IMapper _mapper;
 
     public AccountController(UserManager<ApplicationUser> userManager,
                              RoleManager<IdentityRole> roleManager,
                              SignInManager<ApplicationUser> signInManager,
-                             IEmailSender emailSender)
+                             IEmailSender emailSender,
+                             IMapper mapper)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
+        _mapper = mapper;
     }
 
     // GET: /Account/Register
     public IActionResult Register() => View();
-    
+
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = model.Address };
+            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = _mapper.Map<Address>(model.Address) };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -258,7 +262,7 @@ public class AccountController : Controller
 
 
     // Action to mark user as completed the Tour guide
-  
+
     [Authorize]
     public async Task<IActionResult> CompleteTour()
     {
