@@ -14,7 +14,7 @@ internal sealed class OrderWithItemsAndDeliveryMethodSpec : SpecificationsBase<O
         AddIncludes(order => order.DeliveryMethod);
     }
 
-
+    //public OrderWithItemsAndDeliveryMethod(string userEmail)
 
     public OrderWithItemsAndDeliveryMethodSpec(string userEmail)
         : base(order => order.UserEmail == userEmail)

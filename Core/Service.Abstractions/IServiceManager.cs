@@ -7,7 +7,8 @@ public interface IServiceManager
     public ICartService CartService { get; }
     public IOrderService OrderService { get; }
     public IRestaurantService RestaurantService { get; }
-    public IPaymentService  PaymentService { get; }
     public IUserServices UserServices { get; }
 
+    //public IRestaurantService RestaurantService { get; }
+    public IPaymentService  PaymentService { get; }
 }

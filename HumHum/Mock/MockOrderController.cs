@@ -23,8 +23,6 @@ public class MockOrderController : Controller
     {
         var res = await _serviceManager.OrderService.CreateOrderAsync(model, "customer@gmail.com");
 
-
-
         return RedirectToAction(nameof(ShowOrder), new { id = res.Id });
 
     }
