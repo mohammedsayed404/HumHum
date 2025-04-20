@@ -37,7 +37,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
+            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = model.Address };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
