@@ -23,7 +23,7 @@
     }
 </style>
 
-
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
 <!-- ============================================-->
 <!-- <section> begin ============================-->
 <section class="py-0">
@@ -44,7 +44,7 @@
     <div class="container ">
         <div id="productContainer" class="row h-100 gx-2 gy-5 mt-7 productsSearch">
             
-            @Html.Partial("_ProductCardsPartial", Model);
+            @Html.Partial("_ProductCardsPartial", Model)
         </div>
 
         
@@ -104,4 +104,3 @@
          });
     </script>
 }
-
