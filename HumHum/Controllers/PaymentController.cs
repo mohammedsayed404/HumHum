@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
+using Shared;
+using Shared.OrderModule;
 using Stripe;
 
 namespace HumHum.Controllers;
@@ -13,34 +15,50 @@ public class PaymentController : Controller
         _ServiceManger = serviceManger;
     }
 
+    // get from salah checkout
     [HttpPost]
-    public async Task<IActionResult> CreateOrUpdatePaymentIntent(string cardId)
+    public async Task<IActionResult> Details(DeliveryMethodToReturnDto  deliveryMethodToReturnDto )
     {
-        if (cardId == null) return BadRequest();
-        var card = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cardId);
+        //public record OrderToReturnDto(Guid Id, string UserEmail,
+        //string PaymentStatus, string DeliveryMethod, decimal Subtotal, decimal Total,
+        //string PaymentIntentId, DateTimeOffset OrderDate, OrderAddressToReturnDto ShippingAddress,
+        //IReadOnlyList<OrderItemToReturnDto> OrderItems
+        //);
+
+        //var order = await _ServiceManger.OrderService.GetOrderForUserByIdAsync(orderId);
+        //_ServiceManger.UserServices.
 
 
- 
-    #region Until Finshing Payment
-    //[HttpPost("cardId")]
+        //var OverAllOrder = new OrderToReturnDto()
 
-    ////why generic actionResult  ==>  for  api  or  all  ?
+        ///create  order  -orderser  cartId, address, email,demthod
+        ///demethod from checkout controller  
+        ///addreess from  user  address  if  changed  form order to create  new  model
+        ///
+        ///
+        ///
+        ///
 
-    //public async Task<ActionResult> CreateOrUpdatePaymentIntent(string cardId)
-    //{
-    //    var card = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cardId);
 
-    //    if (cardId is null) return BadRequest();
-
-    //    return View(card);
-
-    //}
-
-    //} 
-    #endregion
-
-        return View(card);
+        return View();
     }
+
+
+    //[HttpPost]
+    public async Task<IActionResult> CreateOrUpdatePaymentIntent(OrderToCreationViewModel model)
+    {
+        string cartId = _ServiceManger.UserServices.Id;
+        if (cartId == null) return BadRequest();
+        var cart = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cartId);
+
+        var customerCart = new CustomerCartDto(cartId, cart.Items, cart.DeliveryMethodId,  cart.DeliveryPrice, cart.PaymentIntentId, cart.ClientSecret);
+        if (customerCart is null) return BadRequest();
+
+        //return Json(new { success = true, message = "Product is increased by one" });
+        return View(customerCart);
+    }
+
+
 
     const string endpointSecret = "whsec_...";
 
