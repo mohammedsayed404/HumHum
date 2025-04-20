@@ -33,10 +33,10 @@ internal sealed class ProductService : IProductService
         return mappedCategories;
     }
 
-    public async Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync()
+    public async Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync(ProductParameterRequest request)
     {
         var products = await _unitOfWork.GetRepository<Product, int>()
-                                        .GetAllWithSpecAsync(new ProductWithRestaurantAndCategorySpec());
+                                        .GetAllWithSpecAsync(new ProductWithRestaurantAndCategorySpec(request));
 
 
         var mappedProducts = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
@@ -184,8 +184,8 @@ internal sealed class ProductService : IProductService
             .GetRepository<Product, int>()
             .GetAllWithSpecAsync(new ProductsWithFeaturedRestaurantsSpec(count));
 
-        
-        
+
+
         var mappedProducts = _mapper.Map<IReadOnlyList<ProductWithRestaurantToReturnDto>>(products);
 
         return mappedProducts;

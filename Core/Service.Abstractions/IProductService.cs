@@ -1,12 +1,12 @@
-﻿using Shared.ViewModels;
-using Shared;
+﻿using Shared;
+using Shared.ViewModels;
 
 namespace Service.Abstractions;
 
 public interface IProductService
 {
 
-    public Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync();
+    public Task<IReadOnlyList<ProductToReturnDto>> GetAllProductsAsync(ProductParameterRequest request);
 
     public Task<ProductToReturnDto> GetProductByIdAsync(int id);
 

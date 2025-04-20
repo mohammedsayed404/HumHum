@@ -20,45 +20,80 @@ public class ProductController : Controller
         cartId = _serviceManager.UserServices.Id!;
     }
 
-    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 4)
+    public async Task<IActionResult> Index(ProductParameterRequest request)
+    //public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 4)
     {
-        var products = await _serviceManager.ProductService.GetAllProductsAsync();
+        var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
         var customerCart = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+
         var items = customerCart.Items;
+        var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel();
+        var viewModel = new ProductToRestaurantWithQuantityViewModel();
 
-        var pagedProducts = products
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-
-        var quantity = Enumerable.Repeat(0, pagedProducts.Count).ToList();
-
-        if (items.Count != 0)
+        //requst.search != null
+        if (request.Search != null)
         {
-            for (int i = 0; i < pagedProducts.Count; i++)
+            if (products?.Any() == true)
             {
-                quantity[i] = items.FirstOrDefault(item => item.Id == pagedProducts[i].Id)?.Quantity ?? 0;
+                productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+                {
+                    Products = products.ToList(),
+                    RestaurantName = products[0].Restaurant,
+                    Quantity = Enumerable.Repeat(0, products.Count).ToList()
+                };
+
+
+                if (items.Count != 0)
+                {
+                    for (int i = 0; i < products.Count; i++)
+                    {
+                        productsWithQuantity.Quantity[i] =
+                            items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                    }
+                }
+            }
+        }
+        //else + pagedPage
+        else
+        {
+            var pagedProducts = products
+            .Skip((request.pageNumber - 1) * request.pageSize)
+            .Take(request.pageSize)
+            .ToList();
+            viewModel.Products = pagedProducts;
+            viewModel.RestaurantName = pagedProducts[0].Restaurant;
+            viewModel.Quantity = Enumerable.Repeat(0, pagedProducts.Count).ToList();
+            viewModel.TotalPages = (int)Math.Ceiling(products.Count / (double)request.pageSize);
+            viewModel.CurrentPage = request.pageNumber;
+            if (items.Count != 0)
+            {
+                for (int i = 0; i < pagedProducts.Count; i++)
+                {
+                    viewModel.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == pagedProducts[i].Id)?.Quantity ?? 0;
+                }
             }
         }
 
-        var viewModel = new ProductToRestaurantWithQuantityViewModel
-        {
-            Products = pagedProducts,
-            RestaurantName = products[0].Name,
-            Quantity = quantity,
-            TotalPages = (int)Math.Ceiling(products.Count / (double)pageSize),
-            CurrentPage = pageNumber
-        };
 
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        if (request.Search == null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
             return PartialView("_ProductCardsPartial", viewModel);
         }
+        else if (request.Search != null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            return PartialView("ProductsSearchPartialView", productsWithQuantity);
+        }
 
         return View(viewModel);
+        //return View(viewModel);
     }
+    public async Task<IActionResult> ShowAll(ProductParameterRequest request)
+    {
+        var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
 
-
+        return View(products);
+    }
     public async Task<IActionResult> Details(int? id, string viewName = nameof(Details))
     {
         if (!id.HasValue) return BadRequest();
@@ -68,12 +103,11 @@ public class ProductController : Controller
         if (product is null) return NotFound();
 
         return View(viewName, product);
-
     }
 
 
     [HttpGet]
-    //[Authorize(Roles =Roles.Administrator)]
+    //[Authorize(Roles = Roles.Administrator)]
     public IActionResult Create() => View();
 
     [HttpPost]
@@ -84,7 +118,7 @@ public class ProductController : Controller
         var created = await _serviceManager.ProductService.CreateProductAsync(model);
 
         if (created > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "cant' add product pls try again later");
@@ -109,10 +143,7 @@ public class ProductController : Controller
 
 
         return View(mappedProduct);
-
     }
-
-
 
     [HttpPost]
     public async Task<IActionResult> Edit([FromRoute] int id, ProductToUpdateViewModel model)
@@ -124,7 +155,7 @@ public class ProductController : Controller
         var updated = await _serviceManager.ProductService.UpdateProductAsync(model);
 
         if (updated > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "can't Update product pls try again later");
@@ -148,7 +179,7 @@ public class ProductController : Controller
         var deleted = await _serviceManager.ProductService.DeleteProductAsync(id);
 
         if (deleted > 0)
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowAll));
         else
         {
             ModelState.AddModelError(string.Empty, "can't delete product pls try again later");
@@ -156,7 +187,4 @@ public class ProductController : Controller
             return await Details(id, nameof(Delete));
         }
     }
-
-
-
 }

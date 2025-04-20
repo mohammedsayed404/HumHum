@@ -243,7 +243,7 @@
                 </div>
 
                 <!-- Search Box -->
-                <form class="d-flex align-items-center" id="search-tour">
+                <form    class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
                         <input class="form-control border-0 input-box bg-100 "
@@ -258,12 +258,7 @@
         
         @RenderBody()
     </main>
-    @if (!(ViewData["HideFooterAndFooter"] as bool? ?? false))
-    {
-        <footer>
-            <p>&copy; 2025 - My App</p>
-        </footer>
-    }
+    
 
 
     <!-- ===============================================-->
@@ -383,9 +378,10 @@
 
                 loadCartCount();
 
-                $(document).on('click', '.addToCart', function() {
+                   $(document).on('click', '.addToCart', function() {
                     const button = $(this);
                     var productId = $(this).data('product-id');
+                    console.log("Add to cart is pressed");
                     $.ajax({
                         url: '@Url.Action("UpdateCart", "Cart")',
                         type: 'POST',
@@ -399,7 +395,7 @@
 
                                 $("#addToCart" + productId).addClass('d-none');
 
-                                 $("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
+                                 //$("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
 
                                 // $("#" + productId).show();
 
@@ -410,15 +406,18 @@
 
                                 // button.prop('disabled', true);
                                 // button.prop('display', none);    
+
+                                $("#quantityCount" + productId).removeClass('d-none').hide().fadeIn(500);
+
                             }
                         },
                         error: function () {
-                            alert('An error occurred while adding the product to the cart.');
+                            showUnavailableProductModal();
                         }
                     });
                 });
 
-                $(document).on('click', '.plusOne', function() {
+                 $(document).on('click', '.plusOne', function() {
                     var productId = $(this).data('product-id');
                     $.ajax({
                         url: '@Url.Action("AddOne", "Cart")',
@@ -434,13 +433,13 @@
                             }
                         },
                         error: function () {
-                            alert('An error occurred while increasing the product in the cart.');
+                            @* alert('Sorry, the product is no longer available in the cart. You may delete it.'); *@
+                            showUnavailableProductModal();
                         }
                     });
                 });
 
-                           $(document).on('click', '.minusOne', function()
-            {
+                   $(document).on('click', '.minusOne', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -463,18 +462,22 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
                         },
                         error: function () {
-                            alert('An error occurred while increasing the product in the cart.');
+                            @* alert('An error occurred while increasing the product in the cart.'); *@
+                            showUnavailableProductModal();
                         }
                     });
                 });
 
+                  
                 $(document).on('click', '.delete', function() {
                     var productId = $(this).data('product-id');
 
@@ -495,9 +498,11 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the server based on the condition
 
+
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
@@ -509,6 +514,83 @@
                 });
 
             });
+
+        function showUnavailableProductModal() {
+              // Prevent multiple modals
+              if (document.getElementById('unavailableProductModal')) return;
+
+              // Create overlay
+              const overlay = document.createElement('div');
+              overlay.id = 'unavailableProductModal';
+              Object.assign(overlay.style, {
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '1000'
+              });
+
+              // Create modal container
+              const modal = document.createElement('div');
+              Object.assign(modal.style, {
+                backgroundColor: '#FFD700', // Dark yellow
+                padding: '30px 40px',
+                borderRadius: '10px',
+                textAlign: 'center',
+                maxWidth: '500px',
+                width: '90%',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                color: '#333', // Dark gray text
+                fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+                fontSize: '18px'
+              });
+
+              // Create message paragraph
+              const message = document.createElement('p');
+              message.textContent = 'Sorry, the product is no longer available. You may delete it.';
+              message.style.marginBottom = '25px';
+
+              // Create close button
+              const closeButton = document.createElement('button');
+              closeButton.textContent = 'OK';
+              Object.assign(closeButton.style, {
+                padding: '10px 20px',
+                backgroundColor: '#333', // Dark gray button
+                color: '#FFD700', // Dark yellow text
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              });
+
+              // Add click event to remove the modal
+              closeButton.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+              });
+
+              // Add click event to overlay to close modal when clicking outside the modal content
+              overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) {
+                  document.body.removeChild(overlay);
+                }
+              });
+
+              // Assemble modal
+              modal.appendChild(message);
+              modal.appendChild(closeButton);
+              overlay.appendChild(modal);
+              document.body.appendChild(overlay);
+            }
+
+
+
+
+
         </script>
     }
 

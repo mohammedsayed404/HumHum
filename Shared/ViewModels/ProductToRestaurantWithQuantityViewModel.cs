@@ -2,11 +2,11 @@
 
 public record ProductToRestaurantWithQuantityViewModel()
 {
-    public required List<ProductToReturnDto> Products { get; init; }
-    public required string RestaurantName { get; init; }
+    public List<ProductToReturnDto> Products { get; set; }
+    public string RestaurantName { get; set; }
 
-    public List<int> Quantity { get; init; } = default!;
-    public int TotalPages { get; init; }
-    public int CurrentPage { get; init; }
+    public List<int> Quantity { get; set; } = default!;
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
 }
 

@@ -64,6 +64,17 @@
 
     </div>
 }
-
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a href="#" class="page-link pagination-link" data-page="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
 
 
