@@ -8,8 +8,6 @@
     var cloudinaryBaseUrl = cloudinary.CurrentValue.CloudinaryBaseUrl;
 
 }
-@* <div style="height:50px"></div>
- *@
 
 <style>
     /* Apply styles to the placeholder text */
@@ -19,163 +17,90 @@
         color: #000 !important;
         opacity: 1; /* Ensures full opacity across browsers */
     }
-    #search-product{
+
+    #search-product {
         font-weight: 700;
     }
 </style>
 
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
 <!-- ============================================-->
 <!-- <section> begin ============================-->
+<section class="py-0">
 
-    <section class="py-0">
-        <!-- Search Box -->
-        @* <form class="d-flex align-items-center"> *@
-        @*     <div class="input-group-icon pe-2"> *@
-        @*         <i class="fas fa-search input-box-icon text-primary"></i> *@
-        @*     <input class="form-control border-0 input-box bg-100" id="search-tour" *@
-        @*                type="search" *@
-        @*                name="request.Search" *@
-        @*                placeholder="Search Food" *@
-        @*                aria-label="Search" /> *@
-        @*     </div> *@
-        @* </form> *@
-		
-        <div class="d-flex justify-content-center my-4">
-	        <div class="input-group input-group-sm w-50">
-		        <span class="input-group-text bg-warning text-dark border-0">
-			        <i class="fas fa-search"></i>
-		        </span>
-		        <input
-			        id="search-product"
-			        type="search"
-			        class="form-control bg-warning text-dark border-0"
-			        placeholder="Find your favourite meal"
-			        aria-label="Search"/>
-	        </div>
+    <div class="d-flex justify-content-center my-4">
+        <div class="input-group input-group-sm w-50">
+            <span class="input-group-text bg-warning text-dark border-0">
+                <i class="fas fa-search"></i>
+            </span>
+            <input id="search-product"
+                   type="search"
+                   class="form-control bg-warning text-dark border-0"
+                   placeholder="Find your favourite meal"
+                   aria-label="Search" />
+        </div>
+    </div>
+
+    <div class="container ">
+        <div id="productContainer" class="row h-100 gx-2 gy-5 mt-7 productsSearch">
+            
+            @Html.Partial("_ProductCardsPartial", Model)
         </div>
 
+        
+    </div>
+    <!-- end of .container-->
 
-        <div class="container productsSearch">
-            <div class="row h-100 gx-2 gy-5 mt-7">
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // $(document).on("click", ".pagination-link", function (e) {
+        //     e.preventDefault();
+        //     var page = $(this).data("page");
 
-                @for (int i = 0; i < Model.Products.Count; i++)
-                {
-                    <div class="col-sm-6 col-lg-4 mb-3 mb-md-0 h-100 pb-4">
-
-                        <div class="card card-span h-100 mx-2">
-                            <div class="position-relative">
-                                <img class="img-fluid rounded-3 w-100" style="height:250px;"
-                                     src="@Model.Products[i].Image"
-                                     alt="..." />
-                                <div class="d-flex justify-content-between align-items-end  card-actions">
-                                    <div class="badge badge-foodwagon bg-primary p-4">
-                                        <div class="d-flex flex-between-center">
-                                            <div class="text-white fs-3">@Model.Products[i].Price</div>
-                                            <div class="d-block text-white fs-2">
-                                                LE <br />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body px-0">
-                                <div class="d-flex justify-content-between">
-                                    <span class="badge bg-soft-danger py-2 px-3">
-                                        <span class="fs-1 text-danger">@Model.Products[i].Category</span>
-                                    </span>
-                                    <span class="badge bg-soft-warning py-2 px-3">
-                                        <span class="fs-1 text-warning">@Model.Products[i].Restaurant</span>
-                                    </span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-end ">
-                                    <h5 class="fw-bold text-1000 text-truncate mt-2">
-                                        @Model.Products[i].Name
-                                    </h5>
-                                    <!-- Star Rating -->
-                                    <div class="d-flex gap-1 p-2">
-                                        @{
-                                            double rate = @Model.Products[i].Rate;
-                                            int fullStars = (int)Math.Floor(rate);
-                                            bool hasHalfStar = (rate - fullStars) >= 0.5;
-                                            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-                                        }
-                                        @for (int j = 0; j < fullStars; j++)
-                                        {
-                                            <i class="fas fa-star text-warning fs-1"></i>
-                                        }
-                                        @if (hasHalfStar)
-                                        {
-                                            <i class="fas fa-star-half-alt text-warning fs-1"></i>
-                                        }
-                                        @for (int j = 0; j < emptyStars; j++)
-                                        {
-                                            <i class="far fa-star text-warning fs-1"></i>
-                                        }
-                                    </div>
-                                    <!-- End Star Rating -->
-                                </div>
-                            </div>
-                        </div>
-
-                        @Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
-                    </div>
-                }
-
-            </div>
-        </div>
-        <!-- end of .container-->
-    </section>
-	
-@section Scripts{
-	<script>
+        //     $.ajax({
+        //         url: '@Url.Action("Index")',
+        //         type: 'GET',
+        //         data: { pageNumber: page },
+        //         success: function (result) {
+        //             $('#productContainer').html(result);
+        //         }
+        //     });
+        // });
+    </script>
+    <script>
         $(document).ready(function() {
+            $(document).on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+                var page = $(this).data("page");
+
+                $.ajax({
+                    url: '@Url.Action("Index")',
+                    type: 'GET',
+                    data: { pageNumber: page },
+                    success: function (result) {
+                        $('#productContainer').html(result);
+                    }
+                });
+            });
             $('#search-product').on('input', function() {
-             const query = $(this).val();
-             console.log(query);
-             $.ajax({
-               url: '/Product/Index',
-               method: 'GET',
-               data: { search: query },
-               success: function(response) {
-                 $('.productsSearch').html(response);
-               },
-               error: function() {
-                 $('.productsSearch').html('<p>An error occurred while searching.</p>');
-               }
-             });
-           });
+                const query = $(this).val();
+                console.log(query);
+                $.ajax({
+                url: '/Product/Index',
+                method: 'GET',
+                data: { search: query },
+                success: function(response) {
+                    $('.productsSearch').html(response);
+                },
+                error: function() {
+                    $('.productsSearch').html('<p>An error occurred while searching.</p>');
+                }
+                });
+            });
          });
     </script>
 }
-
-
-
-<!-- <section> close ============================-->
-<!-- ============================================-->
-
-
-@* <br />
-        <div class="text-center mt-5 py-5 ">
-            <a asp-action="Create" class="btn btn-success">+ Create New Product</a>
-        </div>
-<div class="menu-container">
-    @foreach (var item in Model)
-    {
-        <div class="box">
-            <div class="box-img">
-                <img src="@item.Image" alt="@item.Name" />
-            </div>
-            <h2>@item.Name</h2>
-            <h3>@item.Description.Substring(10)...</h3>
-            <span>$@item.Price</span>
-            <p><strong>Restaurant:</strong> @item.Restaurant</p>
-            <p><strong>Category:</strong> @item.Category</p>
-            <div class="d-flex justify-content-center gap-2 mt-2">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
-            </div>
-        </div>
-    }
-</div>
- *@

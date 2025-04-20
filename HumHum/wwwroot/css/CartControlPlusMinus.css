@@ -1,0 +1,99 @@
+﻿
+/* Smooth transition for all buttons */
+.btn {
+transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+}
+
+/* Add to Cart button styled in yellow with hover effect */
+.btn-warning {
+background-color: #ffb411;
+border-color: #ffb411;
+}
+
+/* Smooth hover effect on input spinner buttons */
+.input-spinner .btn {
+background-color: #ffb411;
+border: 1px solid #ffb411;
+color: #000;
+transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.input-spinner .btn:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+    color: #000;
+}
+
+/* Delete button with red background and white icon on hover */
+.delete {
+background-color: transparent;
+border: 1px solid #dc3545;
+color: #dc3545;
+transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.delete:hover {
+    background-color: #dc3545;
+    color: #fff;
+    transform: scale(1.1); /* Slightly enlarge on hover for a more interactive feel */
+}
+
+.delete:hover svg {
+    fill: #fff;
+}
+
+/* Apply a slight scaling effect when the button is clicked */
+.btn:active {
+transform: scale(0.95); /* Slightly shrink the button when clicked */
+transition: transform 0.5s ease;
+}
+
+/* Add a smooth click animation on delete button */
+.delete:active {
+transform: scale(0.95);
+transition: transform 0.5s ease;
+}
+
+/* Smooth transitions for quantity controls */
+.input-group .form-control {
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.input-group .form-control:focus {
+    border-color: #ffb411;
+    background-color: #fff9e5;
+}
+
+/* Add hover effect on input field */
+.input-group .form-control:hover {
+    background-color: #fff5b8;
+}
+
+.quantityControl {
+margin: -15px;
+}
+
+.input-spinner .btn-sm {
+background-color: transparent;
+border: 1px solid #ffb411;
+color: #000;
+transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* Hover state for both buttons */
+.input-spinner .btn-sm:hover {
+    background-color: #ffb411;
+    border-color: #e0a800;
+    color: #000;
+}
+
+/* Active (click) state for nice feedback */
+.input-spinner .btn-sm:active {
+    transform: scale(0.95);
+    background-color: #e0a800;
+    border-color: #e0a800;
+}
+

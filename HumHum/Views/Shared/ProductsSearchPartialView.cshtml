@@ -1,8 +1,26 @@
 ﻿@model ProductToRestaurantWithQuantityViewModel
+<style>
+    .no-results-container {
+        background-color: #b8860b;
+        color: #fff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    .no-results-container h4 {
+        font-weight: bold;
+    }
+
+    .no-results-container ul {
+        text-align: left;
+        margin: 1rem auto;
+        max-width: 400px;
+    }
+</style>
 
 @if (Model.Products?.Any() == true)
 {
-    <div class="container">
+    
         <div class="row h-100 gx-2 gy-5 mt-7">
 
             @for (int i = 0; i < Model.Products.Count; i++)
@@ -68,28 +86,10 @@
                 </div>
             }
         </div>
-    </div>
+    
 }
 else
 {
-<style>
-.no-results-container {
-background-color: #b8860b;
-color: #fff;
-padding: 2rem;
-border-radius: 0.5rem;
-}
-
-.no-results-container h4 {
-font-weight: bold;
-}
-
-.no-results-container ul {
-text-align: left;
-margin: 1rem auto;
-max-width: 400px;
-}
-</style>
 	<div class="container my-5">
 		<div class="text-center p-4 rounded" style="background-color: #b8860b; color: #fff;">
 			<i class="fas fa-search fa-3x mb-3"></i>
