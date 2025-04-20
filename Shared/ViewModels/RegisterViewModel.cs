@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Entities.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shared.ViewModels
 {
@@ -16,6 +17,6 @@ namespace Shared.ViewModels
         public string ConfirmPassword { get; set; }
 
         [Required]
-        public AddressToReturnDto Address { get; set; }
+        public Address Address { get; set; } = null!;
     }
 }

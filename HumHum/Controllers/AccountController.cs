@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Domain.Contracts;
+﻿using Domain.Contracts;
 using Domain.Entities.Identity;
 using HumHum.SMTP;
 using Microsoft.AspNetCore.Authorization;
@@ -18,19 +17,17 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
-    private readonly IMapper _mapper;
 
     public AccountController(UserManager<ApplicationUser> userManager,
                              RoleManager<IdentityRole> roleManager,
                              SignInManager<ApplicationUser> signInManager,
-                             IEmailSender emailSender,
-                             IMapper mapper)
+                             IEmailSender emailSender
+                             )
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
-        _mapper = mapper;
     }
 
     // GET: /Account/Register
@@ -41,7 +38,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = _mapper.Map<Address>(model.Address) };
+            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = model.Address };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
