@@ -21,48 +21,72 @@ public class ProductController : Controller
     }
 
     public async Task<IActionResult> Index(ProductParameterRequest request)
+    //public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 4)
     {
         var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
-
-        var customerCart =
-            await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+        var customerCart = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
         var items = customerCart.Items;
         var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel();
+        var viewModel = new ProductToRestaurantWithQuantityViewModel();
 
-        //if (products?.Any() == false)
-        //    return View(new ProductToRestaurantWithQuantityViewModel()
-        //    {
-        //        Products = null!,
-        //        RestaurantName = string.Empty,
-        //        Quantity = null!
-        //    });
-
-        if (products?.Any() == true)
+        //requst.search != null
+        if (request.Search != null)
         {
-            productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+            if (products?.Any() == true)
             {
-                Products = products.ToList(),
-                RestaurantName = products[0].Restaurant,
-                Quantity = Enumerable.Repeat(0, products.Count).ToList()
-            };
+                productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+                {
+                    Products = products.ToList(),
+                    RestaurantName = products[0].Restaurant,
+                    Quantity = Enumerable.Repeat(0, products.Count).ToList()
+                };
 
+
+                if (items.Count != 0)
+                {
+                    for (int i = 0; i < products.Count; i++)
+                    {
+                        productsWithQuantity.Quantity[i] =
+                            items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                    }
+                }
+            }
+        }
+        //else + pagedPage
+        else
+        {
+            var pagedProducts = products
+            .Skip((request.pageNumber - 1) * request.pageSize)
+            .Take(request.pageSize)
+            .ToList();
+            viewModel.Products = pagedProducts;
+            viewModel.RestaurantName = pagedProducts[0].Restaurant;
+            viewModel.Quantity = Enumerable.Repeat(0, pagedProducts.Count).ToList();
+            viewModel.TotalPages = (int)Math.Ceiling(products.Count / (double)request.pageSize);
+            viewModel.CurrentPage = request.pageNumber;
             if (items.Count != 0)
             {
-                for (int i = 0; i < products.Count; i++)
+                for (int i = 0; i < pagedProducts.Count; i++)
                 {
-                    productsWithQuantity.Quantity[i] =
-                        items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                    viewModel.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == pagedProducts[i].Id)?.Quantity ?? 0;
                 }
             }
         }
 
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+
+        if (request.Search == null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            return PartialView("_ProductCardsPartial", viewModel);
+        }
+        else if (request.Search != null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
             return PartialView("ProductsSearchPartialView", productsWithQuantity);
         }
 
-        return View(productsWithQuantity);
+        return View(viewModel);
+        //return View(viewModel);
     }
     public async Task<IActionResult> ShowAll(ProductParameterRequest request)
     {

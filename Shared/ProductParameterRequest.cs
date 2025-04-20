@@ -10,4 +10,7 @@ public record ProductParameterRequest
         get { return search; }
         init { search = value?.ToLower().Trim(); }
     }
+
+    public int pageNumber { set; get; } = 1;
+    public int pageSize { set; get; } = 6;
 }
