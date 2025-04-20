@@ -19,7 +19,7 @@ public class MockOrderController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(OrderToCreationViewModel model)
+    public async Task<IActionResult> Create(OrderToCreationViewModel model)
     {
         var res = await _serviceManager.OrderService.CreateOrderAsync(model, "customer@gmail.com");
 

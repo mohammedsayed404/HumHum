@@ -190,7 +190,25 @@ namespace HumHum.Controllers
 
             return Json(new { success = true, message = "Product is deleted", isDeleted = 1, total = totalPrice });
         }
+        public async Task<IActionResult> DeleteAll()
+        {
+            try
+            {
 
+           
+
+                var customerCartDto = new CustomerCartDto(cartId, new List<CartItemDto>(), null, null, null, null);
+
+
+                await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
+
+                return Json(new { success = true });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
         public async Task<IActionResult> UpdateCart(int id)
         {
             CustomerCartDto existingProductList;
@@ -201,7 +219,7 @@ namespace HumHum.Controllers
             }
             catch
             {
-                var cart = new CustomerCartDto(cartId!, new  List<CartItemDto>(), null, null, null, null);
+                var cart = new CustomerCartDto(cartId!, new List<CartItemDto>(), null, null, null, null);
 
                 //var cart = new CustomerCartDto(cartId, new List<CartItemDto>());
 

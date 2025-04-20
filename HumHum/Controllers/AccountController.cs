@@ -21,7 +21,8 @@ public class AccountController : Controller
     public AccountController(UserManager<ApplicationUser> userManager,
                              RoleManager<IdentityRole> roleManager,
                              SignInManager<ApplicationUser> signInManager,
-                             IEmailSender emailSender)
+                             IEmailSender emailSender
+                             )
     {
         _roleManager = roleManager;
         _userManager = userManager;
@@ -31,13 +32,13 @@ public class AccountController : Controller
 
     // GET: /Account/Register
     public IActionResult Register() => View();
-    
+
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
+            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = model.Address };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -258,7 +259,7 @@ public class AccountController : Controller
 
 
     // Action to mark user as completed the Tour guide
-  
+
     [Authorize]
     public async Task<IActionResult> CompleteTour()
     {

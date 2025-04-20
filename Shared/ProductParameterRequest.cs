@@ -3,7 +3,6 @@
 public record ProductParameterRequest
     (int? RestaurantId, int? CategoryId)
 {
-
     private string? search;
 
     public string? Search
@@ -12,6 +11,6 @@ public record ProductParameterRequest
         init { search = value?.ToLower().Trim(); }
     }
 
-
-
+    public int pageNumber { set; get; } = 1;
+    public int pageSize { set; get; } = 6;
 }

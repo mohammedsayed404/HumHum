@@ -1,0 +1,90 @@
+﻿@using Service.Abstractions
+@model DeliveryMethodViewModel
+@inject IServiceManager serviceManager
+@{
+    ViewData["Title"] = "Choose Delivery Method";
+    var deliveryMethods = await serviceManager.OrderService.GetAllDeliveryMethodsAsync();
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #fffdfa;
+        color: #333;
+        padding: 30px;
+    }
+
+    h2 {
+        color: #ffb411;
+        margin-bottom: 20px;
+    }
+
+    .checkout-container {
+        max-width: 70%;
+        margin: auto;
+        margin-top: 30px;
+        background-color: #fff8ed;
+        border: 1px solid #ffb411;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 180, 17, 0.2);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .radio-option {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .radio-option:hover {
+            border-color: #ffb411;
+            background-color: #fff3d4;
+        }
+
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .btn-theme {
+        background-color: #ffb411;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+    }
+
+        .btn-theme:hover {
+            background-color: #e2a800;
+        }
+</style>
+
+<div class="checkout-container">
+    <h2>Select Delivery Method</h2>
+
+    <form asp-action="ConfirmDeliveryMethod" method="post">
+        <div class="form-group">
+            @* @foreach (var method in Model.DeliveryMethods) *@
+            @foreach (var method in deliveryMethods)
+            {
+
+                <label class="radio-option">
+                    <input type="radio" name="SelectedDeliveryMethodId" value="@method.Id" required />
+                    <strong>@method.ShortName</strong> - @method.Price.ToString("C") (ETA: @method.DeliveryTime)
+                </label>
+
+            }
+            <button asp-controller="Payment" asp-action="Details" asp-route-id = "@Model.SelectedDeliveryMethodId"  type="submit" class="btn-theme">Continue</button>
+        </div>
+
+    </form>
+</div>

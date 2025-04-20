@@ -157,11 +157,11 @@
 		                       @* </li> *@
 
 		                       <li class="nav-item me-auto">
-			                       <a class="btn btn-warning position-relative" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+			                       <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
 				                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
 					                       <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
 				                       </svg>
-                                    <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: large">
+                                    <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: medium">
 				                       </span>
 			                       </a>
 		                       </li>
@@ -233,11 +233,11 @@
         {
             <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 bg-dark">
                 <!-- Delivery Info -->
-                <div class="text-center text-lg-start mb-2 mb-lg-0">
+                <div class="text-center text-lg-start mb-2 mb-lg-0" style ="color: white !important">
                     <p class="mb-0 fw-bold">
                         Deliver to:
                         <i class="fas fa-map-marker-alt text-warning mx-2"></i>
-                        <span class="fw-normal">Current Location</span>
+                        <span class= "fw-normal">Current Location</span>
                         <span>Mirpur 1 Bus Stand, Dhaka</span>
                     </p>
                 </div>
@@ -258,12 +258,9 @@
         
         @RenderBody()
     </main>
-    @if (!(ViewData["HideFooterAndFooter"] as bool? ?? false))
-    {
-        <footer>
-            <p>&copy; 2025 - My App</p>
-        </footer>
-    }
+
+    
+
 
 
     <!-- ===============================================-->
@@ -383,9 +380,10 @@
 
                 loadCartCount();
 
-                $('.addToCart').click(function () {
+                   $(document).on('click', '.addToCart', function() {
                     const button = $(this);
                     var productId = $(this).data('product-id');
+                    console.log("Add to cart is pressed");
                     $.ajax({
                         url: '@Url.Action("UpdateCart", "Cart")',
                         type: 'POST',
@@ -399,7 +397,7 @@
 
                                 $("#addToCart" + productId).addClass('d-none');
 
-                                 $("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
+                                 //$("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
 
                                 // $("#" + productId).show();
 
@@ -410,6 +408,9 @@
 
                                 // button.prop('disabled', true);
                                 // button.prop('display', none);    
+
+                                $("#quantityCount" + productId).removeClass('d-none').hide().fadeIn(500);
+
                             }
                         },
                         error: function () {
@@ -418,7 +419,7 @@
                     });
                 });
 
-                $('.plusOne').click(function () {
+                 $(document).on('click', '.plusOne', function() {
                     var productId = $(this).data('product-id');
                     $.ajax({
                         url: '@Url.Action("AddOne", "Cart")',
@@ -440,7 +441,7 @@
                     });
                 });
 
-                $('.minusOne').click(function () {
+                   $(document).on('click', '.minusOne', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -463,8 +464,10 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+                                    
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
@@ -476,7 +479,8 @@
                     });
                 });
 
-                $('.delete').click(function () {
+                  
+                $(document).on('click', '.delete', function() {
                     var productId = $(this).data('product-id');
 
                     let value = parseInt($("#spanCount").html());
@@ -496,9 +500,11 @@
                                     //To add the addToCart
                                     $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
                                     //To remove the quantity controller
-                                    $("#quantityCountDis" + productId).addClass('d-none'); //For the single page
-                                    $("#quantityCount" + productId).remove(); //Div from the server based on the condition
+                                    //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                    //$("#quantityCount" + productId).remove(); //Div from the server based on the condition
 
+
+                                    $("#quantityCount" + productId).addClass('d-none');
                                 }
                                 $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
                             }
@@ -695,6 +701,7 @@
                 startTour();
             }
         </script>
+        
     }
 	</body>
 </html>
