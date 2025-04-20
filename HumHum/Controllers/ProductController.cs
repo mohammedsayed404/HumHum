@@ -35,13 +35,9 @@ public class ProductController : Controller
         {
             if (products?.Any() == true)
             {
-                productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
-                {
-                    Products = products.ToList(),
-                    RestaurantName = products[0].Restaurant,
-                    Quantity = Enumerable.Repeat(0, products.Count).ToList()
-                };
-
+                productsWithQuantity.Products = products.ToList();
+                productsWithQuantity.RestaurantName = products[0].Restaurant;
+                productsWithQuantity.Quantity = Enumerable.Repeat(0, products.Count).ToList();
 
                 if (items.Count != 0)
                 {
@@ -74,7 +70,6 @@ public class ProductController : Controller
                 }
             }
         }
-
 
         if (request.Search == null && Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
