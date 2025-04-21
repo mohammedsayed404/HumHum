@@ -32,6 +32,10 @@ public class AccountController : Controller
         _logger = logger;
     }
 
+
+    public IActionResult MyAccount() => View();
+
+
     // GET: /Account/Register
     public IActionResult Register() => View();
 
@@ -306,16 +310,24 @@ public class AccountController : Controller
                 ModelState.AddModelError("Email", "Email is already in use.");
                 return View(model);
             }
+            //var user = new ApplicationUser
+            //{
+            //    UserName = model.Email,
+            //    Email = model.Email,
+            //    DisplayName = model.Name,
+            //    HasSeenTour = false,
+            //    EmailConfirmed = true // Add this for external logins
+
+            //};
             var user = new ApplicationUser
             {
-                UserName = model.Email,
-                Email = model.Email,
+                UserName = $"{model.Name.Replace(" ", "")}{model.Address.Id}",
                 DisplayName = model.Name,
-                HasSeenTour = false,
-                EmailConfirmed = true // Add this for external logins
-
+                Email = model.Email,
+                Address = model.Address,
+                EmailConfirmed = true,
+                HasSeenTour = false
             };
-
             var createResult = await _userManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
