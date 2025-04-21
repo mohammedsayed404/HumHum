@@ -5,6 +5,12 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IServiceManager ServiceManager
+@{
+
+    var userId = ServiceManager.UserServices.Id;
+
+    var userAddress = await ServiceManager.UserServices.GetUserAddressAsync(userId!);
+}
 <!DOCTYPE html>
 <html>
 
@@ -98,7 +104,7 @@
                             </button>
                         </li>
 
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User?.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
@@ -140,7 +146,7 @@
 
                     <!-- Right side nav -->
                     <ul class="navbar-nav ms-auto">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User?.Identity?.IsAuthenticated == true)
                         {
 	                        @* <li class="nav-item">
                                 <span class="nav-link">Hello, @User.Identity.Name!</span>
@@ -215,7 +221,7 @@
                             
 
                         }
-                        <button id="themeToggle" class="btn btn-primary mx-2" >
+                        <button id="themeToggle" class="btn btn-mood   mx-2">
                             <i class="bi bi-moon-fill d-none"></i>
                             <i class="bi bi-sun-fill"></i>
                         </button>
@@ -231,18 +237,18 @@
 
         @if (User.Identity.IsAuthenticated)
         {
-            <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 bg-dark">
+            <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 ">
                 <!-- Delivery Info -->
                 <div class="text-center text-lg-start mb-2 mb-lg-0" style ="color: white !important">
                     <p class="mb-0 fw-bold">
                         Deliver to:
                         <i class="fas fa-map-marker-alt text-warning mx-2"></i>
                         <span class= "fw-normal">Current Location</span>
-                        <span>Mirpur 1 Bus Stand, Dhaka</span>
+                        <span>@userAddress?.Street, @userAddress?.City, @userAddress?.Country</span>
                     </p>
                 </div>
 
-                <!-- Search Box -->
+                @* <!-- Search Box -->
                 <form    class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
@@ -251,7 +257,7 @@
                         placeholder="Search Food"
                         aria-label="Search" />
                     </div>
-                </form>
+                </form> *@
 
             </div>
         }
@@ -603,7 +609,7 @@
     <!-- Intro.js -->
     <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
 
-    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User).Result.HasSeenTour)
+    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User)?.Result?.HasSeenTour == true)
     {
         <script>
 

@@ -29,7 +29,7 @@
                 <td>
                     <form asp-action="UpdateRole" asp-controller="Admin" method="post">
                         <input type="hidden" name="UserId" value="@user.UserId" />
-                        <select name="SelectedRole" class="form-select">
+                        <select name="SelectedRole" class="form-select bg-100">
                             <option value="">-- No Role --</option>
                             @foreach (var role in user.AllRoles)
                             {

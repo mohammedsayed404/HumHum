@@ -4,7 +4,46 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="menu py-5" id="menu">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="d-block fs-5 text-muted">Category</span>
+            <h2 class="fw-bold">Tasty menu of the week</h2>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 h-100 mb-5">
+                    <a asp-action="ShowProductsByCategory" asp-route-categoryId="@item.Id" class="text-decoration-none text-dark">
+                        <div class="card card-span h-100 text-white rounded-3">
+
+                            <img class="img-fluid rounded-3 w-100" style="height:250px;"
+                                 src="@item.Image"
+                                 alt="..." />
+                            <div class="card-body ps-0">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="flex-1 ms-3">
+                                        <h5 class="mb-0 fw-bold text-1000">@item.Name</h5>
+                                    </div>
+                                </div>
+
+
+                                <span class="badge bg-soft-danger p-2">
+                                    <span class="fw-bold fs-1 text-danger">Tasty Food</span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+@* <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,7 +67,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @* @Html.DisplayFor(modelItem => item.Image) *@
+                
                     <img src="@item.Image" class="w-25 h-75 rounded" />
             </td>
             <td>
@@ -40,3 +79,6 @@
 }
     </tbody>
 </table>
+ *@
+
+

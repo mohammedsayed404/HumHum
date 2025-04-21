@@ -96,7 +96,7 @@
 
 <link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
 
-<div class="container cart-container mt-5">
+<div class="container cart-container mt-5 bg-100">
 
 	<div class="d-flex justify-content-between">
 		<h1 class="cart-title">Your Shopping Cart</h1>
@@ -105,13 +105,13 @@
 	
 	<div class="container mt-3">
 		<div class="d-flex justify-content-end">
-			<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+			<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center my-3" data-bs-toggle="modal" data-bs-target="#clearCartModal">
 				<i class="bi bi-trash me-2"></i> Clear Cart
 			</button>
 		</div>
 	</div>
 
-	<table class="table cart-table">
+	<table class="table cart-table ">
 		<thead>
 		<tr>
 			@* <th>@Html.DisplayNameFor(model => model.Id)</th> *@
@@ -166,7 +166,7 @@
 		<tr>
 			<td colspan="8" class="text-start">
 
-				@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2" })
+				@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
 
 			</td>
 		</tr>

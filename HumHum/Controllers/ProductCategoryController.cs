@@ -1,22 +1,28 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
+using Shared;
 using Shared.ViewModels;
 
 namespace HumHum.Controllers;
 
+
+[Authorize(Roles = Roles.RestaurantManager)]
 public class ProductCategoryController : Controller
 {
 
     private readonly IServiceManager _serviceManager;
-
+    private readonly string cartId;
     public ProductCategoryController(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;
+        cartId = _serviceManager.UserServices.Id!;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var categories = await _serviceManager.ProductService.GetAllCategoriesAsync();
@@ -24,6 +30,57 @@ public class ProductCategoryController : Controller
         return View(categories);
     }
 
+    [AllowAnonymous]
+    public async Task<IActionResult> ShowProductsByCategory(int categoryId)
+    {
+
+        try
+        {
+            var products = await _serviceManager.ProductService
+                                                .GetAllProductsAsync(new ProductParameterRequest(null, categoryId));
+
+
+            var customerCart =
+                await _serviceManager.CartService.GetCustomerCartAsync(cartId);
+
+            var items = customerCart.Items;
+
+
+            var productsWithQuantity = new ProductToRestaurantWithQuantityViewModel()
+            {
+                Products = products.ToList(),
+                RestaurantName = products[0].Restaurant,
+                Quantity = Enumerable.Repeat(0, products.Count).ToList()
+            };
+
+            if (items.Count != 0)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    productsWithQuantity.Quantity[i] =
+                        items.FirstOrDefault(item => item.Id == products[i].Id)?.Quantity ?? 0;
+                }
+            }
+
+
+
+            return View(productsWithQuantity);
+
+        }
+        catch
+        {
+            return View();
+        }
+
+
+
+
+
+    }
+
+
+
+    [AllowAnonymous]
     public async Task<IActionResult> Details(int? id, string viewName = nameof(Details))
     {
         if (!id.HasValue) return BadRequest();
@@ -55,9 +112,9 @@ public class ProductCategoryController : Controller
 
     }
 
-     [HttpGet]
+    [HttpGet]
     public async Task<IActionResult> Edit(int? id,
-        [FromServices] IUnitOfWork _unitOfWork, [FromServices] IMapper _mapper)
+       [FromServices] IUnitOfWork _unitOfWork, [FromServices] IMapper _mapper)
     {
         if (!id.HasValue) return BadRequest();
 
