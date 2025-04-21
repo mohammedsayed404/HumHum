@@ -14,6 +14,7 @@ using Persistence.Repositories;
 using Service.Abstractions;
 using Services;
 using Shared.Cloudinary;
+using Shared.Stripe;
 using StackExchange.Redis;
 
 namespace HumHum;
@@ -98,6 +99,11 @@ public class Program
 
         builder.Services.Configure<CloudinarySettings>
             (builder.Configuration.GetSection(nameof(CloudinarySettings)));
+
+
+        builder.Services.Configure<StripeSettings>
+          (builder.Configuration.GetSection(nameof(StripeSettings)));
+
 
 
         builder.Services.AddScoped<ICartRepository, CartRepository>();

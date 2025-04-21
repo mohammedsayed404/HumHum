@@ -21,4 +21,6 @@ public interface IUserServices
 
     Task<int> UpdateUserAddressAsync(AddressToUpdateViewModel model);
 
+    Task<ApplicationUserToReturnDto> GetCurrentUserAsync();
+
 }
