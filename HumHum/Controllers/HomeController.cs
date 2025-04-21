@@ -65,22 +65,16 @@ namespace HumHum.Controllers
 
             var topProducts = await _serviceManager.ProductService.GetTopRatingProductsAsync(8);
             var featuredRestaurants = await _serviceManager.ProductService.GetProductsWithFeaturedRestaurantsAsync(8);
-            
+
             ////var restProdImg = topProducts.Where(p => p.Restaurant.Contains(featuredRestaurants[0].Name) .ToLower()).FirstOrDefault();
             //var restProdImg = topProducts.FirstOrDefault(p => p.Restaurant == "Hardee's");
-            
+
             var viewModel = new TopProductAndFeaturedRestaurantsViewModel(topProducts, featuredRestaurants);
-   
+
             return View(viewModel);
 
         }
 
-        public IActionResult Privacy()
-        {
-
-
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
