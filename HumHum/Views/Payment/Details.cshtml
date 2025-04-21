@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+ 
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #fffdfa;
+        color: #333;
+        padding: 30px;
+    }
+
+    h2 {
+        color: #ffb411;
+        margin-bottom: 20px;
+    }
+
+    .checkout-container {
+        max-width: 70%;
+        margin: auto;
+        margin-top: 30px;
+        background-color: #fff8ed;
+        border: 1px solid #ffb411;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 180, 17, 0.2);
+    }
+
+
+    .cart-container {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    .cart-title {
+        color: #ffb411;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .radio-option {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .radio-option:hover {
+            border-color: #ffb411;
+            background-color: #fff3d4;
+        }
+
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .btn-theme {
+        background-color: #ffb411;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+    }
+
+    .btn-theme:hover {
+        background-color: #e2a800;
+    }
+
+
+
+
+
+    /* ............. */
+
+
+        
+
+</style>
+
+
+
+
+<div class="container  checkout-container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h2>PAYMENT</h2>
+            </div>
+
+            <form  >
+                <div class="mb-3">
+                    <label for="nameOnCard" class="form-label">Name on card</label>
+                    <input type="text" class="form-control" id="nameOnCard">
+                </div>
+
+                <div class="mb-3">
+                    <label for="cardNumber" class="form-label">Card number</label>
+                    <input type="text" class="form-control" id="cardNumber" value="1234 1234 1234 1234">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="expiryDate" class="form-label">MM / YY</label>
+                        <input type="text" class="form-control" id="expiryDate">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="cvc" class="form-label">CVC</label>
+                        <input type="text" class="form-control" id="cvc">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button  type="submit" class="btn btn-theme">&lt; Back to Review</button>
+                    <button type="submit" class="btn btn-theme">Submit order &gt;</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">ORDER SUMMARY</h5>
+                    <p class="text-muted small">Shipping costs will be added depending on choices made during checkout</p>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Order subtotal</span>
+                        <span>$375.00</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Shipping and handling</span>
+                        <span>$10.00</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total</span>
+                        <span>$385.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

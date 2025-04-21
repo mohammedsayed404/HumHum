@@ -40,13 +40,27 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, DisplayName = model.Name };
+            // Check if email is already taken
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View(model);
+            }
+
+            //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser
+            {
+                UserName = $"{model.Address.FirstName}{model.Address.Id}",
+                DisplayName = $"{model.Address.FirstName} {model.Address.LastName}",
+                Email = model.Email,
+                Address = model.Address
+            };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-
                 await _userManager.AddToRoleAsync(user, Roles.Customer);
 
                 // Add custom claims
@@ -286,6 +300,12 @@ public class AccountController : Controller
                 return View(model);
             }
 
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View(model);
+            }
             var user = new ApplicationUser
             {
                 UserName = model.Email,

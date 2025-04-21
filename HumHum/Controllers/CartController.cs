@@ -87,7 +87,6 @@ namespace HumHum.Controllers
             customerCartDto = new CustomerCartDto(cartId!, listOfNewItems, null, null, null, null);
 
             await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
-
             return Json(new { success = true, message = "Product is increased by one", quantity = newQuantity, total = totalPrice });
         }
 
@@ -195,7 +194,11 @@ namespace HumHum.Controllers
         {
             try
             {
+
+           
+
                 var customerCartDto = new CustomerCartDto(cartId, new List<CartItemDto>(), null, null, null, null);
+
 
                 await _serviceManager.CartService.UpdateCustomerCartAsync(customerCartDto);
 

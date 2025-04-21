@@ -5,6 +5,12 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IServiceManager ServiceManager
+@{
+
+    var userId = ServiceManager.UserServices.Id;
+
+    var userAddress = await ServiceManager.UserServices.GetUserAddressAsync(userId!);
+}
 <!DOCTYPE html>
 <html>
 
@@ -83,7 +89,7 @@
                         </li>
 
 
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User?.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
@@ -125,17 +131,19 @@
 
                     <!-- Right side nav -->
                     <ul class="navbar-nav ms-auto">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User?.Identity?.IsAuthenticated == true)
                         {
-		                    <li class="nav-item me-auto">
-			                    <a class="btn btn-warning position-relative" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
-				                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-					                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-				                    </svg>
-                                <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: large">
-				                    </span>
-			                    </a>
-		                    </li>
+	                        
+
+		                       <li class="nav-item me-auto">
+			                       <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+				                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+					                       <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+				                       </svg>
+                                    <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: medium">
+				                       </span>
+			                       </a>
+		                       </li>
 
 
 
@@ -168,7 +176,7 @@
                             </li>
 
                         }
-                        <button id="themeToggle" class="btn btn-primary mx-2" >
+                        <button id="themeToggle" class="btn btn-mood   mx-2">
                             <i class="bi bi-moon-fill d-none"></i>
                             <i class="bi bi-sun-fill"></i>
                         </button>
@@ -184,18 +192,18 @@
 
         @if (User.Identity.IsAuthenticated)
         {
-            <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 bg-dark">
+            <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 ">
                 <!-- Delivery Info -->
-                <div class="text-center text-lg-start mb-2 mb-lg-0">
+                <div class="text-center text-lg-start mb-2 mb-lg-0" style ="color: white !important">
                     <p class="mb-0 fw-bold">
                         Deliver to:
                         <i class="fas fa-map-marker-alt text-warning mx-2"></i>
-                        <span class="fw-normal">Current Location</span>
-                        <span>Mirpur 1 Bus Stand, Dhaka</span>
+                        <span class= "fw-normal">Current Location</span>
+                        <span>@userAddress?.Street, @userAddress?.City, @userAddress?.Country</span>
                     </p>
                 </div>
 
-                <!-- Search Box -->
+                @* <!-- Search Box -->
                 <form    class="d-flex align-items-center" id="search-tour">
                     <div class="input-group-icon pe-2">
                         <i class="fas fa-search input-box-icon text-primary"></i>
@@ -204,14 +212,16 @@
                         placeholder="Search Food"
                         aria-label="Search" />
                     </div>
-                </form>
+                </form> *@
 
             </div>
         }
         
         @RenderBody()
     </main>
+
     
+
 
 
     <!-- ===============================================-->
@@ -554,7 +564,7 @@
     <!-- Intro.js -->
     <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
 
-    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User).Result.HasSeenTour)
+    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User)?.Result?.HasSeenTour == true)
     {
         <script>
 

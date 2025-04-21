@@ -120,9 +120,79 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-[data-bs-theme="dark"] .bg-light {
-    background-color: var(--bs-dark) !important;
+
+
+    [data-bs-theme="dark"] .bg-light {
+        background-color: var(--bs-dark) !important;
+    }
+
+/*seka*/
+[data-bs-theme="dark"] .form-control:focus {
+    color: aliceblue;
 }
+
+[data-bs-theme="dark"] .btn-mood{
+    color:white !important;
+}
+.btn-mood {
+    border: none;
+    color: #424242 !important;
+}
+.btn-mood:focus {
+    box-shadow: none !important;
+}
+
+[data-bs-theme="dark"] .introjs-tooltiptext {
+    color: #424242;
+}
+
+[data-bs-theme="dark"] .table{
+    color:#aeafb2;
+}
+
+[data-bs-theme="dark"] option{
+    background-color:#757575;
+}
+
+[data-bs-theme="dark"] option:hover {
+    color: #ffb411;
+}
+
+[data-bs-theme="dark"] .table thead {
+    color: #ffb411;
+}
+
+    [data-bs-theme="dark"] .table th {
+        background-color: rgb(42, 40, 40, 0.60);
+    }
+
+[data-bs-theme="dark"] svg {
+    color: white;
+}
+
+[data-bs-theme="dark"] p {
+    color: #757575 !important;
+}
+p {
+    color:#757575;
+}
+[data-bs-theme="dark"] .bg-100 {
+    color: aliceblue;
+}
+[data-bs-theme="dark"] .bg-dark {
+    color: var(--bs-light) !important;
+}
+.navbar {
+    --bs-navbar-color: var(--bs-light);
+    --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+    --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
+    --bs-navbar-active-color: var(--bs-light);
+    --bs-navbar-brand-color: var(--bs-light);
+    --bs-navbar-brand-hover-color: var(--bs-light);
+    background-color: var(--bs-light) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 
 [data-bs-theme="dark"] .text-1000 {
     color: var(--bs-light) !important;
@@ -161,7 +231,10 @@
     --bs-primary: #FFB30E;
     --bs-secondary: #1a6ed1;
     --bs-body-bgg: #212121;
-    .card {
+}
+
+/* These need to be separate rules: */
+[data-bs-theme="dark"] .card {
     background-color: var(--bs-dark) !important;
     border-color: rgba(255,255,255,0.125) !important;
 }  .bg-soft-danger {
@@ -173,6 +246,7 @@
     border-color: #dc3545 !important;
 }
 }
+
 body {
     margin: 0;
     font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -199,8 +273,6 @@ body {
   }
 }
 
-
-
 hr {
   margin: 1rem 0;
   color: #EEEEEE;
@@ -214,12 +286,12 @@ hr:not([size]) {
 }
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-family: "Source Sans Pro", "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-weight: 700;
-  line-height: 1.2;
-  color: #212121;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-family: "Source Sans Pro", "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--bs-body-color);
 }
 
 h1, .h1 {
@@ -353,8 +425,8 @@ sup {
 }
 
 a {
-  color: #212121;
-  text-decoration: none;
+    color: var(--bs-body-color);
+    text-decoration: none;
 }
 
 a:hover {
@@ -9783,7 +9855,7 @@ fieldset:disabled .btn {
 }
 
 .bg-dark {
-  background-color: #212121 !important;
+  background-color: white !important;
 }
 
 .bg-body {
