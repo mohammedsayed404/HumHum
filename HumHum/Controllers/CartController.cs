@@ -195,8 +195,6 @@ namespace HumHum.Controllers
             try
             {
 
-           
-
                 var customerCartDto = new CustomerCartDto(cartId, new List<CartItemDto>(), null, null, null, null);
 
 

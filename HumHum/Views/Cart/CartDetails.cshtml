@@ -164,11 +164,14 @@
 			</tr>
 		}
 		<tr>
-			<td colspan="8" class="text-start">
+			@if (Model.Items.Count != 0)
+			{
+				<td colspan="8" class="text-start">
 
-				@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
+					@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
 
-			</td>
+				</td>
+			}
 		</tr>
 		</tbody>
 	</table>
