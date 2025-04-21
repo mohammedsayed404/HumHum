@@ -1,10 +1,4 @@
-/* -------------------------------------------------------------------------- */
-/*                                 Theme                                      */
-/* -------------------------------------------------------------------------- */
-/* prettier-ignore */
-/* -------------------------------------------------------------------------- */
-/*                                  Utilities                                 */
-/* -------------------------------------------------------------------------- */
+
 /*-----------------------------------------------
 |   Bootstrap Styles
 
@@ -81,10 +75,6 @@
 
 
 
-
-
-
-
 :root {
     --bs-body-bgg: #ffa400;
     --bs-blue: #2780ED;
@@ -117,9 +107,8 @@
 }
 
 
-
-
 /* Add these dark mode overrides for the navbar */
+
 [data-bs-theme="dark"] .navbar {
     --bs-navbar-color: var(--bs-light);
     --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
@@ -161,9 +150,7 @@
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-[data-bs-theme="dark"] .bg-light {
-    background-color: var(--bs-dark) !important;
-}
+
 
 
 
@@ -177,9 +164,7 @@
     .card {
     background-color: var(--bs-dark) !important;
     border-color: rgba(255,255,255,0.125) !important;
-} .text-1000 {
-    color: var(--bs-light) !important;
-} .bg-soft-danger {
+}  .bg-soft-danger {
     background-color: rgba(220,53,69,0.15) !important;
 } .bg-soft-warning {
     background-color: rgba(255,179,14,0.15) !important;

@@ -10,16 +10,24 @@
 <h4>Complete your account</h4>
 <hr />
 
-<form asp-action="ExternalLoginConfirmation">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Confirm</button>
-</form>
 
-@* @section Scripts {
+<h2>Associate your @ViewData["LoginProvider"] account</h2>
+<form asp-action="ExternalLoginConfirmation" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Complete Registration</button>
+</form>
+@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-} *@
+} 
