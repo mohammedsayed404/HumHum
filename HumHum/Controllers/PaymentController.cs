@@ -17,7 +17,7 @@ public class PaymentController : Controller
 
     // get from salah checkout
     [HttpPost]
-    public async Task<IActionResult> Details(DeliveryMethodToReturnDto  deliveryMethodToReturnDto )
+    public async Task<IActionResult> Details(DeliveryMethodToReturnDto deliveryMethodToReturnDto)
     {
         //public record OrderToReturnDto(Guid Id, string UserEmail,
         //string PaymentStatus, string DeliveryMethod, decimal Subtotal, decimal Total,
@@ -51,7 +51,7 @@ public class PaymentController : Controller
         if (cartId == null) return BadRequest();
         var cart = await _ServiceManger.PaymentService.CreateOrUpdatePaymentIntent(cartId);
 
-        var customerCart = new CustomerCartDto(cartId, cart.Items, cart.DeliveryMethodId,  cart.DeliveryPrice, cart.PaymentIntentId, cart.ClientSecret);
+        var customerCart = new CustomerCartDto(cartId, cart.Items, cart.DeliveryMethodId, cart.DeliveryPrice, cart.PaymentIntentId, cart.ClientSecret);
         if (customerCart is null) return BadRequest();
 
         //return Json(new { success = true, message = "Product is increased by one" });
@@ -63,12 +63,12 @@ public class PaymentController : Controller
     const string endpointSecret = "whsec_...";
 
     [HttpPost]
-    public async  Task<IActionResult> Index()
+    public async Task<IActionResult> Index()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
         //const string endpointSecret = "whsec_...";
-        
-            
+
+
         var stripeEvent = EventUtility.ConstructEvent(json,
                 Request.Headers["Stripe-Signature"], endpointSecret);
 
@@ -89,7 +89,14 @@ public class PaymentController : Controller
             Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
         }
         return View();
-        
-      
+
+
     }
+
+
+
+
+
+
+
 }

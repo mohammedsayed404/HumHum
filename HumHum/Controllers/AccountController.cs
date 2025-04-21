@@ -17,18 +17,24 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
+    private readonly ILogger<AccountController> _logger;
 
     public AccountController(UserManager<ApplicationUser> userManager,
                              RoleManager<IdentityRole> roleManager,
                              SignInManager<ApplicationUser> signInManager,
-                             IEmailSender emailSender
-                             )
+                             IEmailSender emailSender,
+                                     ILogger<AccountController> logger)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
+        _logger = logger;
     }
+
+
+    public IActionResult MyAccount() => View();
+
 
     // GET: /Account/Register
     public IActionResult Register() => View();
@@ -38,13 +44,27 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = $"{model.Address.FirstName}{model.Address.Id}", DisplayName = $"{model.Address.FirstName} {model.Address.LastName}", Email = model.Email, Address = model.Address };
+            // Check if email is already taken
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View(model);
+            }
+
+            //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser
+            {
+                UserName = $"{model.Address.FirstName}{model.Address.Id}",
+                DisplayName = $"{model.Address.FirstName} {model.Address.LastName}",
+                Email = model.Email,
+                Address = model.Address
+            };
             //var customerRole = await _roleManager.CreateAsync(new IdentityRole(Roles.Customer));
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-
                 await _userManager.AddToRoleAsync(user, Roles.Customer);
 
                 // Add custom claims
@@ -120,7 +140,6 @@ public class AccountController : Controller
         return RedirectToAction("ForgotPasswordConfirmation");
     }
 
-
     public IActionResult ForgotPasswordConfirmation()
     {
         return View();
@@ -161,6 +180,8 @@ public class AccountController : Controller
     }
 
 
+
+    // External Login Actions
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ExternalLogin(string provider, string returnUrl = null)
@@ -174,32 +195,87 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
     {
-        returnUrl ??= Url.Content("~/");
-
-        if (remoteError != null)
+        try
         {
-            ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-            return RedirectToAction(nameof(Login));
-        }
+            returnUrl ??= Url.Content("~/");
 
-        var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info == null)
-            return RedirectToAction(nameof(Login));
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"External provider error: {remoteError}");
+                return RedirectToAction(nameof(Login));
+            }
 
-        // Try to sign in the user with this external login provider
-        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                _logger.LogWarning("External login info not available");
+                return RedirectToAction(nameof(Login));
+            }
 
-        if (result.Succeeded)
-        {
-            return LocalRedirect(returnUrl);
-        }
-        else
-        {
-            // If user doesn't have an account, prompt to create one
+            // Sign in the user with this external login provider
+            var result = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider,
+                info.ProviderKey,
+                isPersistent: false,
+                bypassTwoFactor: true);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User logged in with {LoginProvider} provider", info.LoginProvider);
+                return LocalRedirect(returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return RedirectToAction(nameof(Lockout));
+            }
+
+            // Handle new user registration
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name) ??
+                      info.Principal.FindFirstValue(ClaimTypes.GivenName);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                _logger.LogWarning("Email claim not received from {LoginProvider}", info.LoginProvider);
+                ModelState.AddModelError(string.Empty, "Email claim not received from external provider.");
+                return RedirectToAction(nameof(Login));
+            }
+
+            // Check if user already exists
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                // Add external login to existing account
+                var addLoginResult = await _userManager.AddLoginAsync(user, info);
+                if (addLoginResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+                foreach (var error in addLoginResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(nameof(Login));
+            }
+
+            // Prepare view model for new user registration
+            return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel
+            {
+                Email = email,
+                Name = name ?? email.Split('@')[0]
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in external login callback");
+            ModelState.AddModelError(string.Empty, "An error occurred during external login");
+            return RedirectToAction(nameof(Login));
         }
     }
+
+
 
     [HttpGet]
     public IActionResult ExternalLoginConfirmation(string returnUrl = null)
@@ -209,38 +285,92 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
+    public async Task<IActionResult> ExternalLoginConfirmation(
+        ExternalLoginConfirmationViewModel model,
+        string returnUrl = null)
     {
-        if (ModelState.IsValid)
+        try
         {
+            if (!ModelState.IsValid)
+                return View(model);
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                return RedirectToAction(nameof(Login));
+                _logger.LogError("External login info not available during confirmation");
+                ModelState.AddModelError(string.Empty, "Error loading external login information");
+                return View(model);
             }
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user);
-            if (result.Succeeded)
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
             {
-                result = await _userManager.AddLoginAsync(user, info);
-                if (result.Succeeded)
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View(model);
+            }
+            //var user = new ApplicationUser
+            //{
+            //    UserName = model.Email,
+            //    Email = model.Email,
+            //    DisplayName = model.Name,
+            //    HasSeenTour = false,
+            //    EmailConfirmed = true // Add this for external logins
+
+            //};
+            var user = new ApplicationUser
+            {
+                UserName = $"{model.Name.Replace(" ", "")}{model.Address.Id}",
+                DisplayName = model.Name,
+                Email = model.Email,
+                Address = model.Address,
+                EmailConfirmed = true,
+                HasSeenTour = false
+            };
+            var createResult = await _userManager.CreateAsync(user);
+            if (createResult.Succeeded)
+            {
+                // Add role to user
+                await _userManager.AddToRoleAsync(user, Roles.Customer);
+
+                // Add external login
+                var addLoginResult = await _userManager.AddLoginAsync(user, info);
+                if (addLoginResult.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    _logger.LogInformation("User created an account using {LoginProvider} provider", info.LoginProvider);
                     return RedirectToLocal(returnUrl);
+                }
+
+                foreach (var error in addLoginResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            else
+            {
+                foreach (var error in createResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            return View(model);
         }
-
-        ViewData["ReturnUrl"] = returnUrl;
-        return View(model);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in external login confirmation");
+            ModelState.AddModelError(string.Empty, "An error occurred while creating your account");
+            return View(model);
+        }
     }
+
+
+
+
+
+
 
     public IActionResult AccessDenied() => View();
 
@@ -255,7 +385,8 @@ public class AccountController : Controller
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
-
+    // Add to AccountController
+    public IActionResult Lockout() => View();
 
 
     // Action to mark user as completed the Tour guide

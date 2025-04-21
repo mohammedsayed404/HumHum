@@ -27,34 +27,33 @@
 <!-- ============================================-->
 <!-- <section> begin ============================-->
 <section class="py-0">
-
-    <!-- Search Box -->
-    <div class="d-flex justify-content-center my-4" >
-        <div class="input-group-icon input-group-sm w-50">
+    <div class="container">
+        <!-- Your content here -->
+    
+        <!-- Search Box -->
+        <div class="d-flex justify-content-center mt-4" >
+            <div class="input-group-icon input-group-sm w-50">
            
-                <i class="fas fa-search input-box-icon text-primary"></i>
-                <input class="form-control border-2 input-box bg-100 "
-                       type="search"
-                       placeholder="Search Food"
-                       aria-label="Search"
-                       id="search-product" />
-           
+                    <i class="fas fa-search input-box-icon text-primary"></i>
+                    <input class="form-control border-2 input-box bg-100 "
+                           type="search"
+                           placeholder="Search Food"
+                           aria-label="Search"
+                           id="search-product" />
+            </div>
         </div>
-    </div>
   
-       
+        <!-- Product Cards -->
+        <div class="container ">
+            <div id="productContainer" class="row h-100 gx-2 gy-5 mt-2 productsSearch">
+                @Html.Partial("_ProductCardsPartial", Model)
 
-
-    <div class="container ">
-        <div id="productContainer" class="row h-100 gx-2 gy-5 mt-7 productsSearch">
-            
-            @Html.Partial("_ProductCardsPartial", Model)
-        </div>
+            </div>
 
         
+        </div>
+        <!-- end of .container-->
     </div>
-    <!-- end of .container-->
-
 </section>
 <!-- <section> close ============================-->
 <!-- ============================================-->

@@ -2,6 +2,7 @@
 using Domain.Contracts;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
@@ -15,17 +16,28 @@ internal sealed class UserServices : IUserServices
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserServices(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
+    public UserServices(IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
     {
         _httpContextAccessor = httpContextAccessor;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _userManager = userManager;
     }
 
     public string? Id => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
     public string? UserEmail => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
+
+    public async Task<ApplicationUserToReturnDto> GetCurrentUserAsync()
+    {
+        var user = await _userManager.FindByIdAsync(Id!);
+
+        return _mapper.Map<ApplicationUserToReturnDto>(user);
+    }
+
     //public string? cartid => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.d);
 
     public async Task<AddressToReturnDto> GetUserAddressAsync(string userId)

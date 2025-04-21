@@ -17,8 +17,8 @@ internal sealed class OrderService : IOrderService
     private readonly IMapper _mapper;
     private readonly IPaymentService _paymentService;
 
-    public OrderService(ICartService cartService, 
-                        IPaymentService paymentService, 
+    public OrderService(ICartService cartService,
+                        IPaymentService paymentService,
                         IUnitOfWork unitOfWork,
                         IMapper mapper)
     {
@@ -91,15 +91,17 @@ internal sealed class OrderService : IOrderService
         var OrderRepo = _unitOfWork.GetRepository<Order, Guid>();
 
 
-        if(!string.IsNullOrEmpty(cart.PaymentIntentId))
-        {
-            var OrderSpec = new OrderWithPaymentIntentSpec(cart.PaymentIntentId);
-            var ExistingOrder = await OrderRepo.GetByIdWithSpecAsync(OrderSpec);
-            OrderRepo.Remove(ExistingOrder);
+        #region old 
+        //if (!string.IsNullOrEmpty(cart.PaymentIntentId))
+        //{
+        //    var OrderSpec = new OrderWithPaymentIntentSpec(cart.PaymentIntentId);
+        //    var ExistingOrder = await OrderRepo.GetByIdWithSpecAsync(OrderSpec);
+        //    OrderRepo.Remove(ExistingOrder);
 
-        }
-        var CardDto =  await _paymentService.CreateOrUpdatePaymentIntent(cart.Id);
-        
+        //}
+        //var CardDto = await _paymentService.CreateOrUpdatePaymentIntent(cart.Id);
+
+        #endregion
 
         var order = new Order
         {
@@ -108,7 +110,7 @@ internal sealed class OrderService : IOrderService
             OrderItems = orderItems,
             DeliveryMethod = deliveryMethod,
             Subtotal = subTotal,
-            PaymentIntentId = CardDto.PaymentIntentId
+            //PaymentIntentId = CardDto.PaymentIntentId
 
 
         };

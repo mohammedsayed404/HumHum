@@ -11,6 +11,7 @@ internal sealed class UserAddressProfile : Profile
     {
         CreateMap<Address, AddressToReturnDto>();
         CreateMap<AddressToUpdateViewModel, Address>();
+        CreateMap<AddressToReturnDto, AddressToUpdateViewModel>();
     }
 
 }

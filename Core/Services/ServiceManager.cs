@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Service.Abstractions;
@@ -30,7 +32,8 @@ public sealed class ServiceManager : IServiceManager
         ICartRepository cartRepository,
         //IServiceManager serviceManager,
         IConfiguration configuration,
-        IHttpContextAccessor httpContextAccessor
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<ApplicationUser> userManager
         )
     {
 
@@ -46,12 +49,12 @@ public sealed class ServiceManager : IServiceManager
 
         _lazyRestaurantService = new(() => new RestaurantService(unitOfWork, mapper, PhotoService));
 
-        _lazyOrderService = new(() => new OrderService(CartService,PaymentService ,unitOfWork, mapper));
+        _lazyOrderService = new(() => new OrderService(CartService, PaymentService, unitOfWork, mapper));
 
         _lazyPaymentService = new(() => new PaymentService(unitOfWork, cartRepository, configuration, mapper));
 
 
-        _lazyUserServices = new(() => new UserServices(httpContextAccessor, unitOfWork, mapper));
+        _lazyUserServices = new(() => new UserServices(httpContextAccessor, unitOfWork, mapper, userManager));
 
     }
 
