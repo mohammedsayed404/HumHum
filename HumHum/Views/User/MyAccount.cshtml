@@ -1,4 +1,4 @@
-﻿
+﻿@model ApplicationUserToUpdateViewModule
 @{
     ViewData["Title"] = "MyAccount";
 }
@@ -22,14 +22,9 @@
                    role="tab"
                    aria-controls="account-info"
                    aria-selected="true">Account Info</a>
-                <a class="nav-link"
-                   id="saved-addresses-tab"
-                   data-bs-toggle="pill"
-                   href="#saved-addresses"
-                   role="tab"
-                   aria-controls="saved-addresses"
-                   aria-selected="false">Saved Addresses</a>
-                <a class="nav-link"
+                
+                <a 
+                   class="nav-link"
                    id="my-orders-tab"
                    data-bs-toggle="pill"
                    href="#my-orders"
@@ -49,33 +44,57 @@
                      aria-labelledby="account-info-tab">
                     <h3>My Account</h3>
                     <hr />
-                    <form>
+                    <form asp-action="UpdateUserInfo">
+                        <input hidden asp-for="Id" />
+                        <input hidden asp-for="@Model.Address.Id" />
+                        <input hidden asp-for="UserName" class="form-control bg-100">
+                       
                         <div class="mb-3 row">
-                            <label class="col-sm-2 col-form-label">Email</label>
+                            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-6">
-                                <input type="email" class="form-control" value="abdellateef35@gmail.com" disabled>
+                                <input asp-for="Email"  class="form-control bg-100"  >
                             </div>
                             <div class="col-sm-4 d-flex gap-2">
-                                <button class="btn btn-outline-secondary">Change Email</button>
+                                <button class="btn btn-outline-warning">Change Email</button>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
-                            <label class="col-sm-2 col-form-label">First Name</label>
+                            <label asp-for="@Model.Address.FirstName" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" value="Abdellateef">
+                                <input asp-for="@Model.Address.FirstName" class="form-control bg-100" >
                             </div>
                         </div>
 
                         <div class="mb-3 row">
-                            <label class="col-sm-2 col-form-label">Last Name</label>
+                            <label asp-for="@Model.Address.LastName" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" value="Eid">
+                                <input asp-for="@Model.Address.LastName" class="form-control bg-100">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.Street" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.Street" class="form-control bg-100">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.City" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.City" class="form-control bg-100">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.Country" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.Country" class="form-control bg-100">
                             </div>
                         </div>
 
                         <!-- Subscriptions -->
-                        <div class="mb-3 row">
+                     @*    <div class="mb-3 row">
                             <div class="offset-sm-2 col-sm-10">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="newsletter">
@@ -86,7 +105,7 @@
                                     <label class="form-check-label" for="sms">Subscribe to SMS</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
 
                         <!-- Submit Button -->
                         <div class="mb-3 row">
@@ -97,57 +116,14 @@
                     </form>
                 </div>
 
-                <!-- Saved Addresses Pane (empty for now) -->
-                <div class="tab-pane fade"
-                     id="saved-addresses"
-                     role="tabpanel"
-                     aria-labelledby="saved-addresses-tab">
-                    <h3>Saved Addresses</h3>
-                    <p>No addresses yet.</p>
-                </div>
+             
 
                 <!-- My Orders Pane -->
-                <div class="tab-pane fade"
-                     id="my-orders"
-                     role="tabpanel"
-                     aria-labelledby="my-orders-tab">
-                    <h3>My Orders</h3>
-                    <hr />
+                <partial name="_OrdersForUser"  />
 
-                    <!-- Sample Order Card -->
-                    <div class="card mb-3 shadow-sm">
-                        <div class="card-body d-md-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">KFC - Main Branch</h5>
-                                <p class="mb-0 text-muted">Order placed on April 20, 2025 at 6:30 PM</p>
-                                <span class="badge bg-success mt-1">Delivered</span>
-                            </div>
 
-                            <div class="text-end mt-3 mt-md-0">
-                                <h6 class="mb-1">Total: <strong>EGP 150.00</strong></h6>
-                                <a href="#" class="btn btn-outline-warning btn-sm rounded-pill">View Details</a>
-                            </div>
-                        </div>
-                    </div>
+             
 
-                    <!-- Another Order -->
-                    <div class="card mb-3 shadow-sm">
-                        <div class="card-body d-md-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">Pizza Hut</h5>
-                                <p class="mb-0 text-muted">Order placed on April 18, 2025 at 8:15 PM</p>
-                                <span class="badge bg-danger mt-1">Canceled</span>
-                            </div>
-
-                            <div class="text-end mt-3 mt-md-0">
-                                <h6 class="mb-1">Total: <strong>EGP 220.00</strong></h6>
-                                <a href="#" class="btn btn-outline-warning btn-sm rounded-pill">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- You can loop through this block dynamically from your backend -->
-                </div>
             </div>
         </div>
     </div>
@@ -193,7 +169,7 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-6">
-                        <input type="email" class="form-control" value="abdellateef35@gmail.com" disabled>
+                        <input type="email" class="form-control bg-100" value="abdellateef35@gmail.com" disabled>
                     </div>
                     <div class="col-sm-4 d-flex gap-2">
                         <button class="btn btn-outline-secondary">Change Email</button>
@@ -204,14 +180,14 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label">First Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" value="Abdellateef">
+                        <input type="text" class="form-control bg-100" value="Abdellateef">
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label">Last Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" value="Eid">
+                        <input type="text" class="form-control bg-100" value="Eid">
                     </div>
                 </div>
 
@@ -228,7 +204,7 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label">Date of birth</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control bg-100">
                     </div>
                 </div>
 

@@ -3,6 +3,7 @@ using Domain.Contracts;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Services.Specifications;
 using Shared;
@@ -38,7 +39,17 @@ internal sealed class UserServices : IUserServices
         return _mapper.Map<ApplicationUserToReturnDto>(user);
     }
 
-    //public string? cartid => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.d);
+    public async Task<ApplicationUserToReturnDto> GetCurrentUserWithAddressAsync()
+    {
+
+        var user = await _userManager.Users.Include(user => user.Address)
+                                            .FirstOrDefaultAsync(user => user.Id == Id);
+
+        return _mapper.Map<ApplicationUserToReturnDto>(user);
+
+    }
+
+
 
     public async Task<AddressToReturnDto> GetUserAddressAsync(string userId)
     {
@@ -75,9 +86,17 @@ internal sealed class UserServices : IUserServices
 
     }
 
+    public async Task<bool> UpdateUserInformationAsync(ApplicationUserToUpdateViewModule model)
+    {
+
+        var user = await _userManager.FindByIdAsync(model.Id);
+
+        var mappedUser = _mapper.Map(model, user);
+
+        var result = await _userManager.UpdateAsync(user!);
+
+        return result.Succeeded;
 
 
-
-
-
+    }
 }

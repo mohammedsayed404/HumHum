@@ -9,7 +9,7 @@ internal sealed class UserAddressProfile : Profile
 {
     public UserAddressProfile()
     {
-        CreateMap<Address, AddressToReturnDto>();
+        CreateMap<Address, AddressToReturnDto>().ReverseMap();
         CreateMap<AddressToUpdateViewModel, Address>();
         CreateMap<AddressToReturnDto, AddressToUpdateViewModel>();
     }

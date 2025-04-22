@@ -65,6 +65,7 @@ namespace HumHum.Mock
             var currency = "usd"; // Currency code
             var successUrl = $"https://localhost:7155/MockPayment/OrderCreatedSuccessfully/{createdOrder.Id}";
             var cancelUrl = "https://localhost:7155/MockPayment/cancel";
+
             StripeConfiguration.ApiKey = _stripeSetting.CurrentValue.SecretKey;
 
             var options = new SessionCreateOptions
@@ -79,11 +80,11 @@ namespace HumHum.Mock
                             PriceData = new SessionLineItemPriceDataOptions
                             {
                                 Currency = currency,
-                                UnitAmount = Convert.ToInt32(createdOrder.Total) * 100, // Amount in smallest currency unit (e.g., cents)
+                                UnitAmount = (long)((createdOrder.Total) * 100), // Amount in smallest currency unit (e.g., cents)
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
 
-                                    Name = user?.DisplayName,
+                                    Name = user?.UserName,
                                     Description = "Product Description"
 
                                 },
