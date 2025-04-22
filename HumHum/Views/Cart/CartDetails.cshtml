@@ -103,13 +103,16 @@
 		<div id="totalPrice">Total price = @ViewBag.TotalPrice</div>
 	</div>
 	
-	<div class="container mt-3">
-		<div class="d-flex justify-content-end">
-			<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center my-3" data-bs-toggle="modal" data-bs-target="#clearCartModal">
-				<i class="bi bi-trash me-2"></i> Clear Cart
-			</button>
+	@if (Model.Items.Count != 0)
+	{
+		<div class="clearAll container mt-3">
+			<div class="d-flex justify-content-end">
+				<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center my-3" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+					<i class="bi bi-trash me-2"></i> Clear Cart
+				</button>
+			</div>
 		</div>
-	</div>
+	}
 
 	<table class="table cart-table ">
 		<thead>
@@ -164,11 +167,14 @@
 			</tr>
 		}
 		<tr>
-			<td colspan="8" class="text-start">
+			@if (Model.Items.Count != 0)
+			{
+				<td colspan="8" class="text-start">
 
-				@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
+					@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
 
-			</td>
+				</td>
+			}
 		</tr>
 		</tbody>
 	</table>

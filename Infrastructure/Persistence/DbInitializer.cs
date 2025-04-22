@@ -157,7 +157,15 @@ public class DbInitializer : IDbInitializer
                 DisplayName = nameof(Roles.Administrator),
                 Email = "admin@gmail.com",
                 UserName = "mmossyed525",
-                PhoneNumber = "01061212129"
+                PhoneNumber = "01061212129",
+                Address = new Address
+                {
+                    City = "Cairo",
+                    Street = "123 str",
+                    Country = "Egypt",
+                    FirstName = "Mohamed",
+                    LastName = "Khafaga",
+                }
             };
 
             var customer = new ApplicationUser

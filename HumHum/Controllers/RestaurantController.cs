@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Service.Abstractions;
@@ -9,6 +10,7 @@ using Shared.ViewModels;
 
 namespace HumHum.Controllers;
 
+[Authorize]
 public class RestaurantController : Controller
 {
 
@@ -61,7 +63,8 @@ public class RestaurantController : Controller
             {
                 Products = products.ToList(),
                 RestaurantName = products[0].Restaurant,
-                Quantity = Enumerable.Repeat(0, products.Count).ToList()
+                Quantity = Enumerable.Repeat(0, products.Count).ToList(),
+                RestaurantId = id
             };
 
             if (items.Count != 0)
