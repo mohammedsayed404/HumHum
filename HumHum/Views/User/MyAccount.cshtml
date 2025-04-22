@@ -23,14 +23,18 @@
                    aria-controls="account-info"
                    aria-selected="true">Account Info</a>
                 
-                <a 
-                   class="nav-link"
-                   id="my-orders-tab"
-                   data-bs-toggle="pill"
-                   href="#my-orders"
-                   role="tab"
-                   aria-controls="my-orders"
-                   aria-selected="false">My Orders</a>
+               @if (User.IsInRole(Roles.Customer))
+               {
+                   <a 
+	                   class="nav-link"
+	                   id="my-orders-tab"
+	                   data-bs-toggle="pill"
+	                   href="#my-orders"
+	                   role="tab"
+	                   aria-controls="my-orders"
+	                   aria-selected="false">My Orders</a>
+               }
+
             </div>
         </div>
 
