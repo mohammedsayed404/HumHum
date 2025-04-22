@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 using Shared;
@@ -23,6 +24,10 @@ public class ProductController : Controller
     public async Task<IActionResult> Index(ProductParameterRequest request)
     //public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 4)
     {
+        //if (User.IsInRole(Roles.RestaurantManager))
+        //{
+        //    return RedirectToAction(nameof())
+        //}
         var products = await _serviceManager.ProductService.GetAllProductsAsync(request);
         var customerCart = await _serviceManager.CartService.GetCustomerCartAsync(cartId);
 
@@ -103,7 +108,11 @@ public class ProductController : Controller
 
     [HttpGet]
     //[Authorize(Roles = Roles.Administrator)]
-    public IActionResult Create() => View();
+    public IActionResult Create(int restaurantId)
+    {
+        ViewBag.restaurantId = restaurantId;
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(ProductToCreationViewModel model)
@@ -113,7 +122,7 @@ public class ProductController : Controller
         var created = await _serviceManager.ProductService.CreateProductAsync(model);
 
         if (created > 0)
-            return RedirectToAction(nameof(ShowAll));
+            return RedirectToAction(nameof(Index));
         else
         {
             ModelState.AddModelError(string.Empty, "cant' add product pls try again later");
@@ -150,7 +159,7 @@ public class ProductController : Controller
         var updated = await _serviceManager.ProductService.UpdateProductAsync(model);
 
         if (updated > 0)
-            return RedirectToAction(nameof(ShowAll));
+            return RedirectToAction(nameof(Index));
         else
         {
             ModelState.AddModelError(string.Empty, "can't Update product pls try again later");
@@ -174,7 +183,7 @@ public class ProductController : Controller
         var deleted = await _serviceManager.ProductService.DeleteProductAsync(id);
 
         if (deleted > 0)
-            return RedirectToAction(nameof(ShowAll));
+            return RedirectToAction(nameof(Index));
         else
         {
             ModelState.AddModelError(string.Empty, "can't delete product pls try again later");

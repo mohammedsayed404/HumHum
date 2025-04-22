@@ -81,8 +81,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    @if (User.IsInRole(Roles.Customer))
+                    {
+	                    @Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+                    }
+                    else if (User.IsInRole(Roles.RestaurantManager))
+                    {
+	                    @Html.Partial("_EditUpdatePartialView", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+                    }
 
-                    @Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
                 </div>
             }
         </div>

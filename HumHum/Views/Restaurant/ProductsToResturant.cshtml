@@ -13,6 +13,13 @@
 	
 <link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
 
+@if (User.IsInRole(Roles.RestaurantManager))
+{
+	<div class="d-flex justify-content-center mt-3">
+		<a href="@Url.Action("Create", "Product", new {restaurantId = Model.RestaurantId})" class="btn" style="background-color: #e69500; color: white;">Create Product</a>
+	</div>
+}
+
 <section class="py-0">
 	<div class="container h-100">
 		<div class="row justify-content-center gx-2 gy-5 mt-3">
@@ -28,8 +35,8 @@
 						<div class="card card-span h-100">
 							<div class="position-relative">
 								<img class="img-fluid rounded-3 w-100" style="height:300px;"
-								src="@Model.Products[i].Image"
-								alt="..."/>
+								     src="@Model.Products[i].Image"
+								     alt="..."/>
 								<div class="card-actions">
 									<div class="badge badge-foodwagon bg-primary p-4">
 										<div class="d-flex flex-between-center">
@@ -60,8 +67,14 @@
 
 						</div>
 					</a>
-					@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary (ViewData) {["index"] = i})
-
+					@if (User.IsInRole(Roles.Customer))
+					{
+						@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+					}
+					else if (User.IsInRole(Roles.RestaurantManager))
+					{
+						@Html.Partial("_EditUpdatePartialView", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+					}
 				
 			    </div>
 		    }

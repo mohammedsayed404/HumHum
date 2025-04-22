@@ -25,6 +25,28 @@
     <!-- ===============================================-->
     <title>@ViewData["Title"] - My App</title>
 
+    <style>
+        body.dark-mode form label,
+        [data-bs-theme="dark"] form label {
+            color: #000 !important; /* Ensures label text is readable in dark mode */
+        }
+
+        form input,
+        form textarea,
+        form select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ccc;
+        }
+
+        /* Optional: Also force the placeholder text color */
+        form input::placeholder,
+        form textarea::placeholder {
+            color: #666 !important;
+        }
+
+    </style>
+
 
     <!-- ===============================================-->
     <!--    Favicons-->
@@ -107,12 +129,14 @@
                                 </button>
                             </li>
 
+
                             <li class="nav-item" id="restaurant-tour">
-                                <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                                onclick="location.href='@Url.Action("Index", "Restaurant")'">
-                                    Restaurants
-                                </button>
+	                            <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+	                                    onclick="location.href='@Url.Action("Index", "Restaurant")'">
+		                            Restaurants
+	                            </button>
                             </li>
+                            
 
                             <li class="nav-item">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProductCategory" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
@@ -156,15 +180,18 @@
 		                       @*  </a> *@
 		                       @* </li> *@
 
-		                       <li class="nav-item me-auto">
-			                       <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
-				                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-					                       <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-				                       </svg>
-                                    <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: medium">
-				                       </span>
-			                       </a>
-		                       </li>
+                            @if (User.IsInRole(Roles.Customer))
+                            {
+	                            <li class="nav-item me-auto">
+		                            <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+			                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+				                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+			                            </svg>
+			                            <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: medium">
+			                            </span>
+		                            </a>
+	                            </li>
+                            }
 
 
 
