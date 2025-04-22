@@ -7,6 +7,12 @@
     ViewData["Title"] = "Checkout";
     var deliveryMethods = await serviceManager.OrderService.GetAllDeliveryMethodsAsync();
     var cartId = serviceManager.UserServices.Id;
+
+    var customerCart = await serviceManager.CartService.GetCustomerCartAsync(cartId!);
+
+    var customerItems = customerCart.Items;
+
+
 }
 <style>
     :root {
@@ -501,38 +507,65 @@
             </div>
             <div class="section-content" id="paymentContent">
                 <!-- Order Summary -->
-                <div class="summary-section">
-                    <h4 class="summary-title">Summary</h4>
+                 <h4 class="summary-title">Summary</h4>
+                <div class="summary-section d-flex justify-content-between align-items-center">
 
-                    <!-- Full Name Summary -->
-                    <div class="summary-item">
-                        <div class="summary-label">Client Name</div>
-                        <div class="summary-value" id="summaryFullName">
-                            <!-- Will be populated by JavaScript -->
-                        </div>
-                    </div>
-                    <!-- Shipping Address Summary -->
-                    <div class="summary-item">
-                        <div class="summary-label">Shipping Address</div>
-                        <div class="summary-value" id="summaryAddress">
-                            <!-- Will be populated by JavaScript -->
-                        </div>
-                    </div>
-                    <!-- Delivery Method Summary -->
-                    <div class="summary-item">
-                        <div class="summary-label">Delivery Method</div>
-                        <div class="summary-value" id="summaryDelivery">
-                            <!-- Will be populated by JavaScript -->
-                        </div>
-                    </div>
+                    <!-- Summary  -->
 
-                    <!-- Delivery Time Summary -->
-                    <div class="summary-item">
-                        <div class="summary-label">Estimated Delivery</div>
-                        <div class="summary-value" id="summaryDeliveryTime">
-                            <!-- Will be populated by JavaScript -->
+                        <div>
+                        <!-- Full Name Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Client Name</div>
+                            <div class="summary-value" id="summaryFullName">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <!-- Shipping Address Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Shipping Address</div>
+                            <div class="summary-value" id="summaryAddress">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <!-- Delivery Method Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Delivery Method</div>
+                            <div class="summary-value" id="summaryDelivery">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Delivery Time Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Estimated Delivery</div>
+                            <div class="summary-value" id="summaryDeliveryTime">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                 </div>
+                    <!-- Cart Items Summary -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">ORDER SUMMARY</h5>
+                                <p class="text-muted small">Shipping costs will be added depending on choices made during checkout</p>
+
+
+                                @foreach (var item in customerItems)
+                                {
+                                   
+                                    <div class="d-flex justify-content-between">
+                                        <span>Order subtotal</span>
+                                        <span>@item.ProductName</span>
+                                    </div>
+                                }
+
+
+                            </div>
                         </div>
                     </div>
+                
                 </div>
 
 
@@ -542,6 +575,8 @@
             </div>
         </div>
     </form>
+
+   
 </div>
 
 <script>

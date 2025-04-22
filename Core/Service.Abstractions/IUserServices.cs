@@ -23,4 +23,6 @@ public interface IUserServices
 
     Task<ApplicationUserToReturnDto> GetCurrentUserAsync();
 
+    Task<ApplicationUserToReturnDto> GetCurrentUserWithAddressAsync();
+    Task<bool> UpdateUserInformationAsync(ApplicationUserToUpdateViewModule model);
 }
