@@ -31,10 +31,22 @@
             color: #000 !important; /* Ensures label text is readable in dark mode */
         }
  </style> *@
+ 
+	<style>
+        form :is(input, textarea, select):not(:is(.Login *, .Registeration *)) {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ccc;
+        }
+
+        form :is(input::placeholder, textarea::placeholder):not(:is(.Login *, .Registeration *)) {
+            color: #666 !important;
+        }
+	</style>
 
 
 
-    <!-- ===============================================-->
+<!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
