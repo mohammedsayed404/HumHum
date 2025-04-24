@@ -1,11 +1,10 @@
 ﻿using Domain.Contracts;
 using Domain.Entities.Identity;
 using HumHum.SMTP;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Shared.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HumHum.Controllers;
 public class AccountController : Controller
@@ -39,7 +38,7 @@ public class AccountController : Controller
     // GET: /Account/Register
     public IActionResult Register() => View();
 
-    [HttpPost]
+    [Microsoft.AspNetCore.Mvc.HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
@@ -83,7 +82,7 @@ public class AccountController : Controller
     // GET: /Account/Login
     public IActionResult Login() => View();
 
-    [HttpPost]
+    [Microsoft.AspNetCore.Mvc.HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (ModelState.IsValid)
@@ -110,13 +109,13 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpGet]
+    [Microsoft.AspNetCore.Mvc.HttpGet]
     public IActionResult ForgotPassword()
     {
         return View();
     }
 
-    [HttpPost]
+    [Microsoft.AspNetCore.Mvc.HttpPost]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -145,7 +144,7 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpGet]
+    [Microsoft.AspNetCore.Mvc.HttpGet]
     public IActionResult ResetPassword(string token, string email)
     {
         if (token == null || email == null)
@@ -154,7 +153,7 @@ public class AccountController : Controller
         return View(new ResetPasswordViewModel { Token = token, Email = email });
     }
 
-    [HttpPost]
+    [Microsoft.AspNetCore.Mvc.HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -182,8 +181,8 @@ public class AccountController : Controller
 
 
     // External Login Actions
-    [HttpGet]
-    [AllowAnonymous]
+    [Microsoft.AspNetCore.Mvc.HttpGet]
+    [Microsoft.AspNetCore.Authorization.AllowAnonymous]
     public IActionResult ExternalLogin(string provider, string returnUrl = null)
     {
         var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
@@ -191,8 +190,8 @@ public class AccountController : Controller
         return Challenge(properties, provider);
     }
 
-    [HttpGet]
-    [AllowAnonymous]
+    [Microsoft.AspNetCore.Mvc.HttpGet]
+    [Microsoft.AspNetCore.Authorization.AllowAnonymous]
     public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
     {
         try
@@ -277,16 +276,16 @@ public class AccountController : Controller
 
 
 
-    [HttpGet]
+    [Microsoft.AspNetCore.Mvc.HttpGet]
     public IActionResult ExternalLoginConfirmation(string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
-    [HttpPost]
-    [AllowAnonymous]
-    [ValidateAntiForgeryToken]
+    [Microsoft.AspNetCore.Mvc.HttpPost]
+    [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+    [System.Web.Mvc.ValidateAntiForgeryToken]
     public async Task<IActionResult> ExternalLoginConfirmation(
         ExternalLoginConfirmationViewModel model,
         string returnUrl = null)
@@ -391,7 +390,7 @@ public class AccountController : Controller
 
     // Action to mark user as completed the Tour guide
 
-    [Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public async Task<IActionResult> CompleteTour()
     {
         var user = await _userManager.GetUserAsync(User);
