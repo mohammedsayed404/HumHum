@@ -106,22 +106,22 @@
 
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item">
+                            <li class="nav-item" id="products-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                         onclick="location.href='@Url.Action("Index", "Product")'">
                                     Products
                                 </button>
                             </li>
 
-                            <li class="nav-item" id="restaurant-tour">
+                            <li class="nav-item" id="restaurants-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                         onclick="location.href='@Url.Action("Index", "Restaurant")'">
                                     Restaurants
                                 </button>
                             </li>
-                            
 
-                            <li class="nav-item">
+
+                            <li class="nav-item" id="categories-tour">
                                 <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProductCategory" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                         onclick="location.href='@Url.Action("Index", "ProductCategory")'">
                                     Categories
@@ -153,7 +153,7 @@
 
                             @if (User.IsInRole(Roles.Customer))
                             {
-	                            <li class="nav-item me-auto">
+                                <li class="nav-item me-auto" id="cart-tour">
 		                            <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
 			                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
 				                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -575,37 +575,59 @@
                 introJs()
                     .setOptions({
                         steps: [
-                            {
-                                element: document.getElementById("restaurant-tour"),
-                                intro: `${getTooltipHeader()}
-                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
-                                position: "bottom",
-                            },
-                            {
-                                element: document.getElementById("search-tour"),
-                                intro: `${getTooltipHeader()}
-                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
-                                position: "bottom",
-                            },
-                            {
-                                element: document.getElementById("popular-items"),
-                                intro: `${getTooltipHeader()}
-                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
-                                position: "bottom",
-                            },
-                            {
-                                element: document.getElementById("testimonial"),
-                                intro: `${getTooltipHeader()}
-                                    <strong>Why Choose Hum Hum?</strong><br>We highlight three core benefits that make us the preferred food delivery choice: Fast Delivery, Fresh Food, and 24/7 Support.`,
-                                position: "bottom",
-                            },
-                            {
-                                element: document.getElementById("logout-tour"),
-                                intro: `${getTooltipHeader()}
-                                     <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
-                                position: "bottom",
-                            },
-                        ],
+            {
+                intro: `${getTooltipHeader()}
+                <strong>👋 Welcome to Hum Hum! our vibrant marketplace!</strong><br>Let's take a quick tour to get you started.`,
+            },
+            {
+                element: document.getElementById("products-tour"),
+                intro: `${getTooltipHeader()}
+                🛍 Discover a world of products! Click here to explore and search for your favorites.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("restaurants-tour"),
+                intro: `${getTooltipHeader()}
+                🍽 Hungry? Dive into our restaurant section to find your next delicious meal.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("categories-tour"),
+                intro: `${getTooltipHeader()}
+                🔍 Looking for something specific? Browse through our categories to find exactly what you crave.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("cart-tour"),
+                intro: `${getTooltipHeader()}
+                🛒 Here's your cart! Keep track of your selections and see how many items you've picked.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("logout-tour"),
+                intro: `${getTooltipHeader()}
+                Here's you can log out`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("themeToggle"),
+                intro: `${getTooltipHeader()}
+                🌗 Switch it up! Toggle between light and dark modes to suit your mood.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("popular-items"),
+                intro: `${getTooltipHeader()}
+                🔥 Check out what's trending! Our popular items section is a must-see.`,
+                position: "bottom",
+            },
+            {
+                element: document.getElementById("testimonial"),
+                intro: `${getTooltipHeader()}
+                ⭐ Discover our featured restaurants, handpicked just for you.`,
+                position: "bottom",
+            }
+                ],
                         nextLabel: 'Next <i class="fas fa-chevron-right"></i>',
                         prevLabel: '<i class="fas fa-chevron-left"></i> Back',
                         skipLabel: '<i class="btn-close" style="color: #ffffff;"></i>',
