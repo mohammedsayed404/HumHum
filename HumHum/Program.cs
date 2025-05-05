@@ -63,7 +63,7 @@ public class Program
             options.ExpireTimeSpan = TimeSpan.FromDays(14);
             options.SlidingExpiration = true;
         });
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews().AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
 
         builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
         builder.Services.AddTransient<IEmailSender, EmailSender>();

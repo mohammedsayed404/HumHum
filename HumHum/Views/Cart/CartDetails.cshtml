@@ -169,7 +169,7 @@
 		<tr>
 			@if (Model.Items.Count != 0)
 			{
-				<td colspan="8" class="text-start">
+				<td colspan="8" class="text-start checkOut">
 
 					@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
 
@@ -193,6 +193,8 @@
 						$(".cartItems").remove();
 						$("#spanCount").html(0);
 						$("#totalPrice").html(`Total price = 0.00`)
+						$(".checkOut").remove();
+						$(".deleteAll").remove();
 						deleteAllMessage();
 					}
 				},
