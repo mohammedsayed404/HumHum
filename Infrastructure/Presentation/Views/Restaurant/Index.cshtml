@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Shared.RestaurantToReturnDto>
+
+@{
+    ViewData["Title"] = "Menu";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* <p class="my-3"> *@
+@*     <a asp-action="Create" class="btn btn-primary">Create New</a> *@
+@* </p> *@
+
+<section class="menu py-5" id="menu">
+    <div class="container">
+	    <div class="text-center">
+		    <span class="d-block fs-8 bg-100">Menu</span>
+		    <h2 class="fw-bold">Tasty menu of the week</h2>
+	    </div>
+
+	@if (User.IsInRole(Roles.Administrator))
+	{
+	    <div class="d-flex justify-content-center mt-5 mb-5">
+	        <a href="@Url.Action("Create", "Restaurant")" class="btn" style="background-color: #e69500; color: white;">Create Restaurant</a>
+	    </div>
+	}
+
+        <div class="row g-4">
+	        @foreach (var item in Model)
+	        {
+		        <div class="col-sm-6 col-md-4 col-lg-3 h-100 mb-4">
+			        <a asp-action="ProductsToResturant" asp-route-id="@item.Id" class="text-decoration-none text-dark">
+				        <div class="card card-span h-100 rounded-4 shadow-lg">
+					        <img src="@item.Image"
+					             alt="@item.Name"
+					             class="img-fluid rounded-top-4"
+					             style="height: 250px; width: 100%; object-fit: cover;" />
+
+@* 					        <div class="card-img-overlay ps-0">
+						        <span class="badge bg-primary ms-2 me-1 px-2 py-1 rounded-pill d-inline-flex align-items-center">
+							        <i class="fas fa-clock me-1 fs-3"></i>
+							        <span class="fs-2">Fast</span>
+						        </span>
+					        </div>
+ *@
+					        <div class="card-body ps-2 pe-2">
+						        <h5 class="fw-bold text-truncate mb-2">@item.Name</h5>
+
+						        <div class="d-flex align-items-center mb-3">
+							        <span class="text-warning me-1"><i class="fas fa-star"></i></span>
+							        <span class="text-warning">4.6</span>
+						        </div>
+
+						        <span class="badge bg-light text-danger fw-semibold rounded-pill p-2">
+							        Tasty Food
+						        </span>
+					        </div>
+				        </div>
+			        </a>
+
+			        @if (User.IsInRole(Roles.Administrator))
+			        {
+				        @Html.Partial("_RestaurantEditUpdatePartialView", item)
+			        }
+		        </div>
+	        }
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,6 @@
+﻿@model ProductCategoryToReturnDto
+
+<div class="mt-3 d-flex justify-content-center gap-2">
+	<a href="@Url.Action("Edit", "ProductCategory", new { id = Model.Id })" class="btn btn-primary btn-sm text-white">Edit</a>
+	<a href="@Url.Action("Delete", "ProductCategory", new { id = Model.Id })" class="btn btn-danger btn-sm text-white">Delete</a>
+</div>

@@ -1,0 +1,75 @@
+﻿@model Shared.ViewModels.ProductToUpdateViewModel
+@inject IUnitOfWork unitOfWork;
+@{
+    ViewData["Title"] = "Edit";
+    // Layout = "~/Views/Shared/_MyLayout.cshtml";
+    var restaurants = await unitOfWork.GetRepository<Restaurant, int>().GetAllAsync();
+    var categories = await unitOfWork.GetRepository<ProductCategory, int>().GetAllAsync();
+    var restaurantslist = new SelectList(restaurants, nameof(Restaurant.Id), nameof(Restaurant.Name));
+    var categoriesslist = new SelectList(categories, nameof(Restaurant.Id), nameof(Restaurant.Name));
+}
+
+<div class="d-flex justify-content-center mt-3 mb-4">
+	<div class="text-center">
+		<span class="badge py-2 px-3 bg-light-subtle">
+			<span class="fs-3 text-warning">Edit @Model.Name</span>
+		</span>
+	</div>
+</div>
+
+<div class="d-flex justify-content-center mt-5">
+	<div class="col-md-6">
+		<form asp-action="Edit" enctype="multipart/form-data" class="bg-dark text-black p-4 rounded shadow">
+			<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+			<input asp-for="Id" class="form-control" hidden />
+			<input asp-for="ImageUrl" class="form-control" hidden />
+			<input asp-for="PublicImageId" class="form-control" hidden />
+			<select asp-for="RestaurantId" asp-items="restaurantslist" class="form-control" hidden></select>
+
+			<div class="form-group mb-3">
+				<label asp-for="Name" class="control-label text-dark">Name</label>
+				<input asp-for="Name" class="form-control bg-white text-dark" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Description" class="control-label text-dark">Description</label>
+				<input asp-for="Description" class="form-control bg-white text-dark" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Price" class="control-label text-dark">Price</label>
+				<input asp-for="Price" class="form-control bg-white text-dark" />
+				<span asp-validation-for="Price" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="CategoryId" class="control-label text-dark">Category</label>
+				<select asp-for="CategoryId" asp-items="categoriesslist" class="form-control bg-white text-dark"></select>
+				<span asp-validation-for="CategoryId" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-4">
+				<label asp-for="Image" class="control-label text-dark">Image</label>
+				<input class="form-control bg-white text-dark" asp-for="Image" />
+				<span asp-validation-for="Image" class="text-danger"></span>
+			</div>
+
+			<div class="d-flex justify-content-center gap-3">
+				<input type="submit" value="Save" class="btn btn-primary btn-sm px-4" />
+				<a asp-action="Index" class="btn btn-warning btn-sm text-dark px-4" style="background-color: #ffc107;">Back to List</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@* <div>
+	<a asp-action="Index" class="btn btn-secondary btn-sm text-white">Back to List</a>
+</div> *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

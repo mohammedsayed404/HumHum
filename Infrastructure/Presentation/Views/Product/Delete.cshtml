@@ -1,0 +1,51 @@
+﻿@model Shared.ProductToReturnDto
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="d-flex justify-content-center mt-3 mb-4">
+	<div class="text-center">
+		<h3 class="text-danger mb-2">Are you sure you want to delete this?</h3>
+		<span class="badge py-2 px-3 bg-light-subtle">
+			<span class="fs-1 text-warning">Delete @Model.Name</span>
+		</span>
+	</div>
+</div>
+
+<div class="row justify-content-center">
+	<div class="col-md-6">
+		<div class="card shadow-sm p-4 mb-4 bg-body rounded">
+			<h4 class="text-center mb-4">Details</h4>
+			<dl class="row mb-4">
+				<dt class="col-sm-4">ID</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+				<dt class="col-sm-4">Name</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+				<dt class="col-sm-4">Description</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+
+				<dt class="col-sm-4">Price</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Price)</dd>
+
+				<dt class="col-sm-4">Restaurant</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Restaurant)</dd>
+
+				<dt class="col-sm-4">Category</dt>
+				<dd class="col-sm-8">@Html.DisplayFor(model => model.Category)</dd>
+
+				<dt class="col-sm-4">Image</dt>
+				<dd class="col-sm-8">
+					<img src="@Model.Image" class="img-fluid rounded border" style="max-height: 250px;" />
+				</dd>
+			</dl>
+
+			<form asp-action="Delete" class="d-flex justify-content-center gap-3 mt-3">
+				<input type="submit" value="Delete" class="btn btn-danger btn-sm px-4" />
+				<a asp-action="Index" class="btn btn-warning btn-sm text-dark px-4" style="background-color: #ffc107;">Back to List</a>
+			</form>
+		</div>
+	</div>
+</div>

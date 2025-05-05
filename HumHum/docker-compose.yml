@@ -1,0 +1,42 @@
+version: '3.8'
+networks:
+    n1:        
+services:
+  SQLdb:
+     container_name: app-sqldb
+     image: mcr.microsoft.com/mssql/server:2022-latest
+     ports:
+      - "1433:1433"
+     environment:
+      - ACCEPT_EULA=Y  
+      - SA_PASSWORD=password@12345#  
+      - MSSQL_PID=Developer
+     networks:
+      - n1
+     volumes:
+      - sql_persistence_data:/var/opt/mssql
+      
+  HumHum:
+    container_name: HumHum_app
+    # image: mohamedsayed404/demo:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5005:8080"
+    depends_on:
+         - SQLdb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # - DB_DockerConnection=Server =app-sqldb,1433; Database =DEMODOCKER;User Id=sa;Password=password@12345#; TrustServerCertificate = true;
+      # - DB_HOST=app-sqldb 
+      # - DB_Name=dockerDemo-05
+      # - DB_SA_PASSWORD=password@12345#  
+    networks:
+      - n1
+    
+
+volumes:
+  sql_persistence_data: 
+      
+

@@ -1,0 +1,63 @@
+﻿@using Service.Abstractions
+@inject IServiceManager serviceManager
+
+@{
+    var userEmail = serviceManager.UserServices.UserEmail;
+    var orders = await serviceManager.OrderService.GetOrdersForUserByEmailAsync(userEmail!);
+}
+
+<!-- My Orders Pane -->
+<div class="tab-pane fade" id="my-orders" role="tabpanel" aria-labelledby="my-orders-tab">
+    <h3>My Orders</h3>
+    <hr />
+    @foreach (var order in orders)
+    {
+        var accordionId = $"accordion-order-{order.Id}";
+        var collapseId = $"collapse-order-{order.Id}";
+        var headingId = $"heading-order-{order.Id}";
+
+        <div class="card mb-3 shadow-sm shadow-warning">
+            <div class="card-body d-md-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">@order.OrderItems[0].ProductName</h5>
+                    <p class="mb-0 text-muted">Order placed on @order.OrderDate.Date</p>
+                    @if (order.PaymentStatus == "PaymentReceived")
+                    {
+                        <span class="badge bg-success mt-1">Delivered</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger mt-1">Pending</span>
+                    }
+                </div>
+
+                <div class="text-end mt-3 mt-md-0">
+                    <h6 class="mb-1">Total: <strong>EGP @order.Total</strong></h6>
+
+                    <!-- Accordion Button -->
+                    <button class="btn btn-outline-warning btn-sm rounded-pill"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#@collapseId"
+                            aria-expanded="false"
+                            aria-controls="@collapseId">
+                        View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accordion Content -->
+            <div class="accordion accordion-flush" id="@accordionId">
+                <div class="accordion-item">
+                    <div id="@collapseId" class="accordion-collapse collapse bg-100" aria-labelledby="@headingId" data-bs-parent="#@accordionId">
+                        <div class="accordion-body ">
+                            <partial name="_OrderDetailsForUser" model="order.OrderItems" />
+
+                            <!-- You can add more order details here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

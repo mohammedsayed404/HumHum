@@ -1,0 +1,53 @@
+﻿@using Shared.ViewModels
+@model List<UserRoleViewModel>
+@{
+    ViewData["Title"] = "Manage User Roles";
+}
+<div style="height:50px"></div>
+
+
+<div class="container mt-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Manage User Roles</h2>
+    <a class="btn btn-primary" asp-controller="Admin" asp-action="Create">Create New Role</a>
+</div>
+<table class="table table-bordered mb-3">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Current Role</th>
+            <th>Assign New Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.CurrentRole</td>
+                <td>
+                    <form asp-action="UpdateRole" asp-controller="Admin" method="post">
+                        <input type="hidden" name="UserId" value="@user.UserId" />
+                        <select name="SelectedRole" class="form-select bg-100">
+                            <option value="">-- No Role --</option>
+                            @foreach (var role in user.AllRoles)
+                            {
+                                <option value="@role" selected="@(role == user.CurrentRole ? "selected" : null)">
+                                    @role
+                                </option>
+                            }
+                        </select>
+                        <td>
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+
+                        </td>
+
+                    </form>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

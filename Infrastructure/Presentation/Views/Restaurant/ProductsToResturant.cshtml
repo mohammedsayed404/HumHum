@@ -1,0 +1,124 @@
+﻿@using NuGet.Versioning
+@model Shared.ProductToRestaurantWithQuantityViewModel
+
+@{
+	ViewData["Title"] = "Restaurant products";
+
+	// string restaurantName = ViewBag.restaurantName;
+
+	// IReadOnlyList<CartItemDto> customerItems = ViewBag.customerProducts;
+}
+
+<!-- <section> begin ============================-->
+	
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
+
+@if (User.IsInRole(Roles.RestaurantManager))
+{
+	<div class="d-flex justify-content-center mt-3">
+		<a href="@Url.Action("Create", "Product", new {restaurantId = Model.RestaurantId})" class="btn" style="background-color: #e69500; color: white;">Create Product</a>
+	</div>
+}
+
+<section class="py-0">
+	<div class="container h-100">
+		<div class="row justify-content-center gx-2 gy-5 mt-3">
+			<span class="badge py-2 px-3">
+				<span class="fs-1 text-warning fs-lg-8">@Model.RestaurantName</span>
+			</span>
+			@for(int i = 0; i < Model.Products.Count; i++)
+			{
+				@* var Model.Products[i]Quantity = customerItems.FirstOrDefault(p => p.Id == Model.Products[i].Id)?.Quantity ?? 0; *@
+				
+				<div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4 mx-2">
+					<a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Products[i].Id" class="text-decoration-none text-dark">
+						<div class="card card-span h-100">
+							<div class="position-relative">
+								<img class="img-fluid rounded-3 w-100" style="height:300px;"
+								     src="@Model.Products[i].Image"
+								     alt="..."/>
+								<div class="card-actions">
+									<div class="badge badge-foodwagon bg-primary p-4">
+										<div class="d-flex flex-between-center">
+											<div class="text-white fs-3">@Model.Products[i].Price</div>
+											<div class="d-block text-white fs-2">
+												LE <br/>
+												@*                                             <div class="fw-normal fs-1 mt-2">Off</div>
+	 *@ </div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-body px-0">
+								<div class="d-flex justify-content-between">
+									<span class="badge bg-soft-danger py-2 px-3">
+										<span class="fs-1 text-danger">@Model.Products[i].Category</span>
+									</span>
+									@* <span class="badge bg-soft-warning py-2 px-3"> *@
+									@*  <span class="fs-1 text-warning">@Model.Products[i].Restaurant</span> *@
+									@* </span> *@
+								</div>
+								<h5 class="fw-bold text-1000 text-truncate mt-2">
+									@Model.Products[i].Name
+								</h5>
+
+							</div>
+							@* <a class="stretched-link" href="#"></a> *@
+
+						</div>
+					</a>
+					@if (User.IsInRole(Roles.Customer))
+					{
+						@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+					}
+					else if (User.IsInRole(Roles.RestaurantManager))
+					{
+						@Html.Partial("_EditUpdatePartialView", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+					}
+				
+			    </div>
+		    }
+
+	    </div>
+    </div>
+    <!-- end of .container-->
+</section>
+<!-- <section> close ============================-->
+
+
+@section Scripts {
+	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+	@* <script> *@
+ @*        $(document).ready(function () { *@
+ @*            $('.addToCart').click(function () { *@
+	@* 			const button = $(this); *@
+ @*                var productId = $(this).data('product-id'); *@
+ @*                $.ajax({ *@
+ @*                    url: '@Url.Action("UpdateCart", "Cart")', *@
+ @*                    type: 'POST', *@
+ @*                    data: { id: productId }, *@
+ @*                    success: function (response) { *@
+ @*                        if (response.success) { *@
+ @*                            // alert(response.message); *@
+	@* 						button.html('Added to Cart'); *@
+	@* 						button.toggle(); *@
+
+	@* 						$("#" + productId).show(); *@
+
+	@* 						$("#spanCount").html(`${response.cartCount}`); *@
+
+	@* 						// button.prop('disabled', true); *@
+	@* 						// button.prop('display', none); *@
+ @*                        } *@
+ @*                    }, *@
+ @*                    error: function () { *@
+ @*                        alert('An error occurred while adding the product to the cart.'); *@
+ @*                    } *@
+ @*                }); *@
+ @*            }); *@
+ @*        }); *@
+ @*    </script> *@
+}
+
+
+

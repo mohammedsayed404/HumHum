@@ -1,0 +1,6 @@
+services:
+  humhum:
+    image: ${DOCKER_REGISTRY-}humhum
+    build:
+      context: .
+      dockerfile: HumHum/Dockerfile

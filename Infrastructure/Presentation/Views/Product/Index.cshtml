@@ -1,0 +1,112 @@
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model ProductToRestaurantWithQuantityViewModel
+@inject IOptionsMonitor<CloudinarySettings> cloudinary;
+@{
+    ViewData["Title"] = "Index";
+    //Layout = "~/Views/Shared/_MyLayout.cshtml";
+
+    var cloudinaryBaseUrl = cloudinary.CurrentValue.CloudinaryBaseUrl;
+
+}
+
+<style>
+    /* Apply styles to the placeholder text */
+    #search-product::placeholder {
+        font-family: 'Georgia', serif; /* Replace with your preferred fancy font */
+        font-weight: bold;
+        color: #000 !important;
+        opacity: 1; /* Ensures full opacity across browsers */
+    }
+
+    #search-product {
+        font-weight: 700;
+    }
+</style>
+
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0">
+    <div class="container">
+        <!-- Your content here -->
+
+        <!-- Search Box -->
+        <div class="d-flex justify-content-center mt-4" >
+	        <div class="input-group-icon input-group-sm w-50">
+           
+		        <i class="fas fa-search input-box-icon text-primary"></i>
+		        <input class="form-control border-2 input-box bg-100 "
+		               type="search"
+		               placeholder="Search Food"
+		               aria-label="Search"
+		               id="search-product" />
+	        </div>
+        </div>
+		
+@*         <div class="d-flex justify-content-center mt-3">
+	        <a href="@Url.Action("Create", "Product")" class="btn" style="background-color: #e69500; color: white;">Create Product</a>
+        </div> *@
+
+
+        <!-- Product Cards -->
+        <div class="container ">
+            <div id="productContainer" class="row h-100 gx-2 gy-5 mt-2 productsSearch">
+                @Html.Partial("_ProductCardsPartial", Model)
+
+            </div>
+        </div>
+        <!-- end of .container-->
+    </div>
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // $(document).on("click", ".pagination-link", function (e) {
+        //     e.preventDefault();
+        //     var page = $(this).data("page");
+
+        //     $.ajax({
+        //         url: '@Url.Action("Index")',
+        //         type: 'GET',
+        //         data: { pageNumber: page },
+        //         success: function (result) {
+        //             $('#productContainer').html(result);
+        //         }
+        //     });
+        // });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+                var page = $(this).data("page");
+
+                $.ajax({
+                    url: '@Url.Action("Index")',
+                    type: 'GET',
+                    data: { pageNumber: page },
+                    success: function (result) {
+                        $('#productContainer').html(result);
+                    }
+                });
+            });
+            $('#search-product').on('input', function() {
+                const query = $(this).val();
+                console.log(query);
+                $.ajax({
+                url: '/Product/Index',
+                method: 'GET',
+                data: { search: query },
+                success: function(response) {
+                    $('.productsSearch').html(response);
+                },
+                error: function() {
+                    $('.productsSearch').html('<p>An error occurred while searching.</p>');
+                }
+                });
+            });
+         });
+    </script>
+}

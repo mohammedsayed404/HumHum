@@ -1,0 +1,113 @@
+﻿@model ProductToRestaurantWithQuantityViewModel
+<style>
+    .no-results-container {
+        background-color: #b8860b;
+        color: #fff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    .no-results-container h4 {
+        font-weight: bold;
+    }
+
+    .no-results-container ul {
+        text-align: left;
+        margin: 1rem auto;
+        max-width: 400px;
+    }
+</style>
+
+@if (Model.Products?.Any() == true)
+{
+    
+        <div class="row h-100 gx-2 gy-5 mt-7">
+
+            @for (int i = 0; i < Model.Products.Count; i++)
+            {
+                <div class="col-sm-6 col-lg-4 mb-3 mb-md-0 h-100 pb-4">
+
+                    <div class="card card-span h-100 mx-2">
+                        <div class="position-relative">
+                            <img class="img-fluid rounded-3 w-100" style="height:250px;"
+                                 src="@Model.Products[i].Image"
+                                 alt="..." />
+                            <div class="d-flex justify-content-between align-items-end  card-actions">
+                                <div class="badge badge-foodwagon bg-primary p-4">
+                                    <div class="d-flex flex-between-center">
+                                        <div class="text-white fs-3">@Model.Products[i].Price</div>
+                                        <div class="d-block text-white fs-2">
+                                            LE <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="badge bg-soft-danger py-2 px-3">
+                                    <span class="fs-1 text-danger">@Model.Products[i].Category</span>
+                                </span>
+                                <span class="badge bg-soft-warning py-2 px-3">
+                                    <span class="fs-1 text-warning">@Model.Products[i].Restaurant</span>
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-end ">
+                                <h5 class="fw-bold text-1000 text-truncate mt-2">
+                                    @Model.Products[i].Name
+                                </h5>
+                                <!-- Star Rating -->
+                                <div class="d-flex gap-1 p-2">
+                                    @{
+                                        double rate = @Model.Products[i].Rate;
+                                        int fullStars = (int)Math.Floor(rate);
+                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                    }
+                                    @for (int j = 0; j < fullStars; j++)
+                                    {
+                                        <i class="fas fa-star text-warning fs-1"></i>
+                                    }
+                                    @if (hasHalfStar)
+                                    {
+                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                    }
+                                    @for (int j = 0; j < emptyStars; j++)
+                                    {
+                                        <i class="far fa-star text-warning fs-1"></i>
+                                    }
+                                </div>
+                                <!-- End Star Rating -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if (User.IsInRole(Roles.Customer))
+                    {
+	                    @Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+                    }
+                    else if (User.IsInRole(Roles.RestaurantManager))
+                    {
+	                    @Html.Partial("_EditUpdatePartialView", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+                    }
+
+                </div>
+            }
+        </div>
+    
+}
+else
+{
+	<div class="container my-5">
+		<div class="text-center p-4 rounded" style="background-color: #b8860b; color: #fff;">
+			<i class="fas fa-search fa-3x mb-3"></i>
+			<h4 class="fw-bold">No Results Found</h4>
+			<p class="mb-3" style="color: white !important">We couldn't find any matches for your search. Please try adjusting your keywords.</p>
+			<ul class="list-unstyled">
+				<li>• Check for spelling errors.</li>
+				<li>• Use different or more general keywords.</li>
+			</ul>
+		</div>
+	</div>
+
+}

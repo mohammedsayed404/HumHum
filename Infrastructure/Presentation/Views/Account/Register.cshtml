@@ -1,0 +1,79 @@
+﻿@model Shared.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    ViewData["HideFooterAndFooter"] = true;
+
+}
+
+<div style="background-image: url('/assets/img/gallery/bg/Regis2.jpg'); background-size: cover; background-position: center; min-height: 93vh; margin-top:64px;">
+    <div class="container d-flex justify-content-center align-items-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0 rounded-4 my-7" style="background-color: white;">
+                    <div class="card-body  mx-4">
+                    <h3 class="card-title text-center mb-2" style="font-size: 1.75rem !important;">Create Your Account</h3>
+
+                    <form asp-action="Register">
+                        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+                        <div class="mb-2">
+                            <label asp-for="Address.FirstName" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.FirstName" class="form-control bg-100 bg-100" placeholder="Your first name" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="Address.LastName" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.LastName" class="form-control bg-100" placeholder="Your last name" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="Email" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Email" class="form-control bg-100" placeholder="Enter your email" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="Address.Country" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.Country" class="form-control bg-100" placeholder="Enter your Country" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.Country" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="Address.City" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.City" class="form-control bg-100" placeholder="Enter your city" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.City" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="Address.Street" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.Street" class="form-control bg-100" placeholder="Enter your Street" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.Street" class="text-danger"></span>
+                        </div>
+                        
+
+                        <div class="mb-2">
+                            <label asp-for="Password" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Password" class="form-control bg-100" placeholder="Create a password" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="ConfirmPassword" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="ConfirmPassword" class="form-control bg-100" placeholder="Confirm your password" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid my-4">
+                            <button type="submit" class="btn btn-primary btn-lg" style="padding: 0.75rem !important; font-weight: bold !important;">
+                                Register
+                            </button>
+                        </div>
+
+           
+                     </form>
+                
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+

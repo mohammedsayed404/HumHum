@@ -1,0 +1,98 @@
+﻿@model IEnumerable<ProductCategoryToReturnDto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<section class="menu py-0" id="menu">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="fs-2 text-warning fs-lg-8">Category</span>
+            <h2 class="fw-bold">Tasty menu of the week</h2>
+        </div>
+
+        @if (User.IsInRole(Roles.RestaurantManager))
+        {
+	        <div class="d-flex justify-content-center mt-5 mb-5">
+		        <a href="@Url.Action("Create", "ProductCategory")" class="btn" style="background-color: #e69500; color: white;">Create Category</a>
+	        </div>
+        }
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 h-100 mb-5">
+	                <a asp-action="ShowProductsByCategory" asp-route-categoryId="@item.Id" class="text-decoration-none text-dark">
+		                <div class="card card-span h-100 text-white rounded-3">
+
+			                <img class="img-fluid rounded-3 w-100" style="height:250px;"
+			                     src="@item.Image"
+			                     alt="..." />
+			                <div class="card-body ps-0">
+				                <div class="d-flex align-items-center mb-3">
+					                <div class="flex-1 ms-3">
+						                <h5 class="mb-0 fw-bold text-1000">@item.Name</h5>
+					                </div>
+				                </div>
+
+
+				                <span class="badge bg-soft-danger p-2">
+					                <span class="fw-bold fs-1 text-danger">Tasty Food</span>
+				                </span>
+			                </div>
+
+		                </div>
+	                </a>
+
+	                @if (User.IsInRole(Roles.RestaurantManager))
+	                {
+                        @Html.Partial("_CategoryProductEditDeletePartialView", item)
+	                }
+
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+@* <h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                
+                    <img src="@item.Image" class="w-25 h-75 rounded" />
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+ *@
+
+

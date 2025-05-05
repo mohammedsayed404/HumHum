@@ -1,0 +1,462 @@
+﻿@* @model IEnumerable<Shared.ProductToReturnDto> *@
+@model Shared.ViewModels.TopProductAndFeaturedRestaurantsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+
+    var products = Model?.Products;
+    var ProductWithRestaurnts = Model?.ProductWithRestaurants;
+    int count = 5;
+
+}
+
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="overflow-hidden pt-4 custom-div" id="home">
+    <div class="container ">
+        <div class="row flex-center">
+            <div class="col-md-5 col-lg-6 order-0 order-md-1 ">
+                <a class="img-landing-banner p-5" href="#!">
+                    <img class="img-fluid" style="filter: drop-shadow(0.5px 0.5px 0.5rem #ffa400);"
+                         src="assets/img/gallery/bg/home.png"
+                         alt="hero-header" />
+                </a>
+            </div>
+            <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
+                <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">
+                    Are you starving?
+                </h1>
+                <h1 class="text-800 mb-5 fs-4">
+                    Within a few clicks, find meals that<br class="d-none d-xxl-block" /> are accessible near you
+                </h1>
+                <div class="card w-xxl-75">
+                    <div class="card-body">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link active mb-3"
+                                        id="nav-home-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-home"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-home"
+                                        aria-selected="true">
+                                    <i class="fas fa-motorcycle me-2"></i>Delivery
+                                </button>
+                                <button class="nav-link mb-3"
+                                        id="nav-profile-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-profile"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-profile"
+                                        aria-selected="false">
+                                    <i class="fas fa-shopping-bag me-2"></i>Pickup
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mt-3" id="nav-tabContent">
+                            <div class="tab-pane fade show active"
+                                 id="nav-home"
+                                 role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <form class="row gx-2 gy-2 align-items-center">
+                                    <div class="col">
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
+                                            <label class="visually-hidden" for="inputDelivery">Address</label>
+                                            <input class="form-control input-box form-foodwagon-control"
+                                                   id="inputDelivery"
+                                                   type="text"
+                                                   placeholder="Enter Your Address" />
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-3 col-sm-auto">
+                                        <button class="btn btn-danger" type="submit">
+                                            Find Food
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade"
+                                 id="nav-profile"
+                                 role="tabpanel"
+                                 aria-labelledby="nav-profile-tab">
+                                <form class="row gx-4 gy-2 align-items-center">
+                                    <div class="col">
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-map-marker-alt text-danger input-box-icon"></i>
+                                            <label class="visually-hidden" for="inputPickup">Address</label>
+                                            <input class="form-control input-box form-foodwagon-control"
+                                                   id="inputPickup"
+                                                   type="text"
+                                                   placeholder="Enter Your Address" />
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-3 col-sm-auto">
+                                        <button class="btn btn-danger" type="submit">
+                                            Find Food
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+
+
+
+<!-- ============================================-->
+<!-- <Popular items section> begin ============================-->
+<section class="py-4 overflow-hidden" id="popular-items">
+    <div class="container">
+        <div class="row h-100">
+            <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm">Popular items</h5>
+            </div>
+            <div class="col-12 ">
+                <div class="carousel slide mx-6 h-50"
+                     id="carouselPopularItems"
+                     data-bs-touch="false"
+                     data-bs-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" data-bs-interval="10000">
+                            <div class="row gx-3 h-100 align-items-center">
+                                @for (int i = 0; i < count; i++)
+                                {
+                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
+                                        <div class="card card-span h-100 rounded-3">
+
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
+                                                 src="@products[i].Image"
+                                                 alt="..." />
+
+                                            <div class="card-body ps-0">
+                                                <h5 class="fw-bold text-1000 text-truncate mb-1">
+                                                    @products[i].Name
+                                                </h5>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
+                                                <div>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
+                                                </div>
+                                                <span class="text-1000 fw-bold">@products[i].Price LE</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-bs-interval="5000">
+                            <div class="row gx-3 h-100 align-items-center">
+                                @for (int i = 0; i < count; i++)
+                                {
+                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
+                                        <div class="card card-span h-100 rounded-3">
+
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
+                                                 src="@products[i].Image"
+                                                 alt="..." />
+
+                                            <div class="card-body ps-0">
+                                                <h5 class="fw-bold text-1000 text-truncate mb-1">
+                                                    @products[i].Name
+                                                </h5>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
+                                                <div>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
+                                                </div>
+                                                <span class="text-1000 fw-bold">@products[i].Price LE</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-bs-interval="3000">
+                            <div class="row gx-3 h-100 align-items-center">
+                                @for (int i = 0; i < count; i++)
+                                {
+                                    <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 w-25">
+                                        <div class="card card-span h-100 rounded-3">
+
+                                            <img class="img-fluid rounded-3 w-100" style="height:200px;"
+                                                 src="@products[i].Image"
+                                                 alt="..." />
+
+                                            <div class="card-body ps-0">
+                                                <h5 class="fw-bold text-1000 text-truncate mb-1">
+                                                    @products[i].Name
+                                                </h5>
+                                                <!-- Star Rating -->
+                                                <div class="d-flex gap-1">
+                                                    @{
+                                                        double rate = products[i].Rate;
+                                                        int fullStars = (int)Math.Floor(rate);
+                                                        bool hasHalfStar = (rate - fullStars) >= 0.5;
+                                                        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                                    }
+                                                    @for (int j = 0; j < fullStars; j++)
+                                                    {
+                                                        <i class="fas fa-star text-warning fs-1"></i>
+                                                    }
+                                                    @if (hasHalfStar)
+                                                    {
+                                                        <i class="fas fa-star-half-alt text-warning fs-1"></i>
+                                                    }
+                                                    @for (int j = 0; j < emptyStars; j++)
+                                                    {
+                                                        <i class="far fa-star text-warning fs-1"></i>
+                                                    }
+                                                </div>
+                                                <!-- End Star Rating -->
+                                                <div>
+                                                    <span class="text-warning me-2"><i class="fas fa-map-marker-alt"></i></span>
+                                                    <span class="text-primary">@products[i].Restaurant</span>
+                                                </div>
+                                                <span class="text-1000 fw-bold">@products[i].Price LE</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button class="carousel-control-prev carousel-icon"
+                            type="button"
+                            data-bs-target="#carouselPopularItems"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon hover-top-shadow"
+                              aria-hidden="true"></span><span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next carousel-icon"
+                            type="button"
+                            data-bs-target="#carouselPopularItems"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon hover-top-shadow"
+                              aria-hidden="true"></span><span class="visually-hidden">Next </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of .container-->
+</section>
+
+<!-- <Popular items section> close ============================-->
+<!-- ============================================-->
+<!-- ============================================-->
+<!-- <Featured Restaurants section> begin ============================-->
+<section id="testimonial">
+    <div class="container">
+        <div class="row h-100">
+            <div class="col-lg-7 mx-auto text-center mb-6">
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">
+                    Featured Restaurants
+                </h5>
+            </div>
+        </div>
+        <div class="row gx-2">
+          
+            @foreach (var item in ProductWithRestaurnts)
+            {
+                @* var restProdImg = products.FirstOrDefault(p => p.Restaurant == rest.Name); *@
+                <div class="col-sm-6 col-md-4 col-lg-3 h-100 mb-5">
+	                <a asp-controller="Restaurant" asp-action="ProductsToResturant" asp-route-id="@item.Restaurant.Id" class="text-decoration-none">
+		                <div class="card card-span h-100 text-white rounded-3">
+
+			                <img class="img-fluid rounded-3 w-100" style="height:250px;"
+			                     src="@item.ProductImage"
+			                     @* src="assets/img/gallery/food-world.png"   *@
+			                     alt="..."/>
+
+			                <div class="card-img-overlay ps-0">
+				                <span class="badge bg-primary ms-2 me-1 p-2">
+					                <i class="fas fa-clock me-1 fs-0"></i><span class="fs-0">Fast</span>
+				                </span>
+			                </div>
+			                <div class="card-body ps-0">
+				                <div class="d-flex align-items-center mb-3">
+					                <img class="img-fluid rounded rounded-2" style="width:50px; height:50px;"
+					                     src="@item.Restaurant.Image"
+					                     alt=""/>
+					                <div class="flex-1 ms-3">
+						                <h5 class="mb-0 fw-bold text-1000">@item.Restaurant.Name</h5>
+						                <span class="text-primary fs--1 me-1"><i class="fas fa-star"></i></span><span class="mb-0 text-primary">4.6</span>
+					                </div>
+				                </div>
+				                <span class="badge bg-soft-danger p-2">
+					                <span class="fw-bold fs-1 text-danger">Opens Tomorrow</span>
+				                </span>
+			                </div>
+		                </div>
+		            </a>
+                </div>
+            }
+            
+            
+            <div class="col-12 d-flex justify-content-center mt-5">
+                <a class="btn btn-lg btn-primary" asp-controller="Restaurant" asp-action="Index">
+                    View All <i class="fas fa-chevron-right ms-2"> </i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0">
+    <div class="bg-holder"
+         style="
+            background-image: url(assets/img/gallery/cta-two-bg.png);
+            background-position: center;
+            background-size: cover;
+          "></div>
+    <!--/.bg-holder-->
+
+    <div class="container">
+        <div class="row flex-center">
+            <div class="col-xxl-9 py-7 text-center">
+                <h1 class="fw-bold mb-4 text-white fs-6">
+                    Are you ready to order <br />with the best deals?
+                </h1>
+                <a class="btn btn-danger" href="#">
+                    PROCEED TO ORDER<i class="fas fa-chevron-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<section class="py-0 pt-7 bg-1000">
+    <div class="container">
+
+        <div class="row">
+            <!-- Legal Section -->
+            <div class="col-6 col-md-4 col-lg-3 col-xxl-2 mb-3">
+                <h5 class="lh-lg fw-bold text-white">LEGAL</h5>
+                <ul class="list-unstyled mb-md-4 mb-lg-0">
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Terms and Conditions</a>
+                    </li>
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Privacy Policy</a>
+                    </li>
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Cookie Policy</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="col-6 col-md-4 col-lg-3 col-xxl-2 mb-3">
+                <h5 class="lh-lg fw-bold text-white">CONTACT</h5>
+                <ul class="list-unstyled mb-md-4 mb-lg-0">
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Ride with us</a>
+                    </li>
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Support</a>
+                    </li>
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Help Center</a>
+                    </li>
+                    <li class="mb-1">
+                        <a class="text-200 text-decoration-none" href="#!">Contact</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Subscribe Section -->
+            <div class="col-12 col-md-8 col-lg-6 col-xxl-4 mb-3">
+                <h5 class="lh-lg fw-bold text-white">
+                    SUBSCRIBE TO OUR NEWSLETTER
+                </h5>
+                <p class="text-200">
+                    Get the latest updates on new offers and services directly in
+                    your inbox.
+                </p>
+                <form>
+                    <div class="row input-group-icon mb-5">
+                        <div class="col">
+                            <input class="form-control input-box bg-800 border-0"
+                                   type="email"
+                                   placeholder="Enter Email"
+                                   aria-label="email" />
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" type="submit">
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end of .container-->
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->

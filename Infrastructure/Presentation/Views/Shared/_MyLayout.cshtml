@@ -1,0 +1,673 @@
+﻿@using Domain.Entities.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Service.Abstractions
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IServiceManager ServiceManager
+@{
+
+    var userId = ServiceManager.UserServices.Id;
+
+    var userAddress = await ServiceManager.UserServices.GetUserAddressAsync(userId!);
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>@ViewData["Title"] - My App</title>
+
+ @*    <style>
+        body.dark-mode form label,
+        [data-bs-theme="dark"] form label {
+            color: #000 !important; /* Ensures label text is readable in dark mode */
+        }
+
+        form input,
+        form textarea,
+        form select {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: #ccc;
+        }
+
+        /* Optional: Also force the placeholder text color */
+        form input::placeholder,
+        form textarea::placeholder {
+            color: #666 !important;
+        }
+
+    </style> *@
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/favicons/favicon.ico">
+    <link rel="manifest" href="~/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="~/assets/img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="~/assets/css/theme.css" rel="stylesheet" />
+
+    <!-- ===============================================-->
+    <!--    Intro.js CSS-->
+    <!-- ===============================================-->
+    <!-- Intro.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/introjs.min.css"
+          rel="stylesheet" />
+
+    @* custom tour layout CSS *@
+    <link href="~/css/layouttour.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <main class="main" id="top">
+
+        <nav class="navbar navbar-expand-lg bg-dark fixed-top custom-nav"
+             data-navbar-on-scroll="data-navbar-on-scroll">
+            <div class="container-fluid align-items-center">
+                <!-- Brand -->
+
+                <a class="navbar-brand d-inline-flex align-items-center" href="@Url.Action("Index", "Home")">
+                    <img class="d-inline-block" style="width:50px; height:50px;"
+                         src="~/assets/img/HumHum_logo.jpg"
+                         alt="logo" />
+                    <span class="text-1000 fs-3 fw-bold ms-2 text-gradient">HumHum</span>
+                </a>
+                <!-- Toggler -->
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"> </span>
+                </button>
+                <!-- Navbar content -->
+                <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0"
+                     id="navbarSupportedContent">
+
+                    <ul class="nav nav-pills me-auto mt-2 mb-lg-0 d-flex align-items-center">
+
+
+                        <li class="nav-item">
+                            <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                                    onclick="location.href='@Url.Action("Index", "Home")'">
+                                Home
+                            </button>
+                        </li>
+
+
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                                        onclick="location.href='@Url.Action("Index", "Product")'">
+                                    Products
+                                </button>
+                            </li>
+
+                            <li class="nav-item" id="restaurant-tour">
+                                <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Restaurant" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                                        onclick="location.href='@Url.Action("Index", "Restaurant")'">
+                                    Restaurants
+                                </button>
+                            </li>
+                            
+
+                            <li class="nav-item">
+                                <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProductCategory" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                                        onclick="location.href='@Url.Action("Index", "ProductCategory")'">
+                                    Categories
+                                </button>
+                            </li>
+                        }
+
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Administrator))
+                        {
+                            <li class="nav-item">
+                                <button class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["action"]?.ToString() == "ManageRoles" ? "active" : "")"
+                                        onclick="location.href='@Url.Action("ManageRoles", "Admin")'">
+                                    Manage
+                                </button>
+                            </li>
+                        }
+
+                    </ul>
+
+
+
+
+
+                    <!-- Right side nav -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+                            
+
+                            @if (User.IsInRole(Roles.Customer))
+                            {
+	                            <li class="nav-item me-auto">
+		                            <a class="btn btn-warning position-relative mx-2" asp-area="" asp-controller="Cart" asp-action="CartDetails" asp-route-id="@ServiceManager.UserServices.Id">
+			                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+				                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+			                            </svg>
+			                            <span id="spanCount" class="d-none position-absolute start-100 translate-middle badge rounded-pill bg-danger" style="top: 10%; font-family: 'Helvetica Neue', sans-serif; font-size: medium">
+			                            </span>
+		                            </a>
+	                            </li>
+                            }
+
+
+
+                            <li class="nav-item" id="logout-tour">
+                                <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
+                                    <button class="btn btn-white shadow-warning text-warning  mx-2"
+                                            type="submit">
+                                        <i class="fas fa-sign-out-alt me-2"></i>
+                                    </button>
+
+                                </form>
+                            </li>
+
+
+                            <li class="nav-item me-auto">
+	                            <button class="btn btn-white shadow-warning text-warning mx-2"
+	                                    type="submit" onclick="location.href='@Url.Action("MyAccount", "User")'">
+
+		                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+			                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+			                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+		                            </svg>
+	                            </button>
+                            </li>
+
+
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <button class="btn btn-white shadow-warning text-warning  mx-2"
+                                        type="submit" onclick="location.href='@Url.Action("Login", "Account")'">
+                                    <i class="fas fa-user me-2"></i>Login
+                                </button>
+                           </li>
+                           
+                           <li class="nav-item">
+                                <button class="btn btn-white shadow-warning text-warning"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("Register", "Account")'">
+                                    <i class="fas fa-user-plus me-2"></i>Register
+                                </button>
+                            </li>
+
+
+
+
+                        }
+                        <button id="themeToggle" class="btn btn-mood   mx-2">
+                            <i class="bi bi-moon-fill d-none"></i>
+                            <i class="bi bi-sun-fill"></i>
+                        </button>
+
+                    </ul>
+
+
+
+                </div>
+
+            </div>
+        </nav>
+
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <div class="container-fluid d-flex flex-column flex-lg-row align-items-center justify-content-evenly mt-6 w-100  pt-4 pb-2 ">
+                <!-- Delivery Info -->
+                <div class="text-center text-lg-start mb-2 mb-lg-0" style="color: white !important">
+                    <p class="mb-0 fw-bold">
+                        Deliver to:
+                        <i class="fas fa-map-marker-alt text-warning mx-2"></i>
+                        <span class="fw-normal">Current Location</span>
+                        <span>@userAddress?.Street, @userAddress?.City, @userAddress?.Country</span>
+                    </p>
+                </div>
+
+               
+
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+
+
+
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script>
+       
+        document.addEventListener('DOMContentLoaded', function() {
+          const themeToggle = document.getElementById('themeToggle');
+          const htmlElement = document.documentElement;
+
+          // Initialize theme
+          const savedTheme = localStorage.getItem('theme') || 'light';
+          htmlElement.setAttribute('data-bs-theme', savedTheme);
+
+          // Set initial icon state
+          const moonIcon = themeToggle.querySelector('.bi-moon-fill');
+          const sunIcon = themeToggle.querySelector('.bi-sun-fill');
+          moonIcon.classList.toggle('d-none', savedTheme === 'dark');
+          sunIcon.classList.toggle('d-none', savedTheme !== 'dark');
+
+          themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            moonIcon.classList.toggle('d-none');
+            sunIcon.classList.toggle('d-none');
+          });
+        });
+
+
+    </script>
+    <script src="~/vendors/popperjs/popper.min.js"></script>
+    <script src="~/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="~/vendors/is/is.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="~/vendors/fontawesome/all.min.js"></script>
+    <script src="~/assets/js/theme.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
+          rel="stylesheet" />
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+                function loadCartCount(){
+                     $.ajax({
+                            url: '@Url.Action("GetCartCount", "Cart")',
+                            type: 'POST',
+                            data: {},
+                            success: function (response) {
+                                if (response.success) {
+                                    // alert(response.message);
+                                    // button.html('Added to Cart');
+                                    // button.toggle();
+
+                                    // $("#" + productId).show();
+
+                                    $("#spanCount").html(`${response.cartCount}`);
+
+                                    $("#spanCount").removeClass("d-none");
+
+                                    // $("#spanCount").html(`${response.cartCount}`);
+
+                                    // button.prop('disabled', true);
+                                    // button.prop('display', none);
+                                }
+                            },
+                            error: function () {
+                                alert('An error occurred while adding the product to the cart.');
+                            }
+                    });
+                }
+
+                $(document).ready(function () {
+
+                    loadCartCount();
+
+                       $(document).on('click', '.addToCart', function() {
+                        const button = $(this);
+                        var productId = $(this).data('product-id');
+                        console.log("Add to cart is pressed");
+                        $.ajax({
+                            url: '@Url.Action("UpdateCart", "Cart")',
+                            type: 'POST',
+                            data: { id: productId },
+                            success: function (response) {
+                                if (response.success) {
+                                    // alert(response.message);
+
+                                    // button.html('Added to Cart');
+                                    // button.hide();
+
+                                    $("#addToCart" + productId).addClass('d-none');
+
+                                     //$("#quantityCountDis" + productId).removeClass('d-none').hide().fadeIn(500);
+
+                                    // $("#" + productId).show();
+
+                                    $("#spanCount").html(`${response.cartCount}`);
+
+                                    //For the restuarantToProduct view, so that it always shows 1 when it's first added to the cart
+                                    $("#in" + productId).val(1);
+
+                                    // button.prop('disabled', true);
+                                    // button.prop('display', none);
+
+                                    $("#quantityCount" + productId).removeClass('d-none').hide().fadeIn(500);
+
+                                }
+                            },
+                            error: function () {
+                                showUnavailableProductModal();
+                            }
+                        });
+                    });
+
+                     $(document).on('click', '.plusOne', function() {
+                        var productId = $(this).data('product-id');
+                        $.ajax({
+                            url: '@Url.Action("AddOne", "Cart")',
+                            type: 'POST',
+                            data: { id: productId },
+                            success: function (response) {
+                                if (response.success) {
+                                    // alert(response.message);
+                                    $("#" + productId).html(`${response.quantity}`);
+                                    $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+
+                                    $("#in" + productId).val(response.quantity);
+                                }
+                            },
+                            error: function () {
+            @* alert('Sorry, the product is no longer available in the cart. You may delete it.'); *@
+                                showUnavailableProductModal();
+                            }
+                        });
+                    });
+
+                       $(document).on('click', '.minusOne', function() {
+                        var productId = $(this).data('product-id');
+
+                        let value = parseInt($("#spanCount").html());
+
+                        $.ajax({
+                            url: '@Url.Action("DecreaseOne", "Cart")',
+                            type: 'POST',
+                            data: { id: productId },
+                            success: function (response) {
+                                if (response.success) {
+                                    // alert(response.message);
+                                    if (response.quantity >= 1) {
+                                        $("#" + productId).html(`${response.quantity}`);
+                                        $("#in" + productId).val(response.quantity);
+                                    } else {
+                                        $("#row" + productId).remove();
+
+                                        $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
+
+                                        //To add the addToCart
+                                        $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
+                                        //To remove the quantity controller
+                                        //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                        //$("#quantityCount" + productId).remove(); //Div from the Server based on the condition
+
+                                        $("#quantityCount" + productId).addClass('d-none');
+                                    }
+                                    $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+                                }
+                            },
+                            error: function () {
+            @* alert('An error occurred while increasing the product in the cart.'); *@
+                                showUnavailableProductModal();
+                            }
+                        });
+                    });
+
+
+                    $(document).on('click', '.delete', function() {
+                        var productId = $(this).data('product-id');
+
+                        let value = parseInt($("#spanCount").html());
+
+                        $.ajax({
+                            url: '@Url.Action("DeleteProduct", "Cart")',
+                            type: 'POST',
+                            data: { id: productId },
+                            success: function (response) {
+                                if (response.success) {
+                                    // alert(response.message);
+                                    if (response.isDeleted) {
+                                        $("#row" + productId).remove();
+
+                                        $("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart
+
+                                        //To add the addToCart
+                                        $("#addToCart"+ productId).removeClass('d-none').hide().fadeIn(500);
+                                        //To remove the quantity controller
+                                        //$("#quantityCountDis" + productId).addClass('d-none'); //For the single page
+                                        //$("#quantityCount" + productId).remove(); //Div from the server based on the condition
+
+
+                                        $("#quantityCount" + productId).addClass('d-none');
+                                    }
+                                    $("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`)
+                                }
+                            },
+                            error: function () {
+                                alert('An error occurred while deleting the product in the cart.');
+                            }
+                        });
+                    });
+
+                });
+
+            function showUnavailableProductModal() {
+                  // Prevent multiple modals
+                  if (document.getElementById('unavailableProductModal')) return;
+
+                  // Create overlay
+                  const overlay = document.createElement('div');
+                  overlay.id = 'unavailableProductModal';
+                  Object.assign(overlay.style, {
+                    position: 'fixed',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: '1000'
+                  });
+
+                  // Create modal container
+                  const modal = document.createElement('div');
+                  Object.assign(modal.style, {
+                    backgroundColor: '#FFD700', // Dark yellow
+                    padding: '30px 40px',
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    maxWidth: '500px',
+                    width: '90%',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    color: '#333', // Dark gray text
+                    fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+                    fontSize: '18px'
+                  });
+
+                  // Create message paragraph
+                  const message = document.createElement('p');
+                  message.textContent = 'Sorry, the product is no longer available. You may delete it.';
+                  message.style.marginBottom = '25px';
+
+                  // Create close button
+                  const closeButton = document.createElement('button');
+                  closeButton.textContent = 'OK';
+                  Object.assign(closeButton.style, {
+                    padding: '10px 20px',
+                    backgroundColor: '#333', // Dark gray button
+                    color: '#FFD700', // Dark yellow text
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontSize: '16px'
+                  });
+
+                  // Add click event to remove the modal
+                  closeButton.addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                  });
+
+                  // Add click event to overlay to close modal when clicking outside the modal content
+                  overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) {
+                      document.body.removeChild(overlay);
+                    }
+                  });
+
+                  // Assemble modal
+                  modal.appendChild(message);
+                  modal.appendChild(closeButton);
+                  overlay.appendChild(modal);
+                  document.body.appendChild(overlay);
+                }
+
+
+
+
+
+        </script>
+    }
+
+
+    <script>
+
+    </script>
+    <!-- Intro.js -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/minified/intro.min.js"></script>
+
+    @if (User.Identity.IsAuthenticated && !UserManager.GetUserAsync(User)?.Result?.HasSeenTour == true)
+    {
+        <script>
+
+            function getTooltipHeader() {
+                return `<div class="d-flex align-items-center mb-3">
+                             <img class="d-inline-block" style="width:50px; height:50px; border-radius:4px;"
+                                  src="/assets/img/HumHum_logo.jpg"
+                                  alt="HumHum Logo" />
+                             <span class="fs-3 fw-bold ms-2" style="background: linear-gradient(90deg, #F17228 0%, #FFB30E 100%);
+                                  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                               HumHum
+                             </span>
+                           </div>`
+            }
+
+             function startTour() {
+                introJs()
+                    .setOptions({
+                        steps: [
+                            {
+                                element: document.getElementById("restaurant-tour"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("search-tour"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("popular-items"),
+                                intro: `${getTooltipHeader()}
+                               <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("testimonial"),
+                                intro: `${getTooltipHeader()}
+                                    <strong>Why Choose Hum Hum?</strong><br>We highlight three core benefits that make us the preferred food delivery choice: Fast Delivery, Fresh Food, and 24/7 Support.`,
+                                position: "bottom",
+                            },
+                            {
+                                element: document.getElementById("logout-tour"),
+                                intro: `${getTooltipHeader()}
+                                     <strong>Welcome to Hum Hum!</strong><br>Discover delicious meals delivered fast to your doorstep. Our hero section showcases what we offer and how easy it is to get started.`,
+                                position: "bottom",
+                            },
+                        ],
+                        nextLabel: 'Next <i class="fas fa-chevron-right"></i>',
+                        prevLabel: '<i class="fas fa-chevron-left"></i> Back',
+                        skipLabel: '<i class="btn-close" style="color: #ffffff;"></i>',
+                        doneLabel: 'Finish <i class="fas fa-utensils"></i>',
+                        tooltipClass: 'customTooltip',
+                        highlightClass: 'customHighlight',
+                        exitOnEsc: true,
+                        exitOnOverlayClick: false,
+                        showStepNumbers: false,
+                        showBullets: true,
+                        showProgress: true,
+                        keyboardNavigation: true,
+                        scrollToElement: true,
+                        overlayOpacity: 0.8,
+                        position: 'auto',
+                        tooltipClass: 'customTooltip',
+                        isActive: true,
+                    })
+                    .oncomplete(function () {
+                        // Send AJAX request to mark tour as completed
+                        $.ajax({
+                            url: '/Account/CompleteTour', // Adjust URL based on your controller
+                            type: 'GET',
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log('Tour marked as completed');
+                                }
+                            },
+                            error: function () {
+                                console.error('Failed to mark tour as completed');
+                            }
+                        });
+                    })
+                    .onexit(function () {
+                        // Optionally mark as completed on exit as well
+                        $.ajax({
+                            url: '/Account/CompleteTour', // Adjust URL based on your controller
+                            type: 'GET'
+                        });
+                    })
+                    .start();
+            }
+
+            window.onload = function () {
+                startTour();
+            }
+        </script>
+
+    }
+</body>
+</html>

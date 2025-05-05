@@ -3,7 +3,6 @@ using Domain.Entities.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HumHum.Extensions;
-using HumHum.Mock;
 using HumHum.SMTP;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Repositories;
+using Presentation.Mock;
 using Service.Abstractions;
 using Services;
 using Shared.Cloudinary;
@@ -29,7 +29,8 @@ public class Program
 
         #region DI Services
 
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews()
+            .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
 
 
         builder.Services.AddDbContext<HumHumContext>(options =>
