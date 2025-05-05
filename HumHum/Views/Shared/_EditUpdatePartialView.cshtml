@@ -1,0 +1,12 @@
+﻿@model ProductToRestaurantWithQuantityViewModel
+@{
+	int i = (int)ViewData["Index"];
+}
+
+<div class="d-flex justify-content-center gap-2">
+	<a href="@Url.Action("Edit", "Product", new { id = Model.Products[i].Id })" class="btn btn-primary btn-sm text-white">Edit</a>
+	<a href="@Url.Action("Delete", "Product", new { id = Model.Products[i].Id })" class="btn btn-danger btn-sm text-white">Delete</a>
+</div>
+
+
+

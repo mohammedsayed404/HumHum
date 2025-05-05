@@ -1,0 +1,66 @@
+﻿@model ProductToRestaurantWithQuantityViewModel
+@{
+	int i = (int)ViewData["Index"];
+}
+
+@if (Model.Quantity[i] == 0)
+{
+	<div id="addToCart@(@Model.Products[i].Id)" class="d-grid gap-2">
+		<button class="addToCart btn btn-lg btn-danger" data-product-id="@Model.Products[i].Id">Add to Cart</button>
+	</div>
+
+	<div id="quantityCount@(@Model.Products[i].Id)" class="quantityControl d-none d-flex justify-content-center align-items-center gx-2">
+		<div class="input-group input-spinner" style="width: 15vw">
+			<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@Model.Products[i].Id">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+					<path d="M973.154 563.218H51.222c-28.275 0-51.222-22.946-51.222-51.214 0-28.276 22.946-51.222 51.222-51.222h921.932c28.33 0 51.222 22.946 51.222 51.222 0 28.268-22.891 51.214-51.222 51.214z"></path>
+				</svg>
+			</button>
+			<input id="in@(@Model.Products[i].Id)" type="text" readonly value=" " class="form-control form-control-sm text-center w-25 bg-100 fw-bold">
+			<button class="btn btn-outline-secondary btn-sm plusOne" data-product-id="@Model.Products[i].Id">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+					<path d="M970.745 459.367H566.614V55.251C566.614 25.842 542.771 2 513.361 2s-53.253 23.842-53.253 53.251v404.116H55.975c-29.411 0-53.253 23.841-53.253 53.25s23.842 53.253 53.253 53.253h404.133v404.115c0 29.407 23.842 53.249 53.253 53.249s53.253-23.842 53.253-53.249V565.87h404.131c29.413 0 53.255-23.843 53.255-53.253s-23.842-53.25-53.255-53.25z"></path>
+				</svg>
+			</button>
+		</div>
+		<button class="delete btn btn-outline-danger btn-sm m-3" data-product-id="@Model.Products[i].Id">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-danger" viewBox="0 0 16 16">
+				<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+				<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+			</svg>
+		</button>
+	</div>
+
+}
+else
+{
+	<div id="addToCart@(@Model.Products[i].Id)" class="d-none d-grid gap-2">
+		<button class="addToCart btn btn-lg btn-danger" data-product-id="@Model.Products[i].Id">Add to Cart</button>
+	</div>
+
+	<div id="quantityCount@(@Model.Products[i].Id)" class="quantityControl d-flex justify-content-center align-items-center gx-2">
+		<div class="input-group input-spinner" style="width: 15vw">
+			<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@Model.Products[i].Id">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+					<path d="M973.154 563.218H51.222c-28.275 0-51.222-22.946-51.222-51.214 0-28.276 22.946-51.222 51.222-51.222h921.932c28.33 0 51.222 22.946 51.222 51.222 0 28.268-22.891 51.214-51.222 51.214z"></path>
+				</svg>
+			</button>
+			<input id="in@(@Model.Products[i].Id)" type="text" readonly value="@Model.Quantity[i]" class="form-control form-control-sm text-center w-25 bg-100 fw-bold">
+			<button class="btn btn-outline-secondary btn-sm plusOne" data-product-id="@Model.Products[i].Id">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+					<path d="M970.745 459.367H566.614V55.251C566.614 25.842 542.771 2 513.361 2s-53.253 23.842-53.253 53.251v404.116H55.975c-29.411 0-53.253 23.841-53.253 53.25s23.842 53.253 53.253 53.253h404.133v404.115c0 29.407 23.842 53.249 53.253 53.249s53.253-23.842 53.253-53.249V565.87h404.131c29.413 0 53.255-23.843 53.255-53.253s-23.842-53.25-53.255-53.25z"></path>
+				</svg>
+			</button>
+		</div>
+		<button class="delete btn btn-outline-danger btn-sm m-3" data-product-id="@Model.Products[i].Id">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-danger" viewBox="0 0 16 16">
+				<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+				<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+			</svg>
+		</button>
+	</div>
+}
+
+
+
+

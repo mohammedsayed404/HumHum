@@ -7,6 +7,9 @@ using Shared;
 using Stripe;
 using Product = Domain.Entities.Product;
 using AutoMapper;
+using Services.Specifications;
+using Domain.Enums;
+using Shared.OrderModule;
 
 
 namespace Services;
@@ -37,7 +40,7 @@ internal  sealed class PaymentService  : IPaymentService
 
     public async Task<CustomerCartDto?> CreateOrUpdatePaymentIntent(string CartId)
         {
-            StripeConfiguration.ApiKey = _configuration["StripeSetting:SecretKey"];
+            StripeConfiguration.ApiKey = _configuration["StripeSetting:Secretkey"];
 
             var Card = await _cartRepository.GetCartAsync(CartId);
 
@@ -51,7 +54,7 @@ internal  sealed class PaymentService  : IPaymentService
                 shippingPrice = deliveryMethod.Price;
             }
 
-            if (Card?.Items.Count > 0)
+            if (Card.Items.Count() > 0)
             {
                 foreach (var item in Card.Items)
                 {
@@ -62,20 +65,20 @@ internal  sealed class PaymentService  : IPaymentService
             }
 
 
-            PaymentIntentService paymentIntentService = new PaymentIntentService();
+            var paymentService = new PaymentIntentService();
             PaymentIntent paymentIntent;
 
             if (string.IsNullOrEmpty(Card.PaymentIntentId))  // create new paymentintentID
             {
                 var CreateOptions = new PaymentIntentCreateOptions()
-                {
-                    Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
-                    Currency = "usd",
-                    PaymentMethodTypes = new List<string>() { "card" }
+            {
+                Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
+                Currency = "usd",
+                PaymentMethodTypes = new List<string>() { "card" }
 
-                };
+            };
 
-                paymentIntent = await paymentIntentService.CreateAsync(CreateOptions);
+                paymentIntent = await paymentService.CreateAsync(CreateOptions);
 
                 Card.PaymentIntentId = paymentIntent.Id;
                 Card.ClientSecret = paymentIntent.ClientSecret;
@@ -85,16 +88,40 @@ internal  sealed class PaymentService  : IPaymentService
                 var UpdateOptions = new PaymentIntentUpdateOptions()
                 {
                     Amount = (long)Card.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)(shippingPrice * 100),
-
                 };
 
-                await paymentIntentService.UpdateAsync(Card.PaymentIntentId, UpdateOptions);
+                await paymentService.UpdateAsync(Card.PaymentIntentId, UpdateOptions);
 
+                //Card.PaymentIntentId = paymentIntent.Id;
+                //Card.ClientSecret = paymentIntent.ClientSecret;
             }
 
             await _cartRepository.CreateOrUpdateCartAsync(Card);
 
             return _mapper.Map<CustomerCartDto>(Card) ;
         }
-    
+
+    public async Task<OrderToReturnDto> UpdatePaymentIntentForSucceededOrFailed(string paymentIntent, bool flag)
+    {   
+        var spec = new OrderWithPaymentIntentSpec(paymentIntent);
+
+        //should Have await
+        var Order =  await _unitOfWork.GetRepository<Order, Guid>().GetByIdWithSpecAsync(spec);
+
+        if(flag)
+        {
+            Order.PaymentStatus = OrderPaymentStatus.PaymentReceived;
+        }
+        else
+        {
+            Order.PaymentStatus = OrderPaymentStatus.PaymentFailed;
+        }
+
+        _unitOfWork.GetRepository<Order, Guid>().Update(Order);
+
+        await _unitOfWork.CompleteAsync();
+
+        return  _mapper.Map<OrderToReturnDto>(Order) ;
+    }
+
 }

@@ -1,0 +1,362 @@
+﻿@model CustomerCartDto
+
+@{
+	ViewData["Title"] = "CartDetails";
+}
+
+@* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> *@
+
+<style>
+.cart-container {
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	padding: 30px;
+}
+
+.cart-title {
+	color: #ffb411;
+	font-weight: 700;
+	font-size: 2.5rem;
+	margin-bottom: 20px;
+}
+
+.cart-img {
+	max-width: 80px;
+	height: auto;
+	border-radius: 8px;
+}
+
+.cart-table th {
+	background-color: #f8f9fa;
+	font-weight: 600;
+}
+
+.cart-table td, .cart-table th {
+	vertical-align: middle;
+}
+
+#totalPrice {
+	font-size: 2rem;
+	font-weight: bold;
+	color: #F17228;
+}
+
+.btn,
+.input-spinner .btn,
+.btn-warning,
+.btn-danger,
+.delete {
+	transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Warning (yellow) buttons */
+.btn-warning,
+.input-spinner .btn {
+	background-color: #ffb411;
+	border-color: #ffb411;
+	color: #000;
+}
+
+.btn-warning:hover,
+.input-spinner .btn:hover {
+	background-color: #e0a800;
+	border-color: #e0a800;
+	color: #000;
+}
+
+/* Danger (red) buttons */
+.btn-danger {
+	background-color: #B12704;
+	border-color: #B12704;
+}
+
+.btn-danger:hover {
+	background-color: #a22003;
+	border-color: #a22003;
+}
+
+/* Trash can button */
+.delete {
+	background-color: transparent;
+	border: 1px solid #dc3545;
+	color: #dc3545;
+}
+
+.delete:hover {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.delete:hover svg {
+	fill: #fff;
+}
+
+</style>
+
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
+
+<div class="container cart-container mt-5 bg-100">
+
+	<div class="d-flex justify-content-between">
+		<h1 class="cart-title">Your Shopping Cart</h1>
+		<div id="totalPrice">Total price = @ViewBag.TotalPrice</div>
+	</div>
+	
+	@if (Model.Items.Count != 0)
+	{
+		<div class="clearAll container mt-3">
+			<div class="d-flex justify-content-end">
+				<button type="button" class="deleteAll btn btn-warning btn-lg d-flex align-items-center my-3" data-bs-toggle="modal" data-bs-target="#clearCartModal">
+					<i class="bi bi-trash me-2"></i> Clear Cart
+				</button>
+			</div>
+		</div>
+	}
+
+	<table class="table cart-table ">
+		<thead>
+		<tr>
+			@* <th>@Html.DisplayNameFor(model => model.Id)</th> *@
+			<th>Product Name</th>
+			<th>Image</th>
+			<th>Unit Price</th>
+			<th>Category</th>
+			<th>Restaurant</th>
+			<th class="text-center">Quantity</th>
+			<th>&nbsp;</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var item in Model.Items)
+		{
+			<tr id="row@(@item.Id)" class = "cartItems">
+				@* <td>@Html.DisplayFor(modelItem => item.Id)</td> *@
+				<td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+				<td>
+					<img src="@item?.ImageUrl" class="cart-img" alt="@item?.ProductName"/>
+				</td>
+				<td>@Html.DisplayFor(modelItem => item.Price)</td>
+				@* <td id="@item.Id">@Html.DisplayFor(modelItem => item.Quantity)</td> *@
+				<td>@Html.DisplayFor(modelItem => item.Category)</td>
+				<td>@Html.DisplayFor(modelItem => item.Restaurant)</td>
+				<td>
+
+					<div class="d-flex justify-content-center align-items-center gx-2">
+						<div class="input-group input-spinner" style="width: 15vw">
+							<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@item.Id" data-quantity="@item.Quantity">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+									<path d="M973.154 563.218H51.222c-28.275 0-51.222-22.946-51.222-51.214 0-28.276 22.946-51.222 51.222-51.222h921.932c28.33 0 51.222 22.946 51.222 51.222 0 28.268-22.891 51.214-51.222 51.214z"></path>
+								</svg>
+							</button>
+							<input id="in@(@item.Id)" type="text" readonly value="@item.Quantity" class="form-control form-control-sm text-center w-25">
+							<button class="btn btn-outline-secondary btn-sm plusOne" data-product-id="@item.Id" data-quantity="@item.Quantity">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+									<path d="M970.745 459.367H566.614V55.251C566.614 25.842 542.771 2 513.361 2s-53.253 23.842-53.253 53.251v404.116H55.975c-29.411 0-53.253 23.841-53.253 53.25s23.842 53.253 53.253 53.253h404.133v404.115c0 29.407 23.842 53.249 53.253 53.249s53.253-23.842 53.253-53.249V565.87h404.131c29.413 0 53.255-23.843 53.255-53.253s-23.842-53.25-53.255-53.25z"></path>
+								</svg>
+							</button>
+						</div>
+						<button class="delete btn btn-outline-danger btn-sm m-3" data-product-id="@item.Id">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-danger" viewBox="0 0 16 16">
+								<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+								<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+							</svg>
+						</button>
+					</div>
+				</td>
+			</tr>
+		}
+		<tr>
+			@if (Model.Items.Count != 0)
+			{
+				<td colspan="8" class="text-start checkOut">
+
+					@Html.ActionLink("Proceed to Checkout", "Index", "Checkout", new { id = Model.Id }, new { @class = "btn btn-warning px-4 py-2 my-3" })
+
+				</td>
+			}
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+@section Scripts {
+	<script>
+
+	$(document).ready(function () {
+		$('.deleteAll').on('click', function () {
+			  $.ajax({
+				url: '/Cart/DeleteAll',
+				type: 'POST',
+				success: function (response) {
+					if(response.success){
+						$(".cartItems").remove();
+						$("#spanCount").html(0);
+						$("#totalPrice").html(`Total price = 0.00`)
+						$(".checkOut").remove();
+						$(".deleteAll").remove();
+						deleteAllMessage();
+					}
+				},
+				error: function (xhr, status, error) {
+				  console.error('Error clearing cart:', error);
+				  alert('An error occurred while clearing your cart. Please try again.');
+				}
+			  });
+		  });
+		});
+
+			function deleteAllMessage() {
+				  // Prevent multiple modals
+				  if (document.getElementById('deleteAll')) return;
+
+				  // Create overlay
+				  const overlay = document.createElement('div');
+					  overlay.id = 'deleteAll';
+				  Object.assign(overlay.style, {
+					position: 'fixed',
+					top: '0',
+					left: '0',
+					width: '100%',
+					height: '100%',
+					backgroundColor: 'rgba(0, 0, 0, 0.5)',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					zIndex: '1000'
+				  });
+
+				  // Create modal container
+				  const modal = document.createElement('div');
+				  Object.assign(modal.style, {
+					backgroundColor: '#FFD700', // Dark yellow
+					padding: '30px 40px',
+					borderRadius: '10px',
+					textAlign: 'center',
+					maxWidth: '500px',
+					width: '90%',
+					boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+					color: '#333', // Dark gray text
+					fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+					fontSize: '18px'
+				  });
+
+				  // Create message paragraph
+				  const message = document.createElement('p');
+				  message.textContent = 'Your cart has been deleted!';
+				  message.style.marginBottom = '25px';
+
+				  // Create close button
+				  const closeButton = document.createElement('button');
+				  closeButton.textContent = 'OK';
+				  Object.assign(closeButton.style, {
+					padding: '10px 20px',
+					backgroundColor: '#333', // Dark gray button
+					color: '#FFD700', // Dark yellow text
+					border: 'none',
+					borderRadius: '5px',
+					cursor: 'pointer',
+					fontSize: '16px'
+				  });
+
+				  // Add click event to remove the modal
+				  closeButton.addEventListener('click', () => {
+					document.body.removeChild(overlay);
+				  });
+
+				  // Add click event to overlay to close modal when clicking outside the modal content
+				  overlay.addEventListener('click', (event) => {
+					if (event.target === overlay) {
+					  document.body.removeChild(overlay);
+					}
+				  });
+
+				  // Assemble modal
+				  modal.appendChild(message);
+				  modal.appendChild(closeButton);
+				  overlay.appendChild(modal);
+				  document.body.appendChild(overlay);
+				}
+
+	</script>
+	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+	@* <script> *@
+	@* 	$(document).ready(function () { *@
+	@* 		$('.plusOne').click(function () { *@
+	@* 			var productId = $(this).data('product-id'); *@
+	@* 			$.ajax({ *@
+	@* 				url: '@Url.Action("AddOne", "Cart")', *@
+	@* 				type: 'POST', *@
+	@* 				data: { id: productId }, *@
+	@* 				success: function (response) { *@
+	@* 					if (response.success) { *@
+	@* 						// alert(response.message); *@
+	@* 						$("#" + productId).html(`${response.quantity}`); *@
+	@* 						$("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`) *@
+	@* 						$("#in" + productId).val(response.quantity); *@
+	@* 					} *@
+	@* 				}, *@
+	@* 				error: function () { *@
+	@* 					alert('An error occurred while increasing the product in the cart.'); *@
+	@* 				} *@
+	@* 			}); *@
+	@* 		}); *@
+
+	@* 		$('.minusOne').click(function () { *@
+	@* 			var productId = $(this).data('product-id'); *@
+
+	@* 			let value = parseInt($("#spanCount").html()); *@
+
+	@* 			$.ajax({ *@
+	@* 				url: '@Url.Action("DecreaseOne", "Cart")', *@
+	@* 				type: 'POST', *@
+	@* 				data: { id: productId }, *@
+	@* 				success: function (response) { *@
+	@* 					if (response.success) { *@
+	@* 						// alert(response.message); *@
+	@* 						if (response.quantity >= 1) { *@
+	@* 							$("#" + productId).html(`${response.quantity}`); *@
+	@* 							$("#in" + productId).val(response.quantity); *@
+	@* 						} else { *@
+	@* 							$("#row" + productId).remove(); *@
+
+	@* 							$("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart *@
+	@* 						} *@
+	@* 						$("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`) *@
+	@* 					} *@
+	@* 				}, *@
+	@* 				error: function () { *@
+	@* 					alert('An error occurred while increasing the product in the cart.'); *@
+	@* 				} *@
+	@* 			}); *@
+	@* 		}); *@
+
+	@* 		$('.delete').click(function () { *@
+	@* 			var productId = $(this).data('product-id'); *@
+
+	@* 			let value = parseInt($("#spanCount").html()); *@
+
+
+	@* 			$.ajax({ *@
+	@* 				url: '@Url.Action("DeleteProduct", "Cart")', *@
+	@* 				type: 'POST', *@
+	@* 				data: { id: productId }, *@
+	@* 				success: function (response) { *@
+	@* 					if (response.success) { *@
+	@* 						// alert(response.message); *@
+	@* 						if (response.isDeleted) { *@
+	@* 							$("#row" + productId).remove(); *@
+
+	@* 							$("#spanCount").html(`${value - 1}`); //To decrease the counter beside the cart *@
+	@* 						} *@
+	@* 						$("#totalPrice").html(`Total price = ${(response.total).toFixed(2)}`) *@
+	@* 					} *@
+	@* 				}, *@
+	@* 				error: function () { *@
+	@* 					alert('An error occurred while deleting the product in the cart.'); *@
+	@* 				} *@
+	@* 			}); *@
+	@* 		}); *@
+	@* 	}); *@
+	@* </script> *@
+}

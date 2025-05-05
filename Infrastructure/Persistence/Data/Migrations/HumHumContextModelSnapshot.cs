@@ -223,6 +223,9 @@ namespace Persistence.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasSeenTour")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -301,6 +304,9 @@ namespace Persistence.Data.Migrations
                     b.Property<string>("PublicImageId")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
+
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
 
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");

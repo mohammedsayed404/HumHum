@@ -1,0 +1,752 @@
+﻿@using Service.Abstractions
+@using Shared.OrderModule
+@model OrderToCreationViewModel
+@inject IServiceManager serviceManager
+
+@{
+    ViewData["Title"] = "Checkout";
+    var deliveryMethods = await serviceManager.OrderService.GetAllDeliveryMethodsAsync();
+    var cartId = serviceManager.UserServices.Id;
+
+    var customerCart = await serviceManager.CartService.GetCustomerCartAsync(cartId!);
+
+    var customerItems = customerCart.Items;
+
+
+}
+<style>
+    :root {
+        --theme-color: #ffb411;
+        --theme-hover: #e69d00;
+        --theme-light: #fff8e0;
+        --theme-lighter: #fffdf6;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        --transition: all 0.25s ease;
+    }
+
+    /* Container styling */
+    .checkout-container {
+        max-width: 800px;
+        margin: 40px auto;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Progress indicator */
+    .checkout-progress {
+        display: flex;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+        .checkout-progress::before {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+    .progress-step {
+        flex: 1;
+        position: relative;
+        text-align: center;
+        z-index: 2;
+    }
+
+    .step-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 8px;
+        color: #fff;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .progress-step.active .step-number {
+        background: var(--theme-color);
+        box-shadow: 0 0 0 4px rgba(255, 180, 17, 0.2);
+    }
+
+    .progress-step.completed .step-number {
+        background: #4CAF50;
+    }
+
+    .step-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #757575;
+        transition: var(--transition);
+    }
+
+    .progress-step.active .step-label {
+        color: #333;
+        font-weight: 600;
+    }
+
+    /* Section styling */
+    .checkout-section {
+        background: #fff;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 24px;
+        overflow: hidden;
+        transition: var(--transition);
+    }
+
+    .section-header {
+        padding: 16px 20px;
+        background: #f8f8f8;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+    }
+
+        .section-header.active {
+            background: var(--theme-light);
+            border-left-color: var(--theme-color);
+        }
+
+    .section-number {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-weight: 600;
+        color: #fff;
+        transition: var(--transition);
+    }
+
+    .section-header.active .section-number {
+        background: var(--theme-color);
+    }
+
+    .section-title {
+        font-weight: 600;
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    .section-status {
+        font-size: 13px;
+        color: #4CAF50;
+        display: none;
+    }
+
+    .section-header.completed .section-status {
+        display: block;
+    }
+
+    .section-content {
+        padding: 24px;
+        border-top: 1px solid #eee;
+        display: none;
+    }
+
+        .section-content.active {
+            display: block;
+        }
+
+    /* Form styling */
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -12px;
+    }
+
+    .form-column {
+        padding: 0 12px;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 15px;
+        transition: var(--transition);
+    }
+
+        .form-control:focus {
+            border-color: var(--theme-color);
+            box-shadow: 0 0 0 3px rgba(255, 180, 17, 0.15);
+            outline: none;
+        }
+
+    /* Delivery methods */
+    .delivery-option {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        margin-bottom: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .delivery-option:hover {
+            border-color: var(--theme-color);
+            background: var(--theme-light);
+        }
+
+    .delivery-radio {
+        margin-right: 16px;
+        position: relative;
+    }
+
+        .delivery-radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    .radio-custom {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        position: relative;
+        transition: var(--transition);
+    }
+
+    .delivery-radio input:checked ~ .radio-custom {
+        border-color: var(--theme-color);
+    }
+
+    .radio-custom:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--theme-color);
+        transition: var(--transition);
+    }
+
+    .delivery-radio input:checked ~ .radio-custom:after {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .delivery-info {
+        flex-grow: 1;
+    }
+
+    .delivery-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .delivery-meta {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .delivery-price {
+        font-weight: 700;
+        color: var(--theme-color);
+        font-size: 18px;
+    }
+
+    /* Button */
+    .btn-container {
+        text-align: right;
+        margin-top: 24px;
+    }
+
+    .btn-theme {
+        background: var(--theme-color);
+        color: #fff;
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 12px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .btn-theme:hover {
+            background: var(--theme-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-theme:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+    /* Summary Styles */
+    .summary-section {
+        background: var(--theme-lighter);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .summary-title {
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: #333;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #efe0b5;
+    }
+
+    .summary-item {
+        margin-bottom: 16px;
+    }
+
+    .summary-label {
+        font-weight: 500;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 4px;
+    }
+
+    .summary-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Payment method styling */
+    .payment-method {
+        margin-top: 24px;
+    }
+
+    .payment-option {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        margin-bottom: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .payment-option:hover {
+            border-color: var(--theme-color);
+            background: var(--theme-light);
+        }
+
+    .payment-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .payment-logo {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .total-section {
+        border-top: 1px dashed #ddd;
+        margin-top: 24px;
+        padding-top: 16px;
+        text-align: right;
+    }
+
+    .order-total {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .total-label {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 4px;
+    }
+</style>
+
+<div class="checkout-container">
+    <form asp-controller="MockPayment" asp-action="CreateOrderSession" method="post">
+        <!-- Checkout Progress Indicator -->
+        <div class="checkout-progress">
+            <div class="progress-step active">
+                <div class="step-number">1</div>
+                <div class="step-label">Shipping</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">2</div>
+                <div class="step-label">Delivery</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">3</div>
+                <div class="step-label">Payment</div>
+            </div>
+        </div>
+
+        <!-- Shipping Address Section -->
+        <div class="checkout-section">
+            <div class="section-header active" id="shippingHeader">
+                <div class="section-number">1</div>
+                <h3 class="section-title">Shipping Address</h3>
+                <div class="section-status">Complete</div>
+            </div>
+            <div class="section-content active" id="shippingContent">
+                <input type="hidden" asp-for="@Model.CartId" value="@cartId" />
+                @* <input type="hidden" asp-for="@Model.ShippingAddress.LastName" /> *@
+
+                <div class="form-row">
+                     <div class="form-column">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" asp-for="@Model.ShippingAddress.FirstName" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" asp-for="@Model.ShippingAddress.LastName" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input type="text" asp-for="@Model.ShippingAddress.Country" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" asp-for="@Model.ShippingAddress.City" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Street</label>
+                    <input type="text" asp-for="@Model.ShippingAddress.Street" class="form-control" required />
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-theme" id="continueToDelivery">Continue to Delivery</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Method Section -->
+        <div class="checkout-section">
+            <div class="section-header" id="deliveryHeader">
+                <div class="section-number">2</div>
+                <h3 class="section-title">Delivery Method</h3>
+                <div class="section-status">Complete</div>
+            </div>
+            <div class="section-content" id="deliveryContent">
+                <!-- Delivery options are generated in a loop from the deliveryMethods variable -->
+                @foreach (var method in deliveryMethods)
+                {
+                    <label class="delivery-option">
+                        <div class="delivery-radio">
+                            <input type="radio" name="DeliveryMethodId" value="@method.Id" required data-name="@method.ShortName" data-price="@method.Price.ToString("C")" data-time="@method.DeliveryTime" />
+                            <span class="radio-custom"></span>
+                        </div>
+                        <div class="delivery-info">
+                            <div class="delivery-name">@method.ShortName</div>
+                            <div class="delivery-meta">Estimated delivery: @method.DeliveryTime</div>
+                        </div>
+                        <div class="delivery-price">@method.Price.ToString("C")</div>
+                    </label>
+                }
+
+                <div class="btn-container">
+                    <button type="button" class="btn-theme" id="continueToPayment" disabled>Continue to Payment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="checkout-section">
+            <div class="section-header" id="paymentHeader">
+                <div class="section-number">3</div>
+                <h3 class="section-title">Payment</h3>
+                <div class="section-status">Complete</div>
+            </div>
+            <div class="section-content" id="paymentContent">
+                <!-- Order Summary -->
+                 <h4 class="summary-title">Summary</h4>
+                <div class="summary-section d-flex justify-content-between align-items-center">
+
+                    <!-- Summary  -->
+
+                        <div>
+                        <!-- Full Name Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Client Name</div>
+                            <div class="summary-value" id="summaryFullName">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <!-- Shipping Address Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Shipping Address</div>
+                            <div class="summary-value" id="summaryAddress">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <!-- Delivery Method Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Delivery Method</div>
+                            <div class="summary-value" id="summaryDelivery">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Delivery Time Summary -->
+                        <div class="summary-item">
+                            <div class="summary-label">Estimated Delivery</div>
+                            <div class="summary-value" id="summaryDeliveryTime">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                 </div>
+                    <!-- Cart Items Summary -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">ORDER SUMMARY</h5>
+                                <p class="text-muted small">Shipping costs will be added depending on choices made during checkout</p>
+
+
+                                @foreach (var item in customerItems)
+                                {
+                                   
+                                    <div class="d-flex justify-content-between">
+                                        <span>Order subtotal</span>
+                                        <span>@item.ProductName</span>
+                                    </div>
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+
+
+                <div class="btn-container">
+                    <button type="submit" class="btn-theme">Complete Payment</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+   
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Section elements
+        const shippingHeader = document.getElementById("shippingHeader");
+        const shippingContent = document.getElementById("shippingContent");
+        const deliveryHeader = document.getElementById("deliveryHeader");
+        const deliveryContent = document.getElementById("deliveryContent");
+        const paymentHeader = document.getElementById("paymentHeader");
+        const paymentContent = document.getElementById("paymentContent");
+
+        // Buttons
+        const continueToDelivery = document.getElementById("continueToDelivery");
+        const continueToPayment = document.getElementById("continueToPayment");
+
+        // Progress steps
+        const progressSteps = document.querySelectorAll(".progress-step");
+
+        // Summary elements
+        const summaryAddress = document.getElementById("summaryAddress");
+        const summaryDelivery = document.getElementById("summaryDelivery");
+        const summaryDeliveryTime = document.getElementById("summaryDeliveryTime");
+        const orderTotal = document.getElementById("orderTotal");
+
+        // Continue to Delivery button click handler
+        continueToDelivery.addEventListener("click", function() {
+            // Validate shipping form fields
+            const shippingInputs = shippingContent.querySelectorAll("input[required]");
+            let isValid = true;
+
+            shippingInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = "#ff3860";
+                } else {
+                    input.style.borderColor = "#ddd";
+                }
+            });
+
+            if (isValid) {
+                // Mark shipping section as completed
+                shippingHeader.classList.add("completed");
+                shippingContent.classList.remove("active");
+                shippingHeader.classList.remove("active");
+
+                // Activate delivery section
+                deliveryHeader.classList.add("active");
+                deliveryContent.classList.add("active");
+
+                // Update progress indicator
+                progressSteps[0].classList.add("completed");
+                progressSteps[0].classList.remove("active");
+                progressSteps[1].classList.add("active");
+            }
+        });
+
+        // Continue to Payment button click handler
+        continueToPayment.addEventListener("click", function() {
+            // Mark delivery section as completed
+            deliveryHeader.classList.add("completed");
+            deliveryContent.classList.remove("active");
+            deliveryHeader.classList.remove("active");
+
+            // Activate payment section
+            paymentHeader.classList.add("active");
+            paymentContent.classList.add("active");
+
+            // Update progress indicator
+            progressSteps[1].classList.add("completed");
+            progressSteps[1].classList.remove("active");
+            progressSteps[2].classList.add("active");
+
+            // Update summary information
+            updateSummary();
+        });
+
+        // Section header click handlers
+        shippingHeader.addEventListener("click", function() {
+            activateSection(0);
+        });
+
+        deliveryHeader.addEventListener("click", function() {
+            if (shippingHeader.classList.contains("completed")) {
+                activateSection(1);
+            }
+        });
+
+        paymentHeader.addEventListener("click", function() {
+            if (deliveryHeader.classList.contains("completed")) {
+                activateSection(2);
+                updateSummary();
+            }
+        });
+
+        // Function to activate a specific section
+        function activateSection(sectionIndex) {
+            // Hide all sections
+            shippingHeader.classList.remove("active");
+            shippingContent.classList.remove("active");
+            deliveryHeader.classList.remove("active");
+            deliveryContent.classList.remove("active");
+            paymentHeader.classList.remove("active");
+            paymentContent.classList.remove("active");
+
+            // Remove active class from all progress steps
+            progressSteps.forEach(step => step.classList.remove("active"));
+
+            // Activate the specified section
+            if (sectionIndex === 0) {
+                shippingHeader.classList.add("active");
+                shippingContent.classList.add("active");
+                progressSteps[0].classList.add("active");
+            } else if (sectionIndex === 1) {
+                deliveryHeader.classList.add("active");
+                deliveryContent.classList.add("active");
+                progressSteps[1].classList.add("active");
+            } else if (sectionIndex === 2) {
+                paymentHeader.classList.add("active");
+                paymentContent.classList.add("active");
+                progressSteps[2].classList.add("active");
+            }
+        }
+
+        // Enable continue to payment button when delivery method is selected
+        const radios = document.querySelectorAll('input[name="DeliveryMethodId"]');
+
+        radios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                if (document.querySelector('input[name="DeliveryMethodId"]:checked')) {
+                    continueToPayment.removeAttribute("disabled");
+                }
+            });
+        });
+
+        // Function to update summary info
+           // Function to update summary info
+    function updateSummary() {
+        // Get client name
+        const firstName = document.querySelector('[name="ShippingAddress.FirstName"]').value;
+        const lastName = document.querySelector('[name="ShippingAddress.LastName"]').value;
+        const fullName = `${firstName} ${lastName}`;
+
+        // Update client name summary
+        document.getElementById("summaryFullName").textContent = fullName;
+
+        // Get shipping address
+        const country = document.querySelector('[name="ShippingAddress.Country"]').value;
+        const city = document.querySelector('[name="ShippingAddress.City"]').value;
+        const street = document.querySelector('[name="ShippingAddress.Street"]').value;
+
+        // Update address summary
+        document.getElementById("summaryAddress").textContent = `${street}, ${city}, ${country}`;
+
+        // Get selected delivery method
+        const selectedDelivery = document.querySelector('input[name="DeliveryMethodId"]:checked');
+        if (selectedDelivery) {
+            const deliveryName = selectedDelivery.getAttribute('data-name');
+            const deliveryPrice = selectedDelivery.getAttribute('data-price');
+            const deliveryTime = selectedDelivery.getAttribute('data-time');
+
+            // Update delivery summary
+            document.getElementById("summaryDelivery").textContent = `${deliveryName} - ${deliveryPrice}`;
+            document.getElementById("summaryDeliveryTime").textContent = deliveryTime;
+
+            // Update order total (in a real app, you would add the price of products)
+            document.getElementById("orderTotal").textContent = deliveryPrice;
+        }
+    }
+    });
+</script>
+
+             

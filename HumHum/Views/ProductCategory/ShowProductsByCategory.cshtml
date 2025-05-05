@@ -1,0 +1,88 @@
+﻿@using NuGet.Versioning
+@model Shared.ProductToRestaurantWithQuantityViewModel
+
+@{
+	ViewData["Title"] = "products to category";
+
+	// string restaurantName = ViewBag.restaurantName;
+
+	// IReadOnlyList<CartItemDto> customerItems = ViewBag.customerProducts;
+}
+
+<!-- <section> begin ============================-->
+
+<link href="~/css/CartControlPlusMinus.css" rel="stylesheet" />
+
+@if(Model is not null){
+
+<section class="py-0">
+	<div class="container h-75">
+		<div class="row justify-content-center gx-2 gy-5 mt-3">
+
+		<span class="badge py-2 px-3">
+			<span class="fs-1 text-warning fs-lg-8">@Model.Products[0].Category</span>
+		</span>
+		@for (int i = 0; i < Model.Products.Count; i++)
+		{
+
+			<div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4 mx-2">
+				<a asp-controller="Product"  asp-action="Details"  asp-route-id="@Model.Products[i].Id" class="text-decoration-none text-dark">
+					<div class="card card-span h-100">
+						<div class="position-relative">
+							<img class="img-fluid rounded-3 w-100" style="height:300px;"
+							     src="@Model.Products[i].Image"
+							     alt="..." />
+							<div class="card-actions">
+								<div class="badge badge-foodwagon bg-primary p-4">
+									<div class="d-flex flex-between-center">
+										<div class="text-white fs-3">@Model.Products[i].Price</div>
+										<div class="d-block text-white fs-2">
+											LE <br />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body px-0">
+							<div class="d-flex justify-content-between">
+								<span class="badge bg-soft-danger py-2 px-3">
+									<span class="fs-1 text-danger">@Model.Products[i].Category</span>
+								</span>
+								
+							</div>
+							<h5 class="fw-bold text-1000 text-truncate mt-2">
+								@Model.Products[i].Name
+							</h5>
+
+						</div>
+						@* <a class="stretched-link" href="#"></a> *@
+
+					</div>
+
+				</a>
+				
+				@if (User.IsInRole(Roles.Customer))
+				{
+					@Html.Partial("_CartPlusMinusControl", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+				}
+				else if (User.IsInRole(Roles.RestaurantManager))
+				{
+					@Html.Partial("_EditUpdatePartialView", Model, new ViewDataDictionary(ViewData) { ["index"] = i })
+				}
+
+			</div>
+
+
+					
+		}
+
+		</div>
+	</div>
+
+	<!-- end of .container-->
+</section>
+}else{
+
+<partial name="_NotFoundResult"></partial>
+}
+<!-- <section> close ============================-->

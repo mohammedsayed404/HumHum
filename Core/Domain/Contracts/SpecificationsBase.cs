@@ -9,6 +9,13 @@ public abstract class SpecificationsBase<TEntity> : ISpecifications<TEntity>
     private readonly List<Expression<Func<TEntity, object>>> _includes = new();
     public IReadOnlyList<Expression<Func<TEntity, object>>> Includes => _includes.AsReadOnly();
 
+    public Expression<Func<TEntity, object>> OrderBy { get; private set; } = null!;
+
+    public Expression<Func<TEntity, object>> OrderByDescending { get; private set; } = null!;
+
+    public int? Take { get; private set; } = null!;
+
+    public int? Skip { get; private set; } = null!;
 
     protected SpecificationsBase() { }
 
@@ -21,6 +28,15 @@ public abstract class SpecificationsBase<TEntity> : ISpecifications<TEntity>
     protected void AddIncludes(Expression<Func<TEntity, object>> expression)
         => _includes.Add(expression);
 
+    protected void ApplyOrderBy(Expression<Func<TEntity, object>> expression)
+        => OrderBy = expression;
 
+    protected void ApplyOrderByDescending(Expression<Func<TEntity, object>> expression)
+        => OrderByDescending = expression;
 
+    protected void ApplyTake(int count)
+        => Take = count;
+
+    protected void ApplySkip(int count)
+        => Skip = count;
 }

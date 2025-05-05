@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Entities.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shared.ViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
-        public string Name { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -15,5 +15,8 @@ namespace Shared.ViewModels
 
         [DataType(DataType.Password), Compare("Password")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public Address Address { get; set; } = null!;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
-using HumHum.ViewModels;
+using Shared.ViewModels;
 using Shared;
 
 namespace Services.MappingProfiles;
@@ -23,6 +23,13 @@ internal sealed class ProductProfile : Profile
         CreateMap<ProductToCreationViewModel, Product>();
 
         CreateMap<ProductToUpdateViewModel, Product>().ReverseMap();
+
+        CreateMap<Product, ProductWithRestaurantToReturnDto>()
+            .ForMember(dest => dest.ProductImage,
+              options =>
+              options.MapFrom<PhotoResolver<Product, ProductWithRestaurantToReturnDto>>()
+            
+           );
 
     }
 

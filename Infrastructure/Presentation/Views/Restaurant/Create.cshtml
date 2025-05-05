@@ -1,0 +1,37 @@
+﻿@model RestaurantToCreationViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Restaurant</h1>
+
+<hr />
+<div class="row justify-content-center">
+	<div class="col-md-6">
+		<form asp-action="Create" enctype="multipart/form-data" class="bg-dark text-black p-4 rounded shadow">
+			<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-4">
+				<label asp-for="Image" class="control-label"></label>
+				<input class="form-control" asp-for="Image" />
+				<span asp-validation-for="Image" class="text-danger"></span>
+			</div>
+
+			<div class="d-flex justify-content-center gap-3">
+				<input type="submit" value="Create" class="btn btn-primary" />
+				<a asp-action="Index" class="btn text-dark" style="background-color: #ffe066;">Back to List</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

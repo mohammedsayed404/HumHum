@@ -1,0 +1,91 @@
+﻿@model Shared.ViewModels.ExternalLoginConfirmationViewModel
+
+@{
+    ViewData["Title"] = "External Login Confirmation";
+    ViewData["HideFooterAndFooter"] = true;
+
+}
+
+<h2>@ViewData["Title"]</h2>
+@* <h4>Complete your account</h4>
+<hr />
+
+
+<h2>Associate your @ViewData["LoginProvider"] account</h2>
+<form asp-action="ExternalLoginConfirmation" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control bg-100" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+        
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+</form>
+
+ *@
+
+
+<div style="background-image: url('/assets/img/gallery/bg/Regis2.jpg'); background-size: cover; background-position: center; min-height: 93vh; margin-top:64px;">
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4 my-7" style="background-color: white;">
+                <div class="card-body  mx-4">
+                    
+
+                    <h2 class="card-title text-center mb-2" style="font-size: 1.75rem !important;">Associate your @ViewData["LoginProvider"] account</h2>
+                    <form asp-action="ExternalLoginConfirmation" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+                        <div class="mb-2">
+                            <label asp-for="Name" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Name" class="form-control bg-100 bg-100" placeholder="Your name" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="Email" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Email" class="form-control bg-100" placeholder="Enter your email" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-2">
+                            <label asp-for="Address.Country" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.Country" class="form-control bg-100" placeholder="Enter your Country" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.Country" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="Address.City" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.City" class="form-control bg-100" placeholder="Enter your city" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.City" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label asp-for="Address.Street" class="form-label" style="font-weight: 600 !important;"></label>
+                            <input asp-for="Address.Street" class="form-control bg-100" placeholder="Enter your Street" style="padding: 0.75rem !important;" />
+                            <span asp-validation-for="Address.Street" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="d-grid my-4">
+                            <button type="submit" class="btn btn-primary btn-lg" style="padding: 0.75rem !important; font-weight: bold !important;">
+                                Complete Registration
+                            </button>
+                        </div>
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

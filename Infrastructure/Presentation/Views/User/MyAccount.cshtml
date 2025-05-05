@@ -1,0 +1,280 @@
+﻿@model ApplicationUserToUpdateViewModule
+@{
+    ViewData["Title"] = "MyAccount";
+}
+
+     
+@* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" /> *@ 
+ 
+<div class="container py-10">
+    <div class="row">
+        <!-- Sidebar Nav -->
+        <div class="col-md-3 border-end">
+            <div class="nav flex-column nav-pills"
+                 id="account‐pills‐tab"
+                 role="tablist"
+                 aria-orientation="vertical">
+                <a class="nav-link active"
+                   id="account-info-tab"
+                   data-bs-toggle="pill"
+                   href="#account-info"
+                   role="tab"
+                   aria-controls="account-info"
+                   aria-selected="true">Account Info</a>
+                
+               @if (User.IsInRole(Roles.Customer))
+               {
+                   <a 
+	                   class="nav-link"
+	                   id="my-orders-tab"
+	                   data-bs-toggle="pill"
+	                   href="#my-orders"
+	                   role="tab"
+	                   aria-controls="my-orders"
+	                   aria-selected="false">My Orders</a>
+               }
+
+            </div>
+        </div>
+
+        <!-- Content Panes -->
+        <div class="col-md-9">
+            <div class="tab-content" id="account‐pills‐content">
+                <!-- Account Info Pane -->
+                <div class="tab-pane fade show active"
+                     id="account-info"
+                     role="tabpanel"
+                     aria-labelledby="account-info-tab">
+                    <h3>My Account</h3>
+                    <hr />
+                    <form asp-action="UpdateUserInfo">
+                        <input hidden asp-for="Id" />
+                        <input hidden asp-for="@Model.Address.Id" />
+                        <input hidden asp-for="UserName" class="form-control bg-100">
+                       
+                        <div class="mb-3 row">
+                            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="Email"  class="form-control bg-100"  >
+                            </div>
+                            <div class="col-sm-4 d-flex gap-2">
+                                <button class="btn btn-outline-warning">Change Email</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.FirstName" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.FirstName" class="form-control bg-100" >
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.LastName" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.LastName" class="form-control bg-100">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.Street" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.Street" class="form-control bg-100">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.City" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.City" class="form-control bg-100">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label asp-for="@Model.Address.Country" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="@Model.Address.Country" class="form-control bg-100">
+                            </div>
+                        </div>
+
+                        <!-- Subscriptions -->
+                     @*    <div class="mb-3 row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="newsletter">
+                                    <label class="form-check-label" for="newsletter">Subscribe to our Newsletter</label>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="sms">
+                                    <label class="form-check-label" for="sms">Subscribe to SMS</label>
+                                </div>
+                            </div>
+                        </div> *@
+
+                        <!-- Submit Button -->
+                        <div class="mb-3 row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <button type="submit" class="btn btn-warning rounded-pill px-4">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+             
+
+                <!-- My Orders Pane -->
+                <partial name="_OrdersForUser"  />
+
+
+             
+
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">*@
+@*  <div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 border-end">
+            <div class="nav flex-column nav-pills">
+                <a class="nav-link active">Account Info</a>
+                <a class="nav-link">Saved Addresses</a>
+                <a class="nav-link">My Orders</a>
+            </div>
+        </div>
+
+        <!-- Account Info Section -->
+        <div class="col-md-9">
+            <h3>My Account</h3>
+            <hr>
+            <form>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-6">
+                        <input type="email" class="form-control bg-100" value="abdellateef35@gmail.com" disabled>
+                    </div>
+                    <div class="col-sm-4 d-flex gap-2">
+                        <button class="btn btn-outline-secondary">Change Email</button>
+                        <button class="btn btn-outline-secondary">Change Password</button>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">First Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control bg-100" value="Abdellateef">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Last Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control bg-100" value="Eid">
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Gender</label>
+                    <div class="col-sm-10 d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary">Male</button>
+                        <button type="button" class="btn btn-warning text-white">Female</button>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Date of birth</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control bg-100">
+                    </div>
+                </div>
+
+                <!-- Subscriptions -->
+                <div class="mb-3 row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="newsletter">
+                            <label class="form-check-label" for="newsletter">Subscribe to our Newsletter</label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input type="checkbox" class="form-check-input" id="sms">
+                            <label class="form-check-label" for="sms">Subscribe to SMS</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mb-3 row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <button type="submit" class="btn btn-warning rounded-pill px-4">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- My Orders Section -->
+        <div class="container py-5">
+            <h3>My Orders</h3>
+            <hr>
+
+            <!-- Sample Order Card -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body d-md-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">KFC - Main Branch</h5>
+                        <p class="mb-0 text-muted">Order placed on April 20, 2025 at 6:30 PM</p>
+                        <span class="badge bg-success mt-1">Delivered</span>
+                    </div>
+
+                    <div class="text-end mt-3 mt-md-0">
+                        <h6 class="mb-1">Total: <strong>EGP 150.00</strong></h6>
+                        <a href="#" class="btn btn-outline-warning btn-sm rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Another Order -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body d-md-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">Pizza Hut</h5>
+                        <p class="mb-0 text-muted">Order placed on April 18, 2025 at 8:15 PM</p>
+                        <span class="badge bg-danger mt-1">Canceled</span>
+                    </div>
+
+                    <div class="text-end mt-3 mt-md-0">
+                        <h6 class="mb-1">Total: <strong>EGP 220.00</strong></h6>
+                        <a href="#" class="btn btn-outline-warning btn-sm rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- You can loop through this block dynamically from your backend -->
+        </div>
+
+    </div>
+</div> 
+ *@

@@ -1,0 +1,221 @@
+﻿@using NuGet.Versioning
+@model IEnumerable<Shared.ProductToReturnDto>
+
+@{
+	ViewData["Title"] = "Restaurant products";
+
+	string restaurantName = ViewBag.restaurantName;
+
+	IReadOnlyList<CartItemDto> customerItems = ViewBag.customerProducts;
+}
+
+<!-- <section> begin ============================-->
+	
+<style>
+
+/* Smooth transition for all buttons */
+.btn {
+	transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Add to Cart button styled in yellow with hover effect */
+.btn-warning {
+	background-color: #ffb411;
+	border-color: #ffb411;
+	color: #000;
+}
+
+.btn-warning:hover {
+	background-color: #e0a800;
+	border-color: #e0a800;
+	color: #000;
+}
+
+/* Input spinner buttons with hover effect */
+.input-spinner .btn {
+	background-color: #ffb411;
+	border: 1px solid #ffb411;
+	color: #000;
+}
+
+.input-spinner .btn:hover {
+	background-color: #e0a800;
+	border-color: #e0a800;
+	color: #000;
+}
+
+/* Trash can button with red background and white icon on hover */
+.delete {
+	background-color: transparent;
+	border: 1px solid #dc3545;
+	color: #dc3545;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.delete:hover {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.delete:hover svg {
+	fill: #fff;
+}
+
+</style>
+
+<section class="py-0">
+	<div class="container">
+		<div class="row h-100 gx-2 gy-5 mt-7">
+			<span class="badge py-2 px-3">
+				<span class="fs-1 text-warning fs-lg-8">@restaurantName</span>
+			</span>
+			@foreach (var item in Model)
+			{
+				var itemQuantity = customerItems.FirstOrDefault(p => p.Id == item.Id)?.Quantity ?? 0;
+
+				<div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4 mx-2">
+					<div class="card card-span h-100">
+						<div class="position-relative">
+							<img class="img-fluid rounded-3 w-100" style="height:300px;"
+							src="@item.Image"
+							alt="..."/>
+							<div class="card-actions">
+								<div class="badge badge-foodwagon bg-primary p-4">
+									<div class="d-flex flex-between-center">
+										<div class="text-white fs-3">@item.Price</div>
+										<div class="d-block text-white fs-2">
+											LE <br/>
+										 </div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body px-0">
+							<div class="d-flex justify-content-between">
+								<span class="badge bg-soft-danger py-2 px-3">
+									<span class="fs-1 text-danger">@item.Category</span>
+								</span>
+								@* <span class="badge bg-soft-warning py-2 px-3"> *@
+								@*  <span class="fs-1 text-warning">@item.Restaurant</span> *@
+								@* </span> *@
+							</div>
+							<h5 class="fw-bold text-1000 text-truncate mt-2">
+								@item.Name
+							</h5>
+
+						</div>
+						@* <a class="stretched-link" href="#"></a> *@
+					</div>
+
+					@if (itemQuantity == 0)
+					{
+						<div id="addToCart@(@item.Id)" class="d-grid gap-2">
+							<button class="addToCart btn btn-lg btn-danger" data-product-id="@item.Id">Add to Cart</button>
+						</div>
+					}
+					else
+					{
+						<div id="quantityCount@(@item.Id)" class="d-flex justify-content-center align-items-center gx-2">
+							<div class="input-group input-spinner" style="width: 15vw">
+								<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@item.Id">
+									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+										<path d="M973.154 563.218H51.222c-28.275 0-51.222-22.946-51.222-51.214 0-28.276 22.946-51.222 51.222-51.222h921.932c28.33 0 51.222 22.946 51.222 51.222 0 28.268-22.891 51.214-51.222 51.214z"></path>
+									</svg>
+								</button>
+								<input id="in@(@item.Id)" type="text" readonly value="@itemQuantity" class="form-control form-control-sm text-center w-25">
+								<button class="btn btn-outline-secondary btn-sm plusOne" data-product-id="@item.Id">
+									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+										<path d="M970.745 459.367H566.614V55.251C566.614 25.842 542.771 2 513.361 2s-53.253 23.842-53.253 53.251v404.116H55.975c-29.411 0-53.253 23.841-53.253 53.25s23.842 53.253 53.253 53.253h404.133v404.115c0 29.407 23.842 53.249 53.253 53.249s53.253-23.842 53.253-53.249V565.87h404.131c29.413 0 53.255-23.843 53.255-53.253s-23.842-53.25-53.255-53.25z"></path>
+									</svg>
+								</button>
+							</div>
+							<button class="delete btn btn-outline-danger btn-sm m-3" data-product-id="@item.Id">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-danger" viewBox="0 0 16 16">
+									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+									<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+								</svg>
+							</button>
+						</div>
+					}
+
+					<div id="addToCart@(@item.Id)" class="d-none d-grid gap-2">
+						<button class="addToCart btn btn-lg btn-danger" data-product-id="@item.Id">Add to Cart</button>
+					</div>
+
+					<div id="quantityCountDis@(@item.Id)" class="d-none d-flex justify-content-center align-items-center gx-2">
+						<div class="input-group input-spinner" style="width: 15vw">
+							<button class="btn btn-outline-secondary btn-sm minusOne" data-product-id="@item.Id">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+									<path d="M973.154 563.218H51.222c-28.275 0-51.222-22.946-51.222-51.214 0-28.276 22.946-51.222 51.222-51.222h921.932c28.33 0 51.222 22.946 51.222 51.222 0 28.268-22.891 51.214-51.222 51.214z"></path>
+								</svg>
+							</button>
+							<input id="in@(@item.Id)" type="text" readonly value=" " class="form-control form-control-sm text-center w-25">
+							<button class="btn btn-outline-secondary btn-sm plusOne" data-product-id="@item.Id">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 1024 1024">
+									<path d="M970.745 459.367H566.614V55.251C566.614 25.842 542.771 2 513.361 2s-53.253 23.842-53.253 53.251v404.116H55.975c-29.411 0-53.253 23.841-53.253 53.25s23.842 53.253 53.253 53.253h404.133v404.115c0 29.407 23.842 53.249 53.253 53.249s53.253-23.842 53.253-53.249V565.87h404.131c29.413 0 53.255-23.843 53.255-53.253s-23.842-53.25-53.255-53.25z"></path>
+								</svg>
+							</button>
+						</div>
+						<button class="delete btn btn-outline-danger btn-sm m-3" data-product-id="@item.Id">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash text-danger" viewBox="0 0 16 16">
+								<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+								<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+							</svg>
+						</button>
+					</div>
+
+
+
+
+
+					@* <div class="d-grid gap-2"> *@
+				    @* 	<a class="btn btn-lg btn-danger addToCart" *@
+				    @*                       href="#!" *@
+				    @*                       role="button">Add to Cart</a> *@
+				    @*                </div> *@
+			    </div>
+		    }
+
+	    </div>
+    </div>
+    <!-- end of .container-->
+</section>
+<!-- <section> close ============================-->
+
+
+@section Scripts {
+	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+	@* <script> *@
+ @*        $(document).ready(function () { *@
+ @*            $('.addToCart').click(function () { *@
+	@* 			const button = $(this); *@
+ @*                var productId = $(this).data('product-id'); *@
+ @*                $.ajax({ *@
+ @*                    url: '@Url.Action("UpdateCart", "Cart")', *@
+ @*                    type: 'POST', *@
+ @*                    data: { id: productId }, *@
+ @*                    success: function (response) { *@
+ @*                        if (response.success) { *@
+ @*                            // alert(response.message); *@
+	@* 						button.html('Added to Cart'); *@
+	@* 						button.toggle(); *@
+
+	@* 						$("#" + productId).show(); *@
+
+	@* 						$("#spanCount").html(`${response.cartCount}`); *@
+
+	@* 						// button.prop('disabled', true); *@
+	@* 						// button.prop('display', none); *@
+ @*                        } *@
+ @*                    }, *@
+ @*                    error: function () { *@
+ @*                        alert('An error occurred while adding the product to the cart.'); *@
+ @*                    } *@
+ @*                }); *@
+ @*            }); *@
+ @*        }); *@
+ @*    </script> *@
+}
+
+
+
