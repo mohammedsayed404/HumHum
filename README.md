@@ -91,18 +91,7 @@ git clone https://github.com/your-username/HumHum.git
 - Update connection string in `appsettings.json`
 - Apply migrations or import provided `.bak` file
 
-### 3. Configure Environment Variables
-
-```env
-# Add your Cloudinary credentials
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-
-# Redis & other configs as needed
-```
-
-### 4. Run the Application
+### 3. Run the Application
 
 ```bash
 # Using Visual Studio or dotnet CLI
